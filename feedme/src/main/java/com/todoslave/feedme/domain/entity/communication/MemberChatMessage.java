@@ -13,7 +13,7 @@ public class MemberChatMessage {
 
     // 채팅 메세지 ID
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private int id;
 
     // 회윈 ID

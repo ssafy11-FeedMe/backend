@@ -15,7 +15,7 @@ public class MemberChatRoom {
 
     // 채팅방 ID
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private int id;
 
     // 회원 ID
