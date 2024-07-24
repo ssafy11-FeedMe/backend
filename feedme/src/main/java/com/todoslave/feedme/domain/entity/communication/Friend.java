@@ -10,7 +10,7 @@ public class Friend {
 
     //친구 ID
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     //본인 회원번호

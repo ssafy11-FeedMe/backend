@@ -9,13 +9,13 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-@RequiredArgsConstructor
-public class MemberRepository {
 
-    private final EntityManager em;
+public class MemberRepository {
+    @PersistenceContext
+    private EntityManager em;
 
     public void save(Member member) {
-        em.merge(member);
+        em.persist(member);
     }
 
     public Member findById(int id) {
@@ -26,9 +26,11 @@ public class MemberRepository {
         return em.createQuery("select m from Member m", Member.class).getResultList();
     }
 
-    public List<Member> findByNickname(String name) {
-        return em.createQuery("select m.member from MemberRenewInfo m where m.nickname = :name", Member.class)
-                .setParameter("name",name).getResultList();
+    public List<Member> findByName(String nickname) {
+        return em.createQuery("select m from Member m where m.nickname = :nickname",
+                        Member.class)
+                .setParameter("nickname", nickname)
+                .getResultList();
     }
 
 

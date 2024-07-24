@@ -1,8 +1,7 @@
 package com.todoslave.feedme;
 
 import com.todoslave.feedme.domain.entity.membership.Member;
-import com.todoslave.feedme.domain.entity.membership.MemberDetail;
-import com.todoslave.feedme.domain.entity.membership.MemberSpace;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

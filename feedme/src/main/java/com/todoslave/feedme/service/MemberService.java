@@ -40,7 +40,7 @@ public class MemberService {
 
     // 중복 체크
     private void sameNameCheck(Member member) {
-        List<Member> findMembers = memberRepository.findByNickname(member.getMemberRenewInfo().getNickname());
+        List<Member> findMembers = memberRepository.findByName(member.getNickname());
         if(!findMembers.isEmpty()) {
             throw new IllegalStateException("중복 닉네임");
         }
