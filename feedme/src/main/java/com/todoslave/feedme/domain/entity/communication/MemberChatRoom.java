@@ -27,9 +27,9 @@ public class MemberChatRoom {
     @Column(name = "counterpart_id", nullable = true)
     private int counterpartId;
 
-    //생성 일자
-    @Column(name = "created_at", nullable = true)
-    private LocalDate createdAt;
+    //최근 대화 일자
+    @Column(name = "updated_at", nullable = true)
+    private LocalDate updatedAt;
 
     //유저간 채팅 메시지 매핑
     @OneToMany(mappedBy = "memberChatRoom")

@@ -1,16 +1,17 @@
 package com.todoslave.feedme.domain.entity.membership;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.Getter;
 
-@Entity @Getter
+@Entity @Data
 @Table(name = "memberdetail")
 public class MemberDetail {
 
     // 회원 ID
     @Id
     @Column(name = "member_id")
-    private Long memberId;
+    private int memberId;
 
     // 회원 ID를 PK/FK 동시 적용
     @OneToOne

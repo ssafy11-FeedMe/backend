@@ -33,7 +33,7 @@ public class CreatureTodo {
     private Timestamp createdAt;
 
     // 완료여부
-    @Column(name = "is_completed",nullable = false)
+    @Column(name = "is_completed")
     private boolean isCompleted;
 
 }

@@ -26,7 +26,7 @@ public class Member {
     //회원 ID
     @Id
     @GeneratedValue
-    private Long id;
+    private int id;
 
     //비밀번호
     @Column(nullable = false)
@@ -37,8 +37,11 @@ public class Member {
     private String email;
 
     //생일
-    @Column(nullable = false)
     private Timestamp birthday;
+
+    //토큰
+    @Column(nullable = false)
+    private String token;
 
     //여기부터 1대1
     
@@ -91,5 +94,6 @@ public class Member {
     // 그림일기와 매핑
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PictureDiary> pictureDiary = new ArrayList<>();
+
 
 }

@@ -12,7 +12,7 @@ public class Creature {
 
     // 크리쳐 ID
     @Id @GeneratedValue
-    private Long id;
+    private int id;
 
     //회원 ID
     @ManyToOne(fetch = FetchType.LAZY)
