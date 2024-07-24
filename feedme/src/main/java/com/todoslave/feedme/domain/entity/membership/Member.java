@@ -12,8 +12,10 @@ import com.todoslave.feedme.domain.entity.task.TodoCategory;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +27,7 @@ public class Member {
 
     //회원 ID
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     //비밀번호
@@ -43,19 +45,52 @@ public class Member {
     @Column(nullable = false)
     private String token;
 
+    //유저를 하나로 합침
+
+    // 경험치
+    @Column(name = "exp", nullable = false, updatable = false)
+    private int exp;
+
+    // 감정
+    @Column(name = "status", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Emotion status; // BASIC, JOY, SAD
+
+    //위도
+    @Column(name = "latitude")
+    private Double latitude;
+
+    //경도
+    @Column(name = "longitude")
+    private Double longitude;
+
+    //가입일
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime joinDate;
+
+    //닉네임
+    @Column(nullable = false)
+    private String nickname;
+
+
+    //
+
+
+
     //여기부터 1대1
     
-    //회원 상세와 매핑
-    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private MemberDetail memberDetail;
-
-    //회원 갱신 정보와 매핑
-    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private MemberRenewInfo memberRenewInfo;
-
-    //회원 위치와 매핑
-    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private MemberSpace memberSpace;
+//    //회원 상세와 매핑
+//    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private MemberDetail memberDetail;
+//
+//    //회원 갱신 정보와 매핑
+//    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private MemberRenewInfo memberRenewInfo;
+//
+//    //회원 위치와 매핑
+//    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private MemberSpace memberSpace;
 
     //여기부터 1대 N
 
