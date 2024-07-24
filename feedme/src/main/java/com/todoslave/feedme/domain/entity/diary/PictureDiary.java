@@ -12,8 +12,8 @@ public class PictureDiary {
 
     // 그림일기 ID
     @Id
-    @GeneratedValue
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
     // 회원 ID
     @ManyToOne(fetch = FetchType.LAZY)

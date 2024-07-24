@@ -11,7 +11,7 @@ public class FriendRequest {
 
     //친구요청 ID
     @Id @GeneratedValue
-    private long id;
+    private int id;
 
     //본인 회원번호
     @ManyToOne(fetch = FetchType.LAZY)

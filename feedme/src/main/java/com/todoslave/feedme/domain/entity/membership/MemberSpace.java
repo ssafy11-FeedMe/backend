@@ -11,7 +11,7 @@ public class MemberSpace {
     // 회원 ID
     @Id
     @Column(name = "member_id")
-    private Long memberId;
+    private int memberId;
 
     // 회원 ID를 PK/FK 동시 적용
     @OneToOne

@@ -34,13 +34,18 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-	// 안산 마렵다.
+
+	// table 보이기
+	implementation("com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.1")
+
+	//스웨거 안됌 ㅠ
 	implementation 'org.springdoc:springdoc-openapi-ui:1.7.0'
 	implementation 'org.springdoc:springdoc-openapi-data-rest:1.7.0'
 	implementation 'org.springdoc:springdoc-openapi-security:1.7.0'
 
 	implementation 'io.springfox:springfox-boot-starter:3.0.0'
 	implementation 'io.springfox:springfox-swagger-ui:3.0.0'
+	//스웨거 끝
 
 	//JUnit4 추가
 	testImplementation("org.junit.vintage:junit-vintage-engine") {
