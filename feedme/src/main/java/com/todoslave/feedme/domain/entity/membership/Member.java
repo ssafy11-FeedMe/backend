@@ -30,28 +30,22 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    //비밀번호
-    @Column(nullable = false)
-    private String password;
-
     //이메일
     @Column(nullable = false)
     private String email;
 
+    //닉네임
+    @Column(nullable = false)
+    private String nickname;
+
     //생일
     private Timestamp birthday;
-
-    //토큰
-    @Column(nullable = false)
-    private String token;
-
-    //유저를 하나로 합침
 
     // 경험치
     @Column(name = "exp", nullable = false, updatable = false)
     private int exp;
 
-    // 감정
+    // 상태
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     private Emotion status; // BASIC, JOY, SAD
@@ -69,14 +63,17 @@ public class Member {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime joinDate;
 
-    //닉네임
-    @Column(nullable = false)
-    private String nickname;
+    //토큰
+    @Column(name = "token", nullable = false)
+    private String token;
 
+    //알람 수신 여부
+    @Column(name = "alarm_enabled", nullable = false)
+    private boolean alarm_enabled;
 
-    //
-
-
+    //알람 시간
+    @Column(name = "alarm_time")
+    private LocalDateTime alarm_time;
 
     //여기부터 1대1
     
