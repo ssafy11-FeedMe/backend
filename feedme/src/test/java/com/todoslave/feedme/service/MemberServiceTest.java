@@ -32,7 +32,7 @@ public class MemberServiceTest {
      public void 회원가입() throws Exception {
      //Given
         Member member = new Member();
-        member.setPassword("qwer");
+
         member.setEmail("asdf@gmail.com");
         member.setToken("ABC");
         member.setExp(0);
@@ -52,7 +52,6 @@ public class MemberServiceTest {
       public void 중복_회원_예외() throws Exception {
       //Given
          Member member = new Member();
-         member.setPassword("qwer");
          member.setEmail("asdf@gmail.com");
          member.setToken("ABC");
          member.setExp(0);
@@ -62,7 +61,6 @@ public class MemberServiceTest {
          member.setLongitude(12.4);
 
          Member member2 = new Member();
-         member2.setPassword("qwer");
          member2.setEmail("asdf@gmail.com");
          member2.setToken("ABC");
          member2.setExp(0);
@@ -76,6 +74,7 @@ public class MemberServiceTest {
          memberService.Join(member);
 
       //Then
+
         fail("예외가 발생해야한다.");
 
       }

@@ -3,7 +3,6 @@ package com.todoslave.feedme.repository;
 import com.todoslave.feedme.domain.entity.membership.Member;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -21,6 +20,7 @@ public class MemberRepository {
     public Member findById(int id) {
         return em.find(Member.class, id);
     }
+
 
     public List<Member> findAll() {
         return em.createQuery("select m from Member m", Member.class).getResultList();
