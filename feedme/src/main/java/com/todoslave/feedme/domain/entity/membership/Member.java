@@ -27,7 +27,7 @@ public class Member {
 
     //회원 ID
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private int id;
 
     //비밀번호
