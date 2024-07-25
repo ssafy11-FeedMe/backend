@@ -13,7 +13,7 @@ import java.sql.Timestamp;
 public class Todo {
 
     // 할일 ID
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue
     private int id;
 
     // 회원 ID

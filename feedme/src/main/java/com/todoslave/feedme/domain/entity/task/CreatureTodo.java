@@ -15,7 +15,7 @@ public class CreatureTodo {
 
     //크리쳐 숙제 ID
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private int id;
 
     // 회원 ID
