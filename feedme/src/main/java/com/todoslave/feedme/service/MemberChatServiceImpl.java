@@ -23,7 +23,7 @@ public class MemberChatServiceImpl implements MemberChatService{
   @Transactional
   public MemberChatRoom getChatRoom(MemberChatRoom room){
 
-    room = roomRepository.findByMemberIdAndCounterpartId(room.getMemberId(), room.getCounterpartId());
+    room = roomRepository.findByMemberIdAndCounterpartId(room.getMember().getId(), room.getCounterpartId());
 
     if(room==null){
       room = roomRepository.save(room);

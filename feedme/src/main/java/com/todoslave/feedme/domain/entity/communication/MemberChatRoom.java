@@ -24,8 +24,9 @@ public class MemberChatRoom {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "member_id", nullable = true)
-    private int memberId;
+    @ManyToOne
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
 
     @Column(name = "counterpart_id", nullable = true)
     private int counterpartId;
