@@ -2,6 +2,7 @@ package com.todoslave.feedme.controller;
 
 import com.todoslave.feedme.domain.entity.communication.MemberChatMessage;
 import com.todoslave.feedme.domain.entity.communication.MemberChatRoom;
+import com.todoslave.feedme.domain.entity.membership.Member;
 import com.todoslave.feedme.service.MemberChatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,10 @@ public class MemberChatController {
     }
 
     MemberChatRoom room = new MemberChatRoom();
-    room.setMemberId(memberId);
+
+    Member member = new Member();
+    member.setId(memberId);
+    room.setMember(member);
     room.setCounterpartId(counterpartId);
 
     return ResponseEntity.ok(chatService.getChatRoom(room));

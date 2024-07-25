@@ -26,8 +26,9 @@ public class MemberChatMessage {
     @JoinColumn(name = "memberChatRoom_id", nullable = false)
     private MemberChatRoom memberChatRoom;
 
-    @Column(name = "send_id", nullable = false)
-    private int sendId;
+    @ManyToOne
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
 
     @CreationTimestamp
     @Column(name = "transmit_at", updatable = false)
