@@ -4,33 +4,35 @@ import com.todoslave.feedme.domain.entity.membership.Member;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "memberchatmessage")
 public class MemberChatMessage {
 
-    // 채팅 메세지 ID
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    // 회윈 ID
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
-
-    // 채팅방 ID
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "memberChatRoom_id")
+    @ManyToOne
+    @JoinColumn(name = "memberChatRoom_id", nullable = false)
     private MemberChatRoom memberChatRoom;
 
-    // 보낸 시간
-    @Column(name = "transmit_at", nullable = true)
+    @Column(name = "send_id", nullable = false)
+    private int sendId;
+
+    @CreationTimestamp
+    @Column(name = "transmit_at", updatable = false)
     private LocalDateTime transmitAt;
 
-    // 내용
     @Column(name = "content", nullable = true)
     private String content;
 
