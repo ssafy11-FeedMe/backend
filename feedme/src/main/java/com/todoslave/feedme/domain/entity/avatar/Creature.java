@@ -11,7 +11,7 @@ import lombok.Data;
 public class Creature {
 
     // 크리쳐 ID
-    @Id  @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id  @GeneratedValue
     private int id;
 
     //회원 ID
