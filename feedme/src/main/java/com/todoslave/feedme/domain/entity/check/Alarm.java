@@ -30,4 +30,10 @@ public class Alarm {
     @Column(name = "receive_at", nullable = false, updatable = false)
     private LocalDateTime receiveAt;
 
+    //==연관관계 메서드==//
+    public void setMember(Member member) {
+        this.member = member;
+        member.getAlarms().add(this);
+    }
+
 }

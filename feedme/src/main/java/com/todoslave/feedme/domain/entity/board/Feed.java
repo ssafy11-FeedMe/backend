@@ -50,4 +50,10 @@ public class Feed {
     // 좋아요와 매핑
     @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL)
     private List<FeedLike> feedLikes = new ArrayList<>();
+
+    //==연관관계 메서드==//
+    public void setMember(Member member) {
+        this.member = member;
+        member.getFeeds().add(this);
+    }
 }

@@ -36,4 +36,10 @@ public class CreatureTodo {
     @Column(name = "is_completed")
     private boolean isCompleted;
 
+    //==연관관계 메서드==//
+    public void setMember(Member member) {
+        this.member = member;
+        member.getCreatureTodos().add(this);
+    }
+
 }

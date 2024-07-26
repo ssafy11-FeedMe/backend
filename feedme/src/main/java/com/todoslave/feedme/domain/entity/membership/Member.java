@@ -33,6 +33,14 @@ public class Member {
     @GeneratedValue
     private int id;
 
+    //GeneratedValue에 관하여 설명
+    /**
+    DB마다 다른데 어떤 DB는 seq를 만들기도 하고(MYSQL) 어떤 애들은 테이블을 만드는데, 이러면 항상 ID값이 보장이 된다.
+     persist 할때 필요 => 영속성 컨텍스트에 값을 딱 넣어야 하는데, 그때 이제 키/밸류가 되는데
+
+     **/
+
+
     //이메일
     @Column(nullable = false)
     private String email;
@@ -97,6 +105,10 @@ public class Member {
 //    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
 //    private List<MemberChatMessage> memberChatMessages = new ArrayList<>();
 
+    //크리쳐와 매핑
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Creature> creatures = new ArrayList<>();
+
     // 투두와 매핑
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Todo> todos = new ArrayList<>();
@@ -109,21 +121,17 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CreatureTodo> creatureTodos = new ArrayList<>();
 
-    //크리쳐와 매핑
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    private List<Creature> creatures = new ArrayList<>();
-
     // 그림일기와 매핑
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PictureDiary> pictureDiary = new ArrayList<>();
 
-    //좋아요 매핑
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private  List<FeedLike> feedLikes = new ArrayList<>();
-
     // 피드와 매핑
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Feed> feeds = new ArrayList<>();
+
+    //좋아요 매핑
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private  List<FeedLike> feedLikes = new ArrayList<>();
 
     //피드 댓글과 매핑
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -23,4 +23,5 @@ public class FriendRequest {
     @JoinColumn(name = "counterpart_id")
     private Member counterpartId;
 
+
 }

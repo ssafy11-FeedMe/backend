@@ -29,4 +29,10 @@ public class TodoCategory {
     @OneToMany(mappedBy = "todoCategory", cascade = CascadeType.ALL)
     private List<Todo> todos = new ArrayList<>();
 
+    //==연관관계 메서드==//
+    public void setMember(Member member) {
+        this.member = member;
+        member.getTodoCategories().add(this);
+    }
+
 }
