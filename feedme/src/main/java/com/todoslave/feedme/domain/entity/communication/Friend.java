@@ -23,4 +23,6 @@ public class Friend {
     @JoinColumn(name = "counterpart_id")
     private Member counterpart;
 
+
+
 }

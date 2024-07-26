@@ -27,8 +27,21 @@ public class FeedLike {
     @Data
     @EqualsAndHashCode
     @Embeddable
-    public static class LikeId implements Serializable {
+    public static class LikeId implements Serializable {  //왜 빨간줄이 뜰까?
         private int memberId;
         private int feedId;
     }
+
+    //==연관관계 메서드==//
+    public void setMember(Member member) {
+        this.member = member;
+        member.getFeedLikes().add(this);
+    }
+
+    public void setFeed(Feed feed) {
+        this.feed = feed;
+        feed.getFeedLikes().add(this);
+    }
+
+
 }

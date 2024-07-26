@@ -35,4 +35,15 @@ public class FeedRecomment {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    //==연관관계 메서드==//
+    public void setMember(Member member) {
+        this.member = member;
+        member.getFeedRecomments().add(this);
+    }
+
+    public void setFeedComment(FeedComment feedComment) {
+        this.feedComment = feedComment;
+        feedComment.getFeedRecomments().add(this);
+    }
+
 }

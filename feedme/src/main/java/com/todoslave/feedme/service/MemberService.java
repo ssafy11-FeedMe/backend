@@ -3,7 +3,6 @@ package com.todoslave.feedme.service;
 import com.todoslave.feedme.domain.entity.membership.Member;
 import com.todoslave.feedme.repository.MemberRepository;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,13 +15,13 @@ import java.util.List;
 @RequiredArgsConstructor // 생성자 만들어 주는 얘
 public class MemberService {
 
+    @Autowired
     private final MemberRepository memberRepository;
 
     // 회원가입
-
     @Transactional //가입시에
     public int Join(Member member) {
-        sameNameCheck(member);
+        sameNameCheck(member); // 중복 회원 검증
         memberRepository.save(member);
         return member.getId();
     }
@@ -33,7 +32,6 @@ public class MemberService {
     }
 
     // 단수 조회
-
     public Member findOne(int id) {
         return memberRepository.findById(id);
     }
@@ -48,3 +46,4 @@ public class MemberService {
 
 
 }
+1

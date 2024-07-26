@@ -40,4 +40,15 @@ public class Todo {
     private boolean isCompleted;
 
 
+    //==연관관계 메서드==//
+    public void setMember(Member member) {
+        this.member = member;
+        member.getTodos().add(this);
+    }
+
+    public void setTodoCategory(TodoCategory todoCategory) {
+        this.todoCategory = todoCategory;
+        todoCategory.getTodos().add(this);
+    }
+
 }

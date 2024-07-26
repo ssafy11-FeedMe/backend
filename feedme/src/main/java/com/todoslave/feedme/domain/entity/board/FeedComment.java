@@ -43,4 +43,16 @@ public class FeedComment {
     @OneToMany(mappedBy = "feedComment", cascade = CascadeType.ALL)
     private List<FeedRecomment> feedRecomments = new ArrayList<>();
 
+
+    //==연관관계 메서드==//
+    public void setMember(Member member) {
+        this.member = member;
+        member.getFeedComments().add(this);
+    }
+
+    public void setFeed(Feed feed) {
+        this.feed = feed;
+        feed.getFeedComments().add(this);
+    }
+
 }
