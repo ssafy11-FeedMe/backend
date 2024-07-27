@@ -28,7 +28,7 @@ public class MemberChatController {
   @Autowired
   private final MemberChatService chatService;
 
-  @PostMapping("/friends/chats")
+  @PostMapping("")
   public ResponseEntity<MemberChatRoom> findChatRoom(@RequestParam("memberId") String memberId,
       @RequestParam("counterpartId") String counterpartId) {
     if (memberId != null || counterpartId != null) {
@@ -48,7 +48,7 @@ public class MemberChatController {
 
   }
 
-  @GetMapping("friends/chats")
+  @GetMapping("")
   public ResponseEntity<Slice<MemberChatMessage>> findMessages(@RequestParam String roomId,
       @RequestParam int page,
       @RequestParam int size){

@@ -13,7 +13,6 @@ import org.springframework.data.mongodb.core.SimpleMongoClientDatabaseFactory;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 @Configuration
-@EnableMongoRepositories(basePackages = "com.todoslave.feedme.repository")
 public class MongoConfig extends AbstractMongoClientConfiguration {
 
   private static final Logger logger = LoggerFactory.getLogger(MongoConfig.class);
