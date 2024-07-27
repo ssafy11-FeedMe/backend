@@ -26,11 +26,7 @@ public class MemberChatServiceImpl implements MemberChatService{
   @Transactional
   public MemberChatRoom getChatRoom(MemberChatRoom room){
 
-<<<<<<< HEAD
     room = roomRepository.findByParticipantIdsContaining(room.getParticipantIds());
-=======
-    room = roomRepository.findByMemberIdAndCounterpartId(room.getMember().getId(), room.getCounterpartId());
->>>>>>> df102da768be1bb2c749385d38cdad44cb0bfbc0
 
     if(room==null){
       room = roomRepository.save(room);
