@@ -25,7 +25,19 @@ public class MemberChatRoom {
     private String id;
     private List<String> participantIds;
 
+<<<<<<< HEAD
     @CreatedDate
+=======
+    @ManyToOne
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
+
+    @Column(name = "counterpart_id", nullable = true)
+    private int counterpartId;
+
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
+>>>>>>> df102da768be1bb2c749385d38cdad44cb0bfbc0
     private LocalDate createdAt;
 
 }
