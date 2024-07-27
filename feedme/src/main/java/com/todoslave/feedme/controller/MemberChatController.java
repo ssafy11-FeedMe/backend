@@ -2,7 +2,10 @@ package com.todoslave.feedme.controller;
 
 import com.todoslave.feedme.domain.entity.communication.MemberChatMessage;
 import com.todoslave.feedme.domain.entity.communication.MemberChatRoom;
+import com.todoslave.feedme.domain.entity.membership.Member;
 import com.todoslave.feedme.service.MemberChatService;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Slice;
@@ -26,22 +29,27 @@ public class MemberChatController {
   private final MemberChatService chatService;
 
   @PostMapping("/friends/chats")
-  public ResponseEntity<MemberChatRoom> findChatRoom(@RequestParam("memberId") int memberId,
-      @RequestParam("counterpartId") int counterpartId) {
-    if (memberId != 0 || counterpartId != 0) {
+  public ResponseEntity<MemberChatRoom> findChatRoom(@RequestParam("memberId") String memberId,
+      @RequestParam("counterpartId") String counterpartId) {
+    if (memberId != null || counterpartId != null) {
       return ResponseEntity.badRequest().build();
     }
 
     MemberChatRoom room = new MemberChatRoom();
-    room.setMemberId(memberId);
-    room.setCounterpartId(counterpartId);
+
+    List<String> members = new ArrayList<>();
+
+    members.add(memberId);
+    members.add(counterpartId);
+
+    room.setParticipantIds(members);
 
     return ResponseEntity.ok(chatService.getChatRoom(room));
 
   }
 
   @GetMapping("friends/chats")
-  public ResponseEntity<Slice<MemberChatMessage>> findMessages(@RequestParam int roomId,
+  public ResponseEntity<Slice<MemberChatMessage>> findMessages(@RequestParam String roomId,
       @RequestParam int page,
       @RequestParam int size){
 
@@ -53,12 +61,11 @@ public class MemberChatController {
 
   @MessageMapping("/{roomId}/message")
   @SendTo("/{roomId}")
-  public ResponseEntity<MemberChatMessage> sendMessage(@DestinationVariable int roomId,
+  public ResponseEntity<MemberChatMessage> sendMessage(@DestinationVariable String roomId,
+
       @Payload MemberChatMessage memberChatMessage){
     MemberChatMessage message = new MemberChatMessage();
-    MemberChatRoom memberChatRoom = new MemberChatRoom();
-    memberChatRoom.setId(roomId);
-    message.setMemberChatRoom(memberChatRoom);
+    message.setMemberChatRoomId(roomId);
     return ResponseEntity.ok(chatService.insertChatMessage(message));
   }
 

@@ -11,30 +11,21 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "memberchatroom")
+@Document(collection = "memberchatroom")
 public class MemberChatRoom {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private String id;
+    private List<String> participantIds;
 
-    @Column(name = "member_id", nullable = true)
-    private int memberId;
-
-    @Column(name = "counterpart_id", nullable = true)
-    private int counterpartId;
-
-    @CreationTimestamp
-    @Column(name = "created_at", updatable = false)
+    @CreatedDate
     private LocalDate createdAt;
-
-    @OneToMany(mappedBy = "memberChatRoom", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MemberChatMessage> messages;
 
 }
