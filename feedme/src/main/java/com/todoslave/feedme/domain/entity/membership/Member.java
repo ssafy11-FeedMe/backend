@@ -102,14 +102,6 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<FriendRequest> friendRequests = new ArrayList<>();
 
-    // 채팅방과 매핑
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MemberChatRoom> memberChatRooms = new ArrayList<>();
-
-    // 유저간 채팅 메세지
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    private List<MemberChatMessage> memberChatMessages = new ArrayList<>();
-
     // 투두와 매핑
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Todo> todos = new ArrayList<>();

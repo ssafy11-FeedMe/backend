@@ -2,8 +2,11 @@ package com.todoslave.feedme.service;
 
 import com.todoslave.feedme.domain.entity.communication.MemberChatMessage;
 import com.todoslave.feedme.domain.entity.communication.MemberChatRoom;
+import com.todoslave.feedme.domain.entity.membership.Member;
 import com.todoslave.feedme.repository.MemberChatMessageRepository;
 import com.todoslave.feedme.repository.MemberChatRoomRepository;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +26,7 @@ public class MemberChatServiceImpl implements MemberChatService{
   @Transactional
   public MemberChatRoom getChatRoom(MemberChatRoom room){
 
-    room = roomRepository.findByMemberIdAndCounterpartId(room.getMemberId(), room.getCounterpartId());
+    room = roomRepository.findByParticipantIdsContaining(room.getParticipantIds());
 
     if(room==null){
       room = roomRepository.save(room);
@@ -35,7 +38,7 @@ public class MemberChatServiceImpl implements MemberChatService{
   public Slice<MemberChatMessage> getChatMessage(MemberChatRoom room, int page, int size){
 
     Pageable pageable = PageRequest.of(page, size);
-    return messageRepository.findSliceBymemberChatRoomId(room.getId(), pageable);
+    return messageRepository.findSliceByMemberChatRoomId(room.getId(), pageable);
 
   }
 

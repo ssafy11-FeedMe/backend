@@ -2,16 +2,16 @@ package com.todoslave.feedme.repository;
 
 
 import com.todoslave.feedme.domain.entity.communication.MemberChatRoom;
-import org.springframework.data.repository.CrudRepository;
+import java.util.List;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface MemberChatRoomRepository extends CrudRepository<MemberChatRoom, Integer> {
+public interface MemberChatRoomRepository extends MongoRepository<MemberChatRoom, String> {
 
   // 방 번호 얻어오기
-  MemberChatRoom findByMemberIdAndCounterpartId(int memberId, int counterpartId);
+  MemberChatRoom findByParticipantIdsContaining(List<String>participantIds);
 
-  // 방 생성
-  MemberChatRoom save(MemberChatRoom room);
+  // save 메서드는 이미 몽고디비에 존재하므로 재 정의 할 필요 X
 
 }
