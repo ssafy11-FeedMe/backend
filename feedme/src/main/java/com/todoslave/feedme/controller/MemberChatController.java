@@ -37,19 +37,12 @@ public class MemberChatController {
 
     MemberChatRoom room = new MemberChatRoom();
 
-<<<<<<< HEAD
     List<String> members = new ArrayList<>();
 
     members.add(memberId);
     members.add(counterpartId);
 
     room.setParticipantIds(members);
-=======
-    Member member = new Member();
-    member.setId(memberId);
-    room.setMember(member);
-    room.setCounterpartId(counterpartId);
->>>>>>> df102da768be1bb2c749385d38cdad44cb0bfbc0
 
     return ResponseEntity.ok(chatService.getChatRoom(room));
 
