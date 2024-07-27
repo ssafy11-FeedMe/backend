@@ -6,7 +6,6 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
-@Repository
 public interface MemberChatMessageRepository extends
     MongoRepository<MemberChatMessage, String> {
 

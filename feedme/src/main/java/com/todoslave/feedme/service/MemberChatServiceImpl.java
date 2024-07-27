@@ -2,7 +2,6 @@ package com.todoslave.feedme.service;
 
 import com.todoslave.feedme.domain.entity.communication.MemberChatMessage;
 import com.todoslave.feedme.domain.entity.communication.MemberChatRoom;
-import com.todoslave.feedme.domain.entity.membership.Member;
 import com.todoslave.feedme.repository.MemberChatMessageRepository;
 import com.todoslave.feedme.repository.MemberChatRoomRepository;
 import java.util.ArrayList;
@@ -23,7 +22,6 @@ public class MemberChatServiceImpl implements MemberChatService{
   @Autowired
   private MemberChatRoomRepository roomRepository;
 
-  @Transactional
   public MemberChatRoom getChatRoom(MemberChatRoom room){
 
     room = roomRepository.findByParticipantIdsContaining(room.getParticipantIds());
@@ -42,8 +40,6 @@ public class MemberChatServiceImpl implements MemberChatService{
 
   }
 
-  @Override
-  @Transactional
   public MemberChatMessage insertChatMessage(MemberChatMessage message) {
     return messageRepository.save(message);
   }
