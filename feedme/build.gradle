@@ -46,7 +46,7 @@ dependencies {
 	//스웨거 끝
 
 	//MongoDB
-	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive'
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 
 	//JUnit4 추가
 	testImplementation("org.junit.vintage:junit-vintage-engine") {

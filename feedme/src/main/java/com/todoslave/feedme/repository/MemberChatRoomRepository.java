@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
-@Repository
 public interface MemberChatRoomRepository extends MongoRepository<MemberChatRoom, String> {
 
   // 방 번호 얻어오기
