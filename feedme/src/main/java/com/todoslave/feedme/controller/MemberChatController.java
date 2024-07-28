@@ -2,7 +2,6 @@ package com.todoslave.feedme.controller;
 
 import com.todoslave.feedme.domain.entity.communication.MemberChatMessage;
 import com.todoslave.feedme.domain.entity.communication.MemberChatRoom;
-import com.todoslave.feedme.domain.entity.membership.Member;
 import com.todoslave.feedme.service.MemberChatService;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -28,10 +26,11 @@ public class MemberChatController {
   @Autowired
   private final MemberChatService chatService;
 
-  @PostMapping("")
+  @PostMapping
   public ResponseEntity<MemberChatRoom> findChatRoom(@RequestParam("memberId") String memberId,
-      @RequestParam("counterpartId") String counterpartId) {
-    if (memberId != null || counterpartId != null) {
+                                                     @RequestParam("counterpartId") String counterpartId) {
+
+    if (memberId == null || counterpartId == null) {
       return ResponseEntity.badRequest().build();
     }
 
@@ -48,10 +47,10 @@ public class MemberChatController {
 
   }
 
-  @GetMapping("")
+  @GetMapping
   public ResponseEntity<Slice<MemberChatMessage>> findMessages(@RequestParam String roomId,
-      @RequestParam int page,
-      @RequestParam int size){
+                                                               @RequestParam int page,
+                                                               @RequestParam int size){
 
     MemberChatRoom room = new MemberChatRoom();
     room.setId(roomId);
@@ -59,14 +58,9 @@ public class MemberChatController {
     return ResponseEntity.ok(chatService.getChatMessage(room, page, size));
   }
 
-  @MessageMapping("/{roomId}/message")
-  @SendTo("/{roomId}")
-  public ResponseEntity<MemberChatMessage> sendMessage(@DestinationVariable String roomId,
-
-      @Payload MemberChatMessage memberChatMessage){
-    MemberChatMessage message = new MemberChatMessage();
-    message.setMemberChatRoomId(roomId);
-    return ResponseEntity.ok(chatService.insertChatMessage(message));
+  @MessageMapping("/messages")
+  @SendTo("/topic/messages")
+  public MemberChatMessage sendMessage(@Payload MemberChatMessage memberChatMessage) {
+    return chatService.insertChatMessage(memberChatMessage);
   }
-
 }

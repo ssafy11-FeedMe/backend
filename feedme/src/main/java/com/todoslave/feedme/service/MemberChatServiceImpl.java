@@ -24,13 +24,17 @@ public class MemberChatServiceImpl implements MemberChatService{
 
   public MemberChatRoom getChatRoom(MemberChatRoom room){
 
-    room = roomRepository.findByParticipantIdsContaining(room.getParticipantIds());
+    MemberChatRoom result = roomRepository.findByParticipantIdsContainingAll(room.getParticipantIds());
 
-    if(room==null){
-      room = roomRepository.save(room);
+    System.out.println(room);
+
+    if(result==null){
+      result = roomRepository.save(room);
     }
 
-    return room;
+    System.out.println(result);
+
+    return result;
   }
 
   public Slice<MemberChatMessage> getChatMessage(MemberChatRoom room, int page, int size){
