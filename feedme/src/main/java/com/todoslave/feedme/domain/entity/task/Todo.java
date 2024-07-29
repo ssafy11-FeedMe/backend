@@ -1,24 +1,27 @@
 package com.todoslave.feedme.domain.entity.task;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.todoslave.feedme.domain.entity.membership.Member;
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.Getter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
 
 // 할 일
-@Entity @Getter
+@Entity @Data
 @Table(name = "todo")
 public class Todo {
 
     // 할일 ID
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     // 회원 ID
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
+    @JsonBackReference
     private Member member;
 
     // 할일 카테고리 ID
@@ -28,7 +31,7 @@ public class Todo {
 
     // 내용
     @Column(nullable = false, length = 1000)
-    private String text;
+    private String content;
 
     // 생성 일자
     @CreationTimestamp
