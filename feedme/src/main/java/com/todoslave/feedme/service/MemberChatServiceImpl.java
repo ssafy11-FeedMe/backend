@@ -11,7 +11,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class MemberChatServiceImpl implements MemberChatService{
@@ -21,6 +20,13 @@ public class MemberChatServiceImpl implements MemberChatService{
 
   @Autowired
   private MemberChatRoomRepository roomRepository;
+
+  @Override
+  public List<MemberChatRoom> getChatRooms(MemberChatRoom room) {
+    List<MemberChatRoom> rooms = roomRepository.findAllByParticipantIdsContaining(room.getParticipantIds());
+    System.out.println(rooms);
+    return rooms;
+  }
 
   public MemberChatRoom getChatRoom(MemberChatRoom room){
 
