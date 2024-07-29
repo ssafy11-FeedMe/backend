@@ -45,6 +45,7 @@ public class MemberChatServiceImpl implements MemberChatService{
   }
 
   public MemberChatMessage insertChatMessage(MemberChatMessage message) {
+    System.out.println(message);
     return messageRepository.save(message);
   }
 

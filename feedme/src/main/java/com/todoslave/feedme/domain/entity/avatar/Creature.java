@@ -1,5 +1,6 @@
 package com.todoslave.feedme.domain.entity.avatar;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.todoslave.feedme.domain.entity.membership.Member;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -17,6 +18,7 @@ public class Creature {
     //회원 ID
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
+    @JsonBackReference
     private Member member;
 
     //진화단계
