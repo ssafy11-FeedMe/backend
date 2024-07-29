@@ -13,6 +13,9 @@ public interface MemberChatRoomRepository extends MongoRepository<MemberChatRoom
   @Query("{ 'participantIds': ?0 }")
   MemberChatRoom findByParticipantIdsContainingAll(List<String> participantIds);
 
+  // 방 여러개 얻어오기
+  List<MemberChatRoom> findAllByParticipantIdsContaining(List<String> participantIds);
+
   // save 메서드는 이미 몽고디비에 존재하므로 재 정의 할 필요 X
 
 }
