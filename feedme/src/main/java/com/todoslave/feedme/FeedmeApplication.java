@@ -4,8 +4,13 @@ import com.todoslave.feedme.domain.entity.membership.Member;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 @SpringBootApplication
+@EnableJpaRepositories(basePackages = "com.todoslave.feedme.repository")
+@EnableMongoRepositories(basePackages = "com.todoslave.feedme.repository")
 public class FeedmeApplication {
 
 	public static void main(String[] args) {

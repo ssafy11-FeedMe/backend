@@ -1,37 +1,40 @@
 package com.todoslave.feedme.domain.entity.communication;
 
-import com.todoslave.feedme.domain.entity.membership.Member;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
 @Data
-@Table(name = "memberchatmessage")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Document(collection = "memberchatmessage")
 public class MemberChatMessage {
 
-    // 채팅 메세지 ID
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private String id;
+    private String memberChatRoomId;
+    private String sendId;
+    private String content;
 
-    // 회윈 ID
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
-
-    // 채팅방 ID
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "memberChatRoom_id")
-    private MemberChatRoom memberChatRoom;
-
-    // 보낸 시간
-    @Column(name = "transmit_at", nullable = true)
+    @CreatedDate
     private LocalDateTime transmitAt;
 
-    // 내용
-    @Column(name = "content", nullable = true)
-    private String content;
+    @Override
+    public String toString() {
+        return "MemberChatMessage{" +
+            "id='" + id + '\'' +
+            ", memberChatRoomId='" + memberChatRoomId + '\'' +
+            ", sendId='" + sendId + '\'' +
+            ", content='" + content + '\'' +
+            ", transmitAt=" + transmitAt +
+            '}';
+    }
 
 }
