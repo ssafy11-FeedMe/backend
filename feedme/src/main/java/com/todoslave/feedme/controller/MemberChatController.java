@@ -1,5 +1,6 @@
 package com.todoslave.feedme.controller;
 
+import com.todoslave.feedme.DTO.PaginationRequest;
 import com.todoslave.feedme.domain.entity.communication.MemberChatMessage;
 import com.todoslave.feedme.domain.entity.communication.MemberChatRoom;
 import com.todoslave.feedme.service.MemberChatService;
@@ -9,10 +10,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,7 +38,7 @@ public class MemberChatController {
     List<String> members = new ArrayList<>();
 
     // jwt 토큰에서 id 얻어오기
-    int memberId;
+    String memberId = "-1";
 
     members.add(memberId);
     room.setParticipantIds(members);
@@ -48,7 +51,7 @@ public class MemberChatController {
   public ResponseEntity<MemberChatRoom> findChatRoom(@RequestHeader("Authorization") String token,
                                                      @RequestParam("counterpartId") String counterpartId) {
 
-    int memberId;
+    String memberId = "-1";
 
     if ( memberId == null || counterpartId == null) {
       return ResponseEntity.badRequest().build();
@@ -68,21 +71,26 @@ public class MemberChatController {
   }
 
   // 메세지 불러오기
-  @GetMapping
-  public ResponseEntity<Slice<MemberChatMessage>> findMessages(@RequestParam("roomId") String roomId,
-                                                               @RequestParam("page") int page,
-                                                               @RequestParam("size") int size){
+  @MessageMapping("/loadMessages/{roomId}")
+  @SendTo("/chatRoom/loadMessages/{roomId}")
+  public Slice<MemberChatMessage> findMessages(@DestinationVariable String roomId,
+                                              @Payload PaginationRequest request){
+    System.out.println("receive message?");
+    Slice<MemberChatMessage> messages = chatService.getChatMessage(roomId, request.getSkip(), request.getLimit());
 
-    MemberChatRoom room = new MemberChatRoom();
-    room.setId(roomId);
+    for (MemberChatMessage message : messages) {
+      System.out.println(message.toString());
+    }
 
-    return ResponseEntity.ok(chatService.getChatMessage(room, page, size));
+    return messages;
   }
 
   // 메세지 저장
-  @MessageMapping("/messages")
-  @SendTo("/topic/messages")
-  public MemberChatMessage sendMessage(@Payload MemberChatMessage memberChatMessage) {
+  @MessageMapping("/messages/{roomId}")
+  @SendTo("/chatRoom/messages/{roomId}")
+  public MemberChatMessage sendMessage(@DestinationVariable String roomId, @Payload MemberChatMessage memberChatMessage) {
+    System.out.println("메세지 보냈나요");
+    memberChatMessage.setMemberChatRoomId(roomId);
     return chatService.insertChatMessage(memberChatMessage);
   }
 }
