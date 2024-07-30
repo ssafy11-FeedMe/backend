@@ -14,6 +14,7 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,7 +29,7 @@ public class MemberChatController {
 
   // 이 유저가 누구랑 채팅방을 갖고 있는 지 찾기
   @GetMapping
-  public ResponseEntity<List<MemberChatRoom>> findChatRoomList(@RequestParam("token") String token){
+  public ResponseEntity<List<MemberChatRoom>> findChatRoomList(@RequestHeader("Authorization") String token){
 
     MemberChatRoom room = new MemberChatRoom();
     List<String> members = new ArrayList<>();
@@ -44,7 +45,7 @@ public class MemberChatController {
 
   // 채팅방 ID 찾기
   @PostMapping
-  public ResponseEntity<MemberChatRoom> findChatRoom(@RequestParam("token") String token,
+  public ResponseEntity<MemberChatRoom> findChatRoom(@RequestHeader("Authorization") String token,
                                                      @RequestParam("counterpartId") String counterpartId) {
 
     int memberId;

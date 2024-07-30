@@ -31,7 +31,7 @@ public class FriendController {
 
     // 친구 삭제하기
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> removeFriend(@RequestParam("token") String token, @RequestParam("id") String friendId){
+    public ResponseEntity<Void> removeFriend(@RequestHeader("Authorization") String token, @RequestParam("id") String friendId){
 
         // token으로부터 memberId를 찾는 로직
         int memberId;
@@ -43,7 +43,7 @@ public class FriendController {
 
     // 친구 목록 불러오기
     @GetMapping
-    public ResponseEntity<List<Friend>> findFriends(@RequestParam("token") String token){
+    public ResponseEntity<List<Friend>> findFriends(@RequestHeader("Authorization")String token){
         //token으로부터 memberId를 찾는 로직
         int memberId;
 
@@ -52,7 +52,7 @@ public class FriendController {
 
     // 친구 요청 목록 조회
     @GetMapping("/request")
-    public ResponseEntity<List<FriendRequest>> findRequestFriend(@RequestParam("token") String token){
+    public ResponseEntity<List<FriendRequest>> findRequestFriend(@RequestHeader("Authorization") String token){
         //token으로부터 memberId를 찾는 로직
         int memberId;
 
@@ -61,7 +61,7 @@ public class FriendController {
 
     // 친구 수락하기
     @PostMapping("/{id}/accept")
-    public ResponseEntity<Void> acceptFriendship(@RequestParam("token") String token, @PathVariable("id") int requestId){
+    public ResponseEntity<Void> acceptFriendship(@RequestHeader("Authorization") String token, @PathVariable("id") int requestId){
         // token 인증
         if(true) {
             friendService.insertFriendship(requestId);
@@ -72,7 +72,7 @@ public class FriendController {
 
     // 친구 거절하기
     @PostMapping("/{id}/reject")
-    public ResponseEntity<Void> rejectFriendship(@RequestParam("token") String token, @PathVariable("id") int requestId){
+    public ResponseEntity<Void> rejectFriendship(@RequestHeader("Authorization") String token, @PathVariable("id") int requestId){
         // token 인증
         if(true){
             friendService.deleteRequestFriend(requestId);
