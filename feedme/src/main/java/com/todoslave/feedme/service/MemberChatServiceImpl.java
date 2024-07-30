@@ -43,11 +43,14 @@ public class MemberChatServiceImpl implements MemberChatService{
     return result;
   }
 
-  public Slice<MemberChatMessage> getChatMessage(MemberChatRoom room, int page, int size){
+  public Slice<MemberChatMessage> getChatMessage(String roomId, int skip, int limit){
 
-    Pageable pageable = PageRequest.of(page, size);
-    return messageRepository.findSliceByMemberChatRoomId(room.getId(), pageable);
+    System.out.println("receive message? service");
+    Pageable pageable = PageRequest.of(skip / limit, limit);
 
+    Slice<MemberChatMessage> messages = messageRepository.findByMemberChatRoomIdOrderByTransmitAtDesc(roomId, pageable);
+
+    return messages;
   }
 
   public MemberChatMessage insertChatMessage(MemberChatMessage message) {

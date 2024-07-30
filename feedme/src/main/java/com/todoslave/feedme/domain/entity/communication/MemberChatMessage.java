@@ -26,4 +26,15 @@ public class MemberChatMessage {
     @CreatedDate
     private LocalDateTime transmitAt;
 
+    @Override
+    public String toString() {
+        return "MemberChatMessage{" +
+            "id='" + id + '\'' +
+            ", memberChatRoomId='" + memberChatRoomId + '\'' +
+            ", sendId='" + sendId + '\'' +
+            ", content='" + content + '\'' +
+            ", transmitAt=" + transmitAt +
+            '}';
+    }
+
 }

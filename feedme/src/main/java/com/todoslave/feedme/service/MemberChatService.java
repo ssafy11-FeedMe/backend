@@ -15,7 +15,7 @@ public interface MemberChatService {
   public MemberChatRoom getChatRoom(MemberChatRoom room);
 
   // 채팅방 메세지 불러오기
-  public Slice<MemberChatMessage> getChatMessage(MemberChatRoom room, int page, int size);
+  public Slice<MemberChatMessage> getChatMessage(String roomId, int page, int size);
 
   // 채팅방 메세지 저장
   public MemberChatMessage insertChatMessage(MemberChatMessage message);
