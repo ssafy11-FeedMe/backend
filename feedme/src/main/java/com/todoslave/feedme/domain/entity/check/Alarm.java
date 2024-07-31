@@ -1,6 +1,7 @@
 package com.todoslave.feedme.domain.entity.check;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.todoslave.feedme.domain.entity.membership.Member;
 import jakarta.persistence.*;
 import lombok.Data;
