@@ -1,15 +1,19 @@
 package com.todoslave.feedme.service;
 
 
+import com.todoslave.feedme.domain.entity.check.Alarm;
+import com.todoslave.feedme.domain.entity.membership.Member;
 import com.todoslave.feedme.domain.entity.membership.MemberAlarm;
 import com.todoslave.feedme.domain.entity.task.Todo;
 import com.todoslave.feedme.repository.AlarmRepository;
 import com.todoslave.feedme.repository.MemberAlarmRepository;
+import com.todoslave.feedme.repository.MemberRepository;
 import com.todoslave.feedme.repository.TodoRepository;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Date;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -21,9 +25,11 @@ public class AlarmServiceImpl implements AlarmService{
   private MemberAlarmRepository memberAlarmRepository;
   private TodoRepository todoRepository;
 
-  //1시간 마다 확인
-  @Scheduled(fixedDelay = 3600000)
-  public void checkUserTodo(){
+  private MemberRepository memberRepository;
+
+  //1시간 마다 확인, 일정 완료 했는지 여부
+  @Scheduled(cron = "0 0 * * * ?")
+  public void todoCompleted(){
 
     LocalDate currentDay = LocalDate.now();
     List<Integer> members = todoRepository.findMemberIdAllByCreatedAtAndIsCompletedFalse(currentDay);
@@ -32,14 +38,53 @@ public class AlarmServiceImpl implements AlarmService{
 
       LocalTime currentTime = LocalTime.now();
       int time = currentTime.getHour();
-      int id = memberAlarmRepository.findMemberIdByAlarmTimeHour(time);
+      if(memberAlarmRepository.existsByMemberIdAndAlarmTimeHour(memberId,time)) {
 
-      MemberAlarm alarm = new MemberAlarm();
+        Alarm alarm = new Alarm();
 
-//      Member member =
-//      alarm.setMember()
-//
-//      alarmRepository.save();
+        Member member = new Member();
+        member.setId(memberId);
+
+        alarm.setMember(member);
+        alarm.setContent("일정을 완료해주세요!");
+
+        alarmRepository.save(alarm);
+      }
+    }
+  }
+
+  //친구 요청 알림
+  public boolean requestFriendship(Member requestor,Member counterpart){
+
+    Alarm alarm = new Alarm();
+
+    alarm.setMember(counterpart);
+    alarm.setContent(requestor.getNickname()+"님이 친구 요청을 보내셨습니다.");
+
+    Alarm a = alarmRepository.save(alarm);
+
+    if(a==null){
+      return false;
+    }
+
+    return true;
+  }
+
+  //생일 알림
+  @Scheduled(cron = "0 0 0 * * *")
+  public void congratsBirthday(){
+
+    LocalDate date = LocalDate.now();
+    List<Member> birthdayPerson = memberRepository.findAllByBirthday(date);
+
+    Alarm alarm = new Alarm();
+
+    for(Member member : birthdayPerson){
+
+      alarm.setMember(member);
+      alarm.setContent(member.getNickname()+"님! 생일 축하합니다!");
+
+      alarmRepository.save(alarm);
 
     }
 

@@ -28,8 +28,7 @@ public class TodoController {
 
   @GetMapping("/daily")
   public ResponseEntity<List<Todo>> findTodoDaily(@RequestHeader("Authorization") String token, @RequestBody Todo todo){
-    Timestamp timestamp = todo.getCreatedAt();
-    Date createdAt = new Date(timestamp.getTime());
+    Date timestamp = Date(todo.getCreatedAt().get());
     return ResponseEntity.ok(todoservice.getTodoDaily(todo.getMember().getId(), createdAt));
   }
 
