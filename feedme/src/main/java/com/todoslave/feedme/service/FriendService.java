@@ -8,7 +8,7 @@ import java.util.List;
 public interface FriendService {
 
     // 친구 추가
-    void insertFriend(int memberId, String email);
+    void requestFriend(int memberId, String email);
 
     // 친구 삭제
     void deleteFriend(int friendId);

@@ -2,9 +2,9 @@
 //
 //import com.todoslave.feedme.domain.entity.communication.Friend;
 //import com.todoslave.feedme.domain.entity.communication.FriendRequest;
+//import com.todoslave.feedme.service.AlarmService;
 //import com.todoslave.feedme.service.FriendService;
 //import lombok.RequiredArgsConstructor;
-//import org.springframework.http.RequestEntity;
 //import org.springframework.http.ResponseEntity;
 //import org.springframework.web.bind.annotation.*;
 //
@@ -16,6 +16,7 @@
 //public class FriendController {
 //
 //    static private FriendService friendService;
+//    static private AlarmService alarmService;
 //
 //    // 친구 추가하기
 //    @PostMapping
@@ -24,7 +25,8 @@
 //        // token으로부터 memberId를 찾는 로직
 //        int memberId;
 //
-//        friendService.insertFriend(memberId, email);
+//        int counterpart = friendService.insertFriend(memberId, email);
+//        alarmService.requestFriendship(memberId, counterpart);
 //
 //        return ResponseEntity.noContent().build();
 //    }

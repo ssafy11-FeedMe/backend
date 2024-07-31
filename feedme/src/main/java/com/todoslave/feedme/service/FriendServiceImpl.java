@@ -20,7 +20,7 @@
 //    FriendRequestRepository friendRequestRepository;
 //
 //    @Override
-//    public void insertFriend(int memberId, String email) {
+//    public int requestFriend(int memberId, String email) {
 //
 //        int counterId;
 //
@@ -30,6 +30,7 @@
 //
 //        friendRequestRepository.save(friendRequest);
 //
+//        return counterId;
 //    }
 //
 //    @Override

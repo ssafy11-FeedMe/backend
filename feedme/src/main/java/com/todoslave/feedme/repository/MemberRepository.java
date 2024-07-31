@@ -6,6 +6,8 @@ import jakarta.persistence.PersistenceContext;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 //@Repository //Component가 들어가있다.
@@ -36,5 +38,8 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
 //                .setParameter("nickname", nickname)
 //                .getResultList();
 //    }
+
+    // 생일자 찾기
+    List<Member> findAllByBirthday(LocalDate birthday);
 
 }

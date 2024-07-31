@@ -19,8 +19,10 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -51,7 +53,7 @@ public class Member {
     private String nickname;
 
     //생일
-    private Timestamp birthday;
+    private LocalDate birthday;
 
     //토큰
     @Column(nullable = false)
