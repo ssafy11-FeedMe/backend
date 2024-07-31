@@ -1,4 +1,5 @@
-package com.todoslave.feedme.domain.entity.diary;
+package com.todoslave.feedme.domain.entity.check;
+
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.todoslave.feedme.domain.entity.membership.Member;
@@ -8,10 +9,10 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
-@Entity @Data @Table(name = "picturediary")
-public class PictureDiary {
+@Entity @Data
+public class Alarm {
 
-    // 그림일기 ID
+    // 알람 ID
     @Id
     @GeneratedValue
     private int id;
@@ -22,20 +23,19 @@ public class PictureDiary {
     @JsonBackReference
     private Member member;
 
-    //일기 내용
-    @Lob
-    @Column(name = "content", nullable = false, columnDefinition = "TEXT")
+    //컨텐츠
+    @Column(nullable = false)
     private String content;
 
-    //일기쓴 날
+    // 생성 시간
     @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    @Column(name = "receive_at", nullable = false, updatable = false)
+    private LocalDateTime receiveAt;
 
     //==연관관계 메서드==//
     public void setMember(Member member) {
         this.member = member;
-        member.getPictureDiary().add(this);
+        member.getAlarms().add(this);
     }
 
 }

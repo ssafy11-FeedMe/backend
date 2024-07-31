@@ -15,8 +15,8 @@ import java.sql.Timestamp;
 public class Todo {
 
     // 할일 ID
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @Id @GeneratedValue
+    private int id;
 
     // 회원 ID
     @ManyToOne(fetch = FetchType.LAZY)
@@ -42,5 +42,15 @@ public class Todo {
     @Column(name = "is_completed",nullable = false)
     private boolean isCompleted;
 
+  //==연관관계 메서드==//
+  public void setMember(Member member) {
+    this.member = member;
+    member.getTodos().add(this);
+  }
+
+  public void setTodoCategory(TodoCategory todoCategory) {
+    this.todoCategory = todoCategory;
+    todoCategory.getTodos().add(this);
+  }
 
 }
