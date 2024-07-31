@@ -2,6 +2,11 @@ package com.todoslave.feedme.domain.entity.membership;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.todoslave.feedme.domain.entity.avatar.Creature;
+import com.todoslave.feedme.domain.entity.board.Feed;
+import com.todoslave.feedme.domain.entity.board.FeedComment;
+import com.todoslave.feedme.domain.entity.board.FeedLike;
+import com.todoslave.feedme.domain.entity.board.FeedRecomment;
+import com.todoslave.feedme.domain.entity.check.Alarm;
 import com.todoslave.feedme.domain.entity.communication.Friend;
 import com.todoslave.feedme.domain.entity.communication.FriendRequest;
 import com.todoslave.feedme.domain.entity.communication.MemberChatMessage;
@@ -31,13 +36,21 @@ public class Member {
     @GeneratedValue
     private int id;
 
-    //비밀번호
-    @Column(nullable = false)
-    private String password;
+    //GeneratedValue에 관하여 설명
+    /**
+    DB마다 다른데 어떤 DB는 seq를 만들기도 하고(MYSQL) 어떤 애들은 테이블을 만드는데, 이러면 항상 ID값이 보장이 된다.
+     persist 할때 필요 => 영속성 컨텍스트에 값을 딱 넣어야 하는데, 그때 이제 키/밸류가 되는데
+
+     **/
+
 
     //이메일
     @Column(nullable = false)
     private String email;
+
+    //닉네임
+    @Column(nullable = false)
+    private String nickname;
 
     //생일
     private Timestamp birthday;
@@ -52,7 +65,7 @@ public class Member {
     @Column(name = "exp", nullable = false, updatable = false)
     private int exp;
 
-    // 감정
+    // 상태
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     private Emotion status; // BASIC, JOY, SAD
@@ -69,10 +82,6 @@ public class Member {
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime joinDate;
-
-    //닉네임
-    @Column(nullable = false)
-    private String nickname;
 
 
     //
@@ -129,6 +138,31 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<PictureDiary> pictureDiary = new ArrayList<>();
+
+    // 피드와 매핑
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Feed> feeds = new ArrayList<>();
+
+    //좋아요 매핑
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private  List<FeedLike> feedLikes = new ArrayList<>();
+
+    //피드 댓글과 매핑
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<FeedComment> feedComments = new ArrayList<>();
+
+    //피드 대댓글과 매핑
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<FeedRecomment> feedRecomments = new ArrayList<>();
+
+    //알람과 매핑
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Alarm> alarms = new ArrayList<>();
 
 
 }
