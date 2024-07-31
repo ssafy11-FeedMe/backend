@@ -162,5 +162,9 @@ public class Member {
     @JsonManagedReference
     private List<Alarm> alarms = new ArrayList<>();
 
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<MemberAlarm> memberAlarms = new ArrayList<>();
+
 
 }
