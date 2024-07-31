@@ -26,6 +26,7 @@ public class FeedComment {
     // 회원 ID
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
+    @JsonBackReference
     private Member member;
 
     //작성 댓글 내용

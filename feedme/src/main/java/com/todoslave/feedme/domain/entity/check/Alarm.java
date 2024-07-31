@@ -19,6 +19,7 @@ public class Alarm {
     // 회원 ID
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
+    @JsonBackReference
     private Member member;
 
     //컨텐츠
