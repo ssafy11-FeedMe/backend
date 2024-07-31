@@ -24,60 +24,59 @@
 //@Transactional
 //public class MemberServiceTest {
 //
-//    @Autowired MemberService memberService;
-//    @Autowired MemberRepository memberRepository;
+//  @Autowired MemberService memberService;
+//  @Autowired MemberRepository memberRepository;
 //
-//    @Test
-//    @Rollback(false)
-//     public void 회원가입() throws Exception {
-//     //Given
-//        Member member = new Member();
-//        member.setPassword("qwer");
-//        member.setEmail("asdf@gmail.com");
-//        member.setToken("ABC");
-//        member.setExp(0);
-//        member.setStatus(Emotion.SAD);
-//        member.setNickname("테스트1");
-//        member.setLatitude(12.4);
-//        member.setLongitude(12.4);
+//  @Test
+//  @Rollback(false)
+//  public void 회원가입() throws Exception {
+//    //Given
+//    Member member = new Member();
 //
-//     //When
-//        int saveId = memberService.Join(member);
+//    member.setEmail("asdf@gmail.com");
+//    member.setToken("ABC");
+//    member.setExp(0);
+//    member.setStatus(Emotion.SAD);
+//    member.setNickname("테스트1");
+//    member.setLatitude(12.4);
+//    member.setLongitude(12.4);
 //
-//     //Then
-//        assertEquals(member, memberRepository.findById(saveId));
-//     }
+//    //When
+//    int saveId = memberService.Join(member);
 //
-//     @Test
-//      public void 중복_회원_예외() throws Exception {
-//      //Given
-//         Member member = new Member();
-//         member.setPassword("qwer");
-//         member.setEmail("asdf@gmail.com");
-//         member.setToken("ABC");
-//         member.setExp(0);
-//         member.setStatus(Emotion.SAD);
-//         member.setNickname("테스트1");
-//         member.setLatitude(12.4);
-//         member.setLongitude(12.4);
+//    //Then
+//    assertEquals(member, memberRepository.findById(saveId));
+//  }
 //
-//         Member member2 = new Member();
-//         member2.setPassword("qwer");
-//         member2.setEmail("asdf@gmail.com");
-//         member2.setToken("ABC");
-//         member2.setExp(0);
-//         member2.setStatus(Emotion.SAD);
-//         member2.setNickname("테스트2");
-//         member2.setLatitude(12.4);
-//         member2.setLongitude(12.4);
+//  @Test
+//  public void 중복_회원_예외() throws Exception {
+//    //Given
+//    Member member = new Member();
+//    member.setEmail("asdf@gmail.com");
+//    member.setToken("ABC");
+//    member.setExp(0);
+//    member.setStatus(Emotion.SAD);
+//    member.setNickname("테스트1");
+//    member.setLatitude(12.4);
+//    member.setLongitude(12.4);
 //
-//      //When
-//         memberService.Join(member2);
-//         memberService.Join(member);
+//    Member member2 = new Member();
+//    member2.setEmail("asdf@gmail.com");
+//    member2.setToken("ABC");
+//    member2.setExp(0);
+//    member2.setStatus(Emotion.SAD);
+//    member2.setNickname("테스트2");
+//    member2.setLatitude(12.4);
+//    member2.setLongitude(12.4);
 //
-//      //Then
-//        fail("예외가 발생해야한다.");
+//    //When
+//    memberService.Join(member2);
+//    memberService.Join(member);
 //
-//      }
+//    //Then
+//
+//    fail("예외가 발생해야한다.");
+//
+//  }
 //
 //}
