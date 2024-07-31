@@ -21,7 +21,7 @@ RUN chmod +x ./gradlew
 RUN ./gradlew clean build -x test
 
 # Copy the built JAR file to the app directory
-COPY build/libs/feedme-0.0.1-SNAPSHOT.jar /app/MailService.jar
+# COPY build/libs/feedme-0.0.1-SNAPSHOT.jar /app/MailService.jar
 
 # Set the entry point to run the JAR file
 ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=prod", "/app/build/libs/feedme-0.0.1-SNAPSHOT.jar"]
