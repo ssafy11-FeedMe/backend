@@ -23,6 +23,7 @@ public class FeedRecomment {
     // 회원 ID
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
+    @JsonBackReference
     private Member member;
 
     // 대댓글 내용

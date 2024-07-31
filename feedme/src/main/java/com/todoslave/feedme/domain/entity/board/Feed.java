@@ -22,6 +22,7 @@ public class Feed {
     // 회원 ID
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
+    @JsonBackReference
     private Member member;
 
     // 피드 내용
