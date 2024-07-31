@@ -23,7 +23,7 @@ public class Alarm {
     @JsonBackReference
     private Member member;
 
-    //컨텐츠
+    // 내용
     @Column(nullable = false)
     private String content;
 
@@ -32,8 +32,9 @@ public class Alarm {
     @Column(name = "receive_at", nullable = false, updatable = false)
     private LocalDateTime receiveAt;
 
-//    @Column()
-//    private boolean read;
+    // 확인 했는 지 여부
+    @Column(name = "is_checked")
+    private boolean isChecked;
 
     //==연관관계 메서드==//
     public void setMember(Member member) {

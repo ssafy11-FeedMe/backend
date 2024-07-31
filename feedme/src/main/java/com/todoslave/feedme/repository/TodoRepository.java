@@ -1,6 +1,7 @@
 package com.todoslave.feedme.repository;
 
 import com.todoslave.feedme.domain.entity.task.Todo;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -13,6 +14,9 @@ import org.springframework.stereotype.Repository;
 public interface TodoRepository extends JpaRepository<Todo, Integer> {
 
   @Query("SELECT t FROM Todo t WHERE t.member.id = :memberId AND FUNCTION('DATE', t.createdAt) = :createdAt")
-  List<Todo> findAllByMemberIdAndCreatedAt(@Param("memberId") int memberId, @Param("createdAt") Date createdAt);
+  List<Todo> findAllByMemberIdAndCreatedAt(@Param("memberId") int memberId, @Param("createdAt") LocalDate createdAt);
+
+  @Query("SELECT t.member.id FROM Todo t WHERE t.createdAt = :createdAt AND t.isCompleted = false")
+  List<Integer> findMemberIdAllByCreatedAtAndIsCompletedFalse(LocalDate createdAt);
 
 }

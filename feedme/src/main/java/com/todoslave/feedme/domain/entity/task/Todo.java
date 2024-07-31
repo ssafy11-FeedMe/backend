@@ -3,6 +3,7 @@ package com.todoslave.feedme.domain.entity.task;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.todoslave.feedme.domain.entity.membership.Member;
 import jakarta.persistence.*;
+import java.time.LocalDate;
 import lombok.Data;
 import lombok.Getter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -36,7 +37,7 @@ public class Todo {
     // 생성 일자
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
-    private Timestamp createdAt;
+    private LocalDate createdAt;
 
     //완료 여부
     @Column(name = "is_completed",nullable = false)
