@@ -89,7 +89,6 @@ public class MemberChatController {
   @MessageMapping("/messages/{roomId}")
   @SendTo("/chatRoom/messages/{roomId}")
   public MemberChatMessage sendMessage(@DestinationVariable String roomId, @Payload MemberChatMessage memberChatMessage) {
-    System.out.println("메세지 보냈나요");
     memberChatMessage.setMemberChatRoomId(roomId);
     return chatService.insertChatMessage(memberChatMessage);
   }
