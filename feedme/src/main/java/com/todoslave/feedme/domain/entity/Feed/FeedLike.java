@@ -1,4 +1,4 @@
-package com.todoslave.feedme.domain.entity.board;
+package com.todoslave.feedme.domain.entity.Feed;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.todoslave.feedme.domain.entity.membership.Member;

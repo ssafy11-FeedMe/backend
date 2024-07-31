@@ -20,8 +20,7 @@ public class MemberService {
     // 회원가입
     @Transactional //가입시에
     public int Join(Member member) {
-
-        sameNameCheck(member); // 중복 회원 검증
+//        sameNameCheck(member); // 중복 회원 검증
         memberRepository.save(member);
         return member.getId();
     }
@@ -32,17 +31,17 @@ public class MemberService {
     }
 
     // 단수 조회
-    public Member findOne(int id) {
-        return memberRepository.findById(id);
-    }
+//    public Member findOne(int id) {
+//        return memberRepository.findById(id);
+//    }
 
     // 중복 체크
-    private void sameNameCheck(Member member) {
-        List<Member> findMembers = memberRepository.findByName(member.getNickname());
-        if(!findMembers.isEmpty()) {
-            throw new IllegalStateException("중복 닉네임");
-        }
-    }
+//    private void sameNameCheck(Member member) {
+//        List<Member> findMembers = memberRepository.findByName(member.getNickname());
+//        if(!findMembers.isEmpty()) {
+//            throw new IllegalStateException("중복 닉네임");
+//        }
+//    }
 
 
 }

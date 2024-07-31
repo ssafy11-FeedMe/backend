@@ -1,4 +1,4 @@
-package com.todoslave.feedme.domain.entity.board;
+package com.todoslave.feedme.domain.entity.Feed;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.todoslave.feedme.domain.entity.membership.Member;
@@ -7,19 +7,22 @@ import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
-public class FeedRecomment {
-    // 피드 대댓글 ID
+public class FeedComment {
+
+    //피드 댓글 ID
     @Id
     @GeneratedValue
     private int id;
 
     //피드 ID
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "comment_id")
-    private FeedComment feedComment;
+    @JoinColumn(name = "feed_id")
+    private Feed feed;
 
     // 회원 ID
     @ManyToOne(fetch = FetchType.LAZY)
@@ -27,9 +30,9 @@ public class FeedRecomment {
     @JsonBackReference
     private Member member;
 
-    // 대댓글 내용
+    //작성 댓글 내용
     @Lob
-    @Column(name = "content", nullable = false, columnDefinition = "TEXT")
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
     // 생성 시간
@@ -37,15 +40,21 @@ public class FeedRecomment {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+
+    // 대댓글과 매핑
+    @OneToMany(mappedBy = "feedComment", cascade = CascadeType.ALL)
+    private List<FeedRecomment> feedRecomments = new ArrayList<>();
+
+
     //==연관관계 메서드==//
     public void setMember(Member member) {
         this.member = member;
-        member.getFeedRecomments().add(this);
+        member.getFeedComments().add(this);
     }
 
-    public void setFeedComment(FeedComment feedComment) {
-        this.feedComment = feedComment;
-        feedComment.getFeedRecomments().add(this);
+    public void setFeed(Feed feed) {
+        this.feed = feed;
+        feed.getFeedComments().add(this);
     }
 
 }
