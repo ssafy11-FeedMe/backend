@@ -16,7 +16,7 @@ public class CreatureTodo {
 
     //크리쳐 숙제 ID
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private int id;
 
     // 회원 ID
@@ -37,5 +37,11 @@ public class CreatureTodo {
     // 완료여부
     @Column(name = "is_completed")
     private boolean isCompleted;
+
+    //==연관관계 메서드==//
+    public void setMember(Member member) {
+        this.member = member;
+        member.getCreatureTodos().add(this);
+    }
 
 }
