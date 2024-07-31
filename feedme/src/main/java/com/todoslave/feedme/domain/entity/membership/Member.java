@@ -2,6 +2,11 @@ package com.todoslave.feedme.domain.entity.membership;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.todoslave.feedme.domain.entity.avatar.Creature;
+import com.todoslave.feedme.domain.entity.board.Feed;
+import com.todoslave.feedme.domain.entity.board.FeedComment;
+import com.todoslave.feedme.domain.entity.board.FeedLike;
+import com.todoslave.feedme.domain.entity.board.FeedRecomment;
+import com.todoslave.feedme.domain.entity.check.Alarm;
 import com.todoslave.feedme.domain.entity.communication.Friend;
 import com.todoslave.feedme.domain.entity.communication.FriendRequest;
 import com.todoslave.feedme.domain.entity.communication.MemberChatMessage;
@@ -77,10 +82,6 @@ public class Member {
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime joinDate;
-
-    //닉네임
-    @Column(nullable = false)
-    private String nickname;
 
 
     //
