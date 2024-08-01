@@ -14,24 +14,30 @@ import com.todoslave.feedme.domain.entity.task.CreatureTodo;
 import com.todoslave.feedme.domain.entity.task.Todo;
 import com.todoslave.feedme.domain.entity.task.TodoCategory;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
 @Getter
 @Setter
 @Table(name = "member")
-public class Member {
+@NoArgsConstructor
+@AllArgsConstructor
+public class Member implements UserDetails { //유저 디테일은 사용자 인증 정보를 담아두는 인터페이스이다.
 
     //회원 ID
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     //GeneratedValue에 관하여 설명
@@ -40,7 +46,6 @@ public class Member {
      persist 할때 필요 => 영속성 컨텍스트에 값을 딱 넣어야 하는데, 그때 이제 키/밸류가 되는데
 
      **/
-
 
     //이메일
     @Column(nullable = false)
@@ -51,38 +56,36 @@ public class Member {
     private String nickname;
 
     //생일
+    @Column(nullable = false)
     private Timestamp birthday;
 
     //토큰
-    @Column(nullable = false)
+    @Column
     private String token;
 
     //유저를 하나로 합침
 
     // 경험치
     @Column(name = "exp", nullable = false, updatable = false)
-    private int exp;
+    private int exp = 0 ;
 
     // 상태
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
-    private Emotion status; // BASIC, JOY, SAD
+    private Emotion status = Emotion.BASIC; // BASIC, JOY, SAD
 
     //위도
-    @Column(name = "latitude")
+    @Column
     private Double latitude;
 
     //경도
-    @Column(name = "longitude")
+    @Column
     private Double longitude;
 
     //가입일
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime joinDate;
-
-
-    //
 
 
 
@@ -163,4 +166,38 @@ public class Member {
     private List<Alarm> alarms = new ArrayList<>();
 
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("MEMBER"));
+    }
+
+    @Override
+    public String getPassword() {
+        return null;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }
