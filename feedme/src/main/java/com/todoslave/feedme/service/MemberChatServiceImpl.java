@@ -1,11 +1,16 @@
 package com.todoslave.feedme.service;
 
+import com.todoslave.feedme.DTO.ChatFriendCreateDTO;
+import com.todoslave.feedme.DTO.ChatFriendFindDTO;
 import com.todoslave.feedme.domain.entity.communication.MemberChatMessage;
 import com.todoslave.feedme.domain.entity.communication.MemberChatRoom;
+import com.todoslave.feedme.domain.entity.membership.Member;
 import com.todoslave.feedme.repository.MemberChatMessageRepository;
 import com.todoslave.feedme.repository.MemberChatRoomRepository;
+import com.todoslave.feedme.repository.MemberRepository;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -13,32 +18,43 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class MemberChatServiceImpl implements MemberChatService{
 
-  @Autowired
   private MemberChatMessageRepository messageRepository;
-
-  @Autowired
   private MemberChatRoomRepository roomRepository;
+  private MemberRepository memberRepository;
+  
+  
 
   @Override
-  public List<MemberChatRoom> getChatRooms(MemberChatRoom room) {
-    List<MemberChatRoom> rooms = roomRepository.findAllByParticipantIdsContaining(room.getParticipantIds());
-    System.out.println(rooms);
-    return rooms;
+  public List<MemberChatRoom> getChatRooms(ChatFriendFindDTO chatFriendFindDTO) {
+    List<MemberChatRoom> rooms = roomRepository.findAllByParticipantIdsContaining(chatFriendFindDTO.getMemberId());
+    
+    int counterpartId = -1;
+    
+    for(MemberChatRoom room : rooms){
+      
+      List<Integer> members = room.getParticipantIds();
+
+      for(Integer member : members){
+        if(chatFriendFindDTO.getMemberId().get(0)==member){
+          continue;
+        }
+        counterpartId = member;
+      }
+      
+//      Member member = memberRepository.findById(counterpartId);
+
+
+
+    }
+    
   }
 
-  public MemberChatRoom getChatRoom(MemberChatRoom room){
+  public MemberChatRoom getChatRoom(ChatFriendCreateDTO chatFriendCreateDTO){
 
-    MemberChatRoom result = roomRepository.findByParticipantIdsContainingAll(room.getParticipantIds());
-
-    System.out.println(room);
-
-    if(result==null){
-      result = roomRepository.save(room);
-    }
-
-    System.out.println(result);
+    result = roomRepository.save(chatFriendCreateDTO.getMembers());
 
     return result;
   }
