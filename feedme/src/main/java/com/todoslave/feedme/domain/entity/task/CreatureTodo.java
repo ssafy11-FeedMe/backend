@@ -36,7 +36,7 @@ public class CreatureTodo {
 
     // 완료여부
     @Column(name = "is_completed")
-    private boolean isCompleted;
+    private int isCompleted;
 
     //==연관관계 메서드==//
     public void setMember(Member member) {
