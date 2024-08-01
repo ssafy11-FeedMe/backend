@@ -43,7 +43,7 @@ public class TodoServiceImpl implements TodoService {
   @Transactional
   public Todo completeTodo(int todoId) {
     Todo newTodo = todoRepository.findById(todoId).orElseThrow(() -> new EntityNotFoundException("Todo not found"));
-    newTodo.setCompleted(true);
+    newTodo.setIsCompleted(1);
     return newTodo;
   }
 }
