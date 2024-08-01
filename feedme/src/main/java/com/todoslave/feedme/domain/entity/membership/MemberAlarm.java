@@ -30,6 +30,6 @@ public class MemberAlarm {
   private Member member;
 
   @Column(name = "alarm_time")
-  private Time alarmTime;
+  private int alarmTime;
 
 }
