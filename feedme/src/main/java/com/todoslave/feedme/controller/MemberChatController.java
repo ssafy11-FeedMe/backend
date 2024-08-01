@@ -1,9 +1,12 @@
 package com.todoslave.feedme.controller;
 
-import com.todoslave.feedme.DTO.PaginationRequest;
+import com.todoslave.feedme.DTO.ChatFriendCreateRequestDTO;
+import com.todoslave.feedme.DTO.ChatFriendFindDTO;
+import com.todoslave.feedme.DTO.PaginationRequestDTO;
 import com.todoslave.feedme.domain.entity.communication.MemberChatMessage;
 import com.todoslave.feedme.domain.entity.communication.MemberChatRoom;
 import com.todoslave.feedme.service.MemberChatService;
+import com.todoslave.feedme.service.MemberService;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -15,8 +18,8 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,44 +32,43 @@ public class MemberChatController {
 
   @Autowired
   private final MemberChatService chatService;
+  private final MemberService memberService;
 
   // 이 유저가 누구랑 채팅방을 갖고 있는 지 찾기
-  @GetMapping
+  @GetMapping("/friends")
   public ResponseEntity<List<MemberChatRoom>> findChatRoomList(@RequestHeader("Authorization") String token){
 
-    MemberChatRoom room = new MemberChatRoom();
-    List<String> members = new ArrayList<>();
+    ChatFriendFindDTO chatFriendFindDTO = new ChatFriendFindDTO();
 
     // jwt 토큰에서 id 얻어오기
-    String memberId = "-1";
+    int memberId = -1;
 
+    List<Integer> members = new ArrayList<>();
     members.add(memberId);
-    room.setParticipantIds(members);
 
-    return ResponseEntity.ok(chatService.getChatRooms(room));
+    chatFriendFindDTO.setMemberId(members);
+
+    return ResponseEntity.ok(chatService.getChatRooms(chatFriendFindDTO));
   }
 
-  // 채팅방 ID 찾기
+  // 채팅방 생성
   @PostMapping
-  public ResponseEntity<MemberChatRoom> findChatRoom(@RequestHeader("Authorization") String token,
-                                                     @RequestParam("counterpartId") String counterpartId) {
+  public ResponseEntity<MemberChatRoom> createChatRoom(@RequestHeader("Authorization") String token,
+                                                      @RequestBody ChatFriendCreateRequestDTO chatFriendCreateRequestDTO){
 
-    String memberId = "-1";
+    // 토큰으로 받아오기
+    int memberId;
+//    int counterpartId = memberService.(대충닉네임으로멤버아이디찾는메서드);
 
-    if ( memberId == null || counterpartId == null) {
+    if(counterpartId == -1){
       return ResponseEntity.badRequest().build();
     }
-
-    MemberChatRoom room = new MemberChatRoom();
 
     List<String> members = new ArrayList<>();
 
     members.add(memberId);
     members.add(counterpartId);
 
-    room.setParticipantIds(members);
-
-    return ResponseEntity.ok(chatService.getChatRoom(room));
 
   }
 
@@ -74,7 +76,7 @@ public class MemberChatController {
   @MessageMapping("/loadMessages/{roomId}")
   @SendTo("/chatRoom/loadMessages/{roomId}")
   public Slice<MemberChatMessage> findMessages(@DestinationVariable String roomId,
-                                              @Payload PaginationRequest request){
+                                              @Payload PaginationRequestDTO request){
     System.out.println("receive message?");
     Slice<MemberChatMessage> messages = chatService.getChatMessage(roomId, request.getSkip(), request.getLimit());
 

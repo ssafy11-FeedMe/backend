@@ -25,7 +25,7 @@ public class MemberChatRoom {
     @Id
     private String id;
     @Field("participant_ids")
-    private List<String> participantIds;
+    private List<Integer> participantIds;
     @CreatedDate
     @Field("created_at")
     private LocalDate createdAt;
