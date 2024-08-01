@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 @Data
 @Builder
@@ -17,8 +18,14 @@ public class MemberChatRoomChecked {
 
   @Id
   private String id;
+
+  @Field("memberChatRoom_id")
   private String memberChatRoomId;
-  private String memberId;
+
+  @Field("member_id")
+  private int memberId;
+
+  @Field("recent_check_time")
   private LocalDateTime recentCheckTime;
 
 }

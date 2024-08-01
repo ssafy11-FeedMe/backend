@@ -41,7 +41,7 @@ public class Todo {
 
     //완료 여부
     @Column(name = "is_completed",nullable = false)
-    private boolean isCompleted;
+    private int isCompleted;
 
   //==연관관계 메서드==//
   public void setMember(Member member) {
