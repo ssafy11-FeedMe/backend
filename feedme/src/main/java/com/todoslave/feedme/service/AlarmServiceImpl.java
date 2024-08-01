@@ -5,6 +5,7 @@ import com.todoslave.feedme.domain.entity.check.Alarm;
 import com.todoslave.feedme.domain.entity.membership.Member;
 import com.todoslave.feedme.domain.entity.membership.MemberAlarm;
 import com.todoslave.feedme.domain.entity.task.Todo;
+import com.todoslave.feedme.event.AlarmCreatedEvent;
 import com.todoslave.feedme.repository.AlarmRepository;
 import com.todoslave.feedme.repository.MemberAlarmRepository;
 import com.todoslave.feedme.repository.MemberRepository;
@@ -16,6 +17,7 @@ import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Scheduled;
 
 @RequiredArgsConstructor
@@ -27,18 +29,21 @@ public class AlarmServiceImpl implements AlarmService{
 
   private MemberRepository memberRepository;
 
+  private ApplicationEventPublisher eventPublisher;
+
   //1시간 마다 확인, 일정 완료 했는지 여부
   @Scheduled(cron = "0 0 * * * ?")
   public void todoCompleted(){
 
     LocalDate currentDay = LocalDate.now();
-    List<Integer> members = todoRepository.findMemberIdAllByCreatedAtAndIsCompletedFalse(currentDay);
+    List<Integer> members = todoRepository.findMemberIdAllByCreatedAtAndIsCompleted(currentDay);
 
     for(int memberId : members){
 
       LocalTime currentTime = LocalTime.now();
       int time = currentTime.getHour();
-      if(memberAlarmRepository.existsByMemberIdAndAlarmTimeHour(memberId,time)) {
+
+      if(memberAlarmRepository.existsByMemberIdAndAlarmTime(memberId,time)) {
 
         Alarm alarm = new Alarm();
 
@@ -46,9 +51,10 @@ public class AlarmServiceImpl implements AlarmService{
         member.setId(memberId);
 
         alarm.setMember(member);
-        alarm.setContent("일정을 완료해주세요!");
-
+        alarm.setContent("(크리쳐 이름)"+"이 기다리고 있어요!");
         alarmRepository.save(alarm);
+
+        eventPublisher.publishEvent(new AlarmCreatedEvent(this, alarm,"Todo"));
       }
     }
   }
@@ -66,6 +72,8 @@ public class AlarmServiceImpl implements AlarmService{
     if(a==null){
       return false;
     }
+
+    eventPublisher.publishEvent(new AlarmCreatedEvent(this, alarm,"Friend"));
 
     return true;
   }
@@ -86,7 +94,14 @@ public class AlarmServiceImpl implements AlarmService{
 
       alarmRepository.save(alarm);
 
+      eventPublisher.publishEvent(new AlarmCreatedEvent(this, alarm,"Birthday"));
+
     }
+
+  }
+
+  @Override
+  public void checkAlarm() {
 
   }
 

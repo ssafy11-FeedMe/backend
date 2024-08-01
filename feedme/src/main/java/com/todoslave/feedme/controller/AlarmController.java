@@ -1,21 +1,21 @@
 package com.todoslave.feedme.controller;
 
-import com.todoslave.feedme.DTO.AlarmRequest;
-import com.todoslave.feedme.domain.entity.check.Alarm;
+import com.todoslave.feedme.DTO.AlarmCheckRequestDTO;
+import com.todoslave.feedme.DTO.AlarmCheckServiceDTO;
 import com.todoslave.feedme.service.AlarmService;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/alarm")
+@RequestMapping("/alarms")
 public class AlarmController {
 
     private AlarmService alarmService;
@@ -26,7 +26,7 @@ public class AlarmController {
     public SseEmitter subscribe(@RequestHeader String token){
 
         //token을 받아서 memberid를 찾음
-        int memberId;
+        int memberId = 0;
 
         SseEmitter emitter = new SseEmitter();
         emitters.put(memberId, emitter);
@@ -36,18 +36,24 @@ public class AlarmController {
 
     }
 
-    private void sendAlarmToMember(int memberId, String message){
+    private void sendAlarmToMember(int memberId, String message) throws Exception{
 
         SseEmitter emitter = emitters.get(memberId);
         if(emitter != null){
-            try {
-                emitter.send(SseEmitter.event().name("Alarm").data(message));
-            }
+          emitter.send(SseEmitter.event().name("Alarm").data(message));
         }
-
 
     }
 
+    @RequestMapping("/read")
+    private void checkAlarm(@RequestBody AlarmCheckRequestDTO alarmCheckRequestDTO){
+
+      LocalDateTime checkTime = LocalDateTime.parse(alarmCheckRequestDTO.getCheckTime(), DateTimeFormatter.ISO_DATE_TIME);
+      AlarmCheckServiceDTO alarmCheckServiceDTO = new AlarmCheckServiceDTO();
+      alarmCheckServiceDTO.setCheckTime(checkTime);
+
+
+    }
 
 
 }
