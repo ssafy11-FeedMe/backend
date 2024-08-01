@@ -14,9 +14,9 @@ import org.springframework.stereotype.Repository;
 public interface TodoRepository extends JpaRepository<Todo, Integer> {
 
   @Query("SELECT t FROM Todo t WHERE t.member.id = :memberId AND FUNCTION('DATE', t.createdAt) = :createdAt")
-  List<Todo> findAllByMemberIdAndCreatedAt(@Param("memberId") int memberId, @Param("createdAt") LocalDate createdAt);
+  List<Todo> findAllByMemberIdAndCreatedAt(@Param("memberId") int memberId, @Param("createdAt") Date createdAt);
 
-  @Query("SELECT t.member.id FROM Todo t WHERE t.createdAt = :createdAt AND t.isCompleted = false")
-  List<Integer> findMemberIdAllByCreatedAtAndIsCompletedFalse(LocalDate createdAt);
+  @Query("SELECT t.member.id FROM Todo t WHERE t.createdAt = :createdAt AND t.isCompleted = 0")
+  List<Integer> findMemberIdAllByCreatedAtAndIsCompleted(LocalDate createdAt);
 
 }
