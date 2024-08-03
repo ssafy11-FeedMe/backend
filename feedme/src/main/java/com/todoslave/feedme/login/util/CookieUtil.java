@@ -1,4 +1,4 @@
-package com.todoslave.feedme.util;
+package com.todoslave.feedme.login.util;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;

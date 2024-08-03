@@ -17,4 +17,15 @@ public class UserViewController {
         return "signup";
     }
 
+
+
+    @GetMapping("/test")
+    public String test() {
+        return "test";
+    }
+
+    @GetMapping("/testsite")
+    public String testsite() {
+        return "testsite";
+    }
 }

@@ -13,6 +13,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 @SpringBootApplication
 @EnableJpaRepositories(basePackages = "com.todoslave.feedme.repository")
@@ -34,7 +35,7 @@ public class FeedmeApplication {//
 	public static void main(String[] args) {
 		SpringApplication.run(FeedmeApplication.class, args);
 
-
+//		String saf = SecurityContextHolder.getContext().getAuthentication().
 
 	}
 
