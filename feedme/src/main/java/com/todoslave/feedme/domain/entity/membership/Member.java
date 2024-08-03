@@ -52,11 +52,11 @@ public class Member implements UserDetails { //유저 디테일은 사용자 인
     private String email;
 
     //닉네임
-    @Column(nullable = false)
+    @Column //(nullable = false)
     private String nickname;
 
     //생일
-    @Column(nullable = false)
+    @Column //(nullable = false)
     private Timestamp birthday;
 
     //토큰
@@ -87,21 +87,9 @@ public class Member implements UserDetails { //유저 디테일은 사용자 인
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime joinDate;
 
-
-
-    //여기부터 1대1
-    
-//    //회원 상세와 매핑
-//    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private MemberDetail memberDetail;
-//
-//    //회원 갱신 정보와 매핑
-//    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private MemberRenewInfo memberRenewInfo;
-//
-//    //회원 위치와 매핑
-//    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private MemberSpace memberSpace;
+    //유저 인증 정보
+    @Column(name = "user_role")
+    private String userRole;
 
     //여기부터 1대 N
 
@@ -200,4 +188,5 @@ public class Member implements UserDetails { //유저 디테일은 사용자 인
     public boolean isEnabled() {
         return true;
     }
+
 }
