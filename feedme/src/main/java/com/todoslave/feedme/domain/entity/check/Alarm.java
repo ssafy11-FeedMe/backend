@@ -36,10 +36,10 @@ public class Alarm {
     @Column(name = "is_checked")
     private int isChecked;
 
-    //==연관관계 메서드==//
-    public void setMember(Member member) {
-        this.member = member;
-        member.getAlarms().add(this);
-    }
+//    //==연관관계 메서드==//
+//    public void setMember(Member member) {
+//        this.member = member;
+//        member.getAlarms().add(this);
+//    }
 
 }

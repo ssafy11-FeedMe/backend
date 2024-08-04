@@ -16,6 +16,7 @@ import com.todoslave.feedme.domain.entity.task.TodoCategory;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
@@ -28,12 +29,13 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@ToString(exclude = {"friends", "friendRequests", "todos", "todoCategories", "creatureTodos", "creatures", "pictureDiary", "feeds", "feedLikes", "feedComments", "feedRecomments", "alarms", "memberAlarms"})
 @Table(name = "member")
 public class Member {
 
     //회원 ID
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     //GeneratedValue에 관하여 설명
@@ -45,28 +47,29 @@ public class Member {
 
 
     //이메일
-    @Column(nullable = false)
+    @Column(name = "email")
     private String email;
 
     //닉네임
-    @Column(nullable = false)
+    @Column(name = "nickname")
     private String nickname;
 
     //생일
+    @Column(name = "birthday")
     private LocalDate birthday;
 
     //토큰
-    @Column(nullable = false)
+    @Column(name = "token")
     private String token;
 
     //유저를 하나로 합침
 
     // 경험치
-    @Column(name = "exp", nullable = false, updatable = false)
+    @Column(name = "exp")
     private int exp;
 
     // 상태
-    @Column(name = "status", nullable = false)
+    @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private Emotion status; // BASIC, JOY, SAD
 
@@ -80,7 +83,7 @@ public class Member {
 
     //가입일
     @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "created_at")
     private LocalDateTime joinDate;
 
 

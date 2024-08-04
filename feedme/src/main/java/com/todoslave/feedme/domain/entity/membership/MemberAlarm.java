@@ -16,7 +16,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name = "member")
+@Table(name = "memberAlarm")
 public class MemberAlarm {
 
   @Id
