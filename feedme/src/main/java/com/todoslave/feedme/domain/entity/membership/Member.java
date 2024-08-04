@@ -14,24 +14,29 @@ import com.todoslave.feedme.domain.entity.task.CreatureTodo;
 import com.todoslave.feedme.domain.entity.task.Todo;
 import com.todoslave.feedme.domain.entity.task.TodoCategory;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
 @Getter
 @Setter
-@ToString(exclude = {"friends", "friendRequests", "todos", "todoCategories", "creatureTodos", "creatures", "pictureDiary", "feeds", "feedLikes", "feedComments", "feedRecomments", "alarms", "memberAlarms"})
 @Table(name = "member")
-public class Member {
+@NoArgsConstructor
+@AllArgsConstructor
+public class Member implements UserDetails { //유저 디테일은 사용자 인증 정보를 담아두는 인터페이스이다.
 
     //회원 ID
     @Id
@@ -45,65 +50,49 @@ public class Member {
 
      **/
 
-
     //이메일
-    @Column(name = "email")
+    @Column(nullable = false)
     private String email;
 
     //닉네임
-    @Column(name = "nickname")
+    @Column //(nullable = false)
     private String nickname;
 
     //생일
-    @Column(name = "birthday")
-    private LocalDate birthday;
+    @Column //(nullable = false)
+    private Timestamp birthday;
 
     //토큰
-    @Column(name = "token")
+    @Column
     private String token;
 
     //유저를 하나로 합침
 
     // 경험치
-    @Column(name = "exp")
-    private int exp;
+    @Column(name = "exp", nullable = false, updatable = false)
+    private int exp = 0 ;
 
     // 상태
-    @Column(name = "status")
+    @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
-    private Emotion status; // BASIC, JOY, SAD
+    private Emotion status = Emotion.BASIC; // BASIC, JOY, SAD
 
     //위도
-    @Column(name = "latitude")
+    @Column
     private Double latitude;
 
     //경도
-    @Column(name = "longitude")
+    @Column
     private Double longitude;
 
     //가입일
     @CreationTimestamp
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime joinDate;
 
-
-    //
-
-
-
-    //여기부터 1대1
-    
-//    //회원 상세와 매핑
-//    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private MemberDetail memberDetail;
-//
-//    //회원 갱신 정보와 매핑
-//    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private MemberRenewInfo memberRenewInfo;
-//
-//    //회원 위치와 매핑
-//    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private MemberSpace memberSpace;
+    //유저 인증 정보
+    @Column(name = "user_role")
+    private String userRole;
 
     //여기부터 1대 N
 
@@ -167,9 +156,20 @@ public class Member {
     @JsonManagedReference
     private List<Alarm> alarms = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private List<MemberAlarm> memberAlarms = new ArrayList<>();
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("MEMBER"));
+    }
+
+    @Override
+    public String getPassword() {
+        return "";
+    }
+
+    @Override
+    public String getUsername() {
+        return "";
+    }
 
 
 }
