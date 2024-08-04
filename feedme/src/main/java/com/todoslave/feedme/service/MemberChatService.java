@@ -2,6 +2,8 @@ package com.todoslave.feedme.service;
 
 import com.todoslave.feedme.DTO.ChatFriendCreateDTO;
 import com.todoslave.feedme.DTO.ChatFriendFindDTO;
+import com.todoslave.feedme.DTO.ChatMessageRequestDTO;
+import com.todoslave.feedme.DTO.ChatMessageResponseDTO;
 import com.todoslave.feedme.domain.entity.communication.MemberChatMessage;
 import com.todoslave.feedme.domain.entity.communication.MemberChatRoom;
 import java.util.List;
@@ -20,6 +22,6 @@ public interface MemberChatService {
   public Slice<MemberChatMessage> getChatMessage(String roomId, int page, int size);
 
   // 채팅방 메세지 저장
-  public MemberChatMessage insertChatMessage(MemberChatMessage message);
+  public ChatMessageResponseDTO insertChatMessage(String roomId, ChatMessageRequestDTO chatMessageRequestDTO);
 
 }

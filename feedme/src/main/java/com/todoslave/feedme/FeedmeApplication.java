@@ -3,6 +3,8 @@ package com.todoslave.feedme;
 import com.todoslave.feedme.domain.entity.membership.Emotion;
 import com.todoslave.feedme.domain.entity.membership.Member;
 import com.todoslave.feedme.service.MemberService;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -37,11 +39,16 @@ public class FeedmeApplication implements CommandLineRunner {
 		member.setToken("ABC");
 		member.setExp(0);
 		member.setStatus(Emotion.SAD);
-		member.setNickname("테스트1");
+		member.setNickname("test1");
 		member.setLatitude(12.4);
 		member.setLongitude(12.4);
 
-		int saveId = memberService.Join(member);
-		System.out.println("Member saved with ID: " + saveId);
+		memberService.Join(member);
+		List<Member> members = new ArrayList<>();
+		members = memberService.findMembers();
+		for(Member m : members){
+			System.out.println(m.toString());
+		}
+//		System.out.println("Member saved with ID: " + saveId);
 	}
 }

@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
-//@Repository //Component가 들어가있다.
+@Repository
 public interface MemberRepository extends JpaRepository<Member, Integer> {
 
 //    @PersistenceContext //여기에 JPA의 em를 자기가 주입을 해줘서 스프링이 알아서 해준다.

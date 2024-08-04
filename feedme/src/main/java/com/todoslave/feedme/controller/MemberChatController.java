@@ -2,6 +2,7 @@ package com.todoslave.feedme.controller;
 
 import com.todoslave.feedme.DTO.ChatFriendCreateRequestDTO;
 import com.todoslave.feedme.DTO.ChatFriendFindDTO;
+import com.todoslave.feedme.DTO.ChatMessageRequestDTO;
 import com.todoslave.feedme.DTO.PaginationRequestDTO;
 import com.todoslave.feedme.domain.entity.communication.MemberChatMessage;
 import com.todoslave.feedme.domain.entity.communication.MemberChatRoom;
@@ -30,13 +31,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/friends/chats")
 public class MemberChatController {
 
-  @Autowired
   private final MemberChatService chatService;
   private final MemberService memberService;
 
   // 이 유저가 누구랑 채팅방을 갖고 있는 지 찾기
-  @GetMapping("/friends")
-  public ResponseEntity<List<MemberChatRoom>> findChatRoomList(@RequestHeader("Authorization") String token){
+  @GetMapping
+  public ResponseEntity<List<MemberChatRoom>> findChatRoomList(){
 
     ChatFriendFindDTO chatFriendFindDTO = new ChatFriendFindDTO();
 
@@ -53,8 +53,8 @@ public class MemberChatController {
 
   // 채팅방 생성
   @PostMapping
-  public ResponseEntity<MemberChatRoom> createChatRoom(@RequestHeader("Authorization") String token,
-                                                      @RequestBody ChatFriendCreateRequestDTO chatFriendCreateRequestDTO){
+  public ResponseEntity<MemberChatRoom> createChatRoom(
+      @RequestBody ChatFriendCreateRequestDTO chatFriendCreateRequestDTO){
 
     // 토큰으로 받아오기
     int memberId;
@@ -66,8 +66,12 @@ public class MemberChatController {
 
     List<String> members = new ArrayList<>();
 
-    members.add(memberId);
-    members.add(counterpartId);
+    try {
+      members.add(memberId);
+      members.add(counterpartId);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
 
 
   }
@@ -90,8 +94,7 @@ public class MemberChatController {
   // 메세지 저장
   @MessageMapping("/messages/{roomId}")
   @SendTo("/chatRoom/messages/{roomId}")
-  public MemberChatMessage sendMessage(@DestinationVariable String roomId, @Payload MemberChatMessage memberChatMessage) {
-    memberChatMessage.setMemberChatRoomId(roomId);
-    return chatService.insertChatMessage(memberChatMessage);
+  public MemberChatMessage sendMessage(@DestinationVariable String roomId, @Payload ChatMessageRequestDTO chatMessageRequestDTO) {
+    return chatService.insertChatMessage(roomId, chatMessageRequestDTO);
   }
 }

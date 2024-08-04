@@ -76,6 +76,8 @@ public class AlarmEventListener {
 
   }
 
+  // 채팅 갱신 알림
+
 
   public void addEmitter(int memberId, SseEmitter emitter){
     emitters.put(memberId, emitter);
