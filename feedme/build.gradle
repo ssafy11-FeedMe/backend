@@ -37,11 +37,27 @@ dependencies {
 	// table 보이기
 	implementation("com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.1")
 
+	// 시큐리티 설정
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+	testImplementation 'org.springframework.security:spring-security-test'
+
 	//스웨거
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
 
 	//MongoDB
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+
+	//JWT
+	testImplementation 'org.projectlombok:lombok'
+	implementation 'io.jsonwebtoken:jjwt:0.9.1'
+	implementation 'javax.xml.bind:jaxb-api:2.3.1'
+
+	//OAuth 2.0
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
+	//redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
 	//JUnit4 추가
 	testImplementation("org.junit.vintage:junit-vintage-engine") {
