@@ -42,8 +42,14 @@ public class AuthController {
         // 액세스 토큰으로 Refresh 토큰 객체를 조회
         Optional<RefreshToken> refreshToken = tokenRepository.findByAccessToken(accessToken);
 
+        System.out.println(refreshToken.get().getRefreshToken());
+
+
         // RefreshToken이 존재하고 유효하다면 실행
         if (refreshToken.isPresent() && jwtUtil.verifyToken(refreshToken.get().getRefreshToken())) {
+
+            System.out.println("바봉");
+
             // RefreshToken 객체를 꺼내온다.
             RefreshToken resultToken = refreshToken.get();
             // 권한과 아이디를 추출해 새로운 액세스토큰을 만든다.
@@ -51,6 +57,10 @@ public class AuthController {
             // 액세스 토큰의 값을 수정해준다.
             resultToken.updateAccessToken(newAccessToken);
             tokenRepository.save(resultToken);
+            System.out.println();
+            System.out.println(accessToken);
+            System.out.println(resultToken);
+
             // 새로운 액세스 토큰을 반환해준다.
             return ResponseEntity.ok(TokenResponseStatus.addStatus(200, newAccessToken));
         }
