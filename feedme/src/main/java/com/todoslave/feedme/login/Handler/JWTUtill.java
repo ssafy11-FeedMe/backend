@@ -32,7 +32,6 @@ public class JWTUtill {
         secretKey = Base64.getEncoder().encodeToString(jwtProperties.getSecretKey().getBytes());
     }
 
-
     public GeneratedToken generateToken(String email, String role) {
         // refreshToken과 accessToken을 생성한다.
         String refreshToken = generateRefreshToken(email, role);

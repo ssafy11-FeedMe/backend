@@ -49,6 +49,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         // AccessToken을 검증하고, 만료되었을경우 예외를 발생시킨다.
         if (!jwtUtil.verifyToken(atc)) {
             throw new JwtException("Access Token 만료!");
+
+
         }
 
         // AccessToken의 값이 있고, 유효한 경우에 진행한다.
