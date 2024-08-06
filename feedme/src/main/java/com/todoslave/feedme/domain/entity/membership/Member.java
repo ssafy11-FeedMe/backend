@@ -14,7 +14,10 @@ import com.todoslave.feedme.domain.entity.task.CreatureTodo;
 import com.todoslave.feedme.domain.entity.task.Todo;
 import com.todoslave.feedme.domain.entity.task.TodoCategory;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 
@@ -53,10 +56,6 @@ public class Member { //유저 디테일은 사용자 인증 정보를 담아두
     //생일
     @Column //(nullable = false)
     private Timestamp birthday;
-
-//    // 레벨 (크리쳐)
-//    @Column(nullable = false)
-//    private int level = 0 ; //레벨 1로 초기화 한다는 뜻
 
     // 상태
     @Column(name = "status", nullable = false)
@@ -146,7 +145,25 @@ public class Member { //유저 디테일은 사용자 인증 정보를 담아두
     @JsonManagedReference
     private List<Alarm> alarms = new ArrayList<>();
 
+
 }
+
+// 메인에 있던건데, 뭐에 쓰는교?!
+//     @Override
+//     public Collection<? extends GrantedAuthority> getAuthorities() {
+//         return List.of(new SimpleGrantedAuthority("MEMBER"));
+//     }
+
+//     @Override
+//     public String getPassword() {
+//         return "";
+//     }
+
+//     @Override
+//     public String getUsername() {
+//         return "";
+//     }
+
 
 
 //package com.todoslave.feedme.domain.entity.membership;
