@@ -68,9 +68,7 @@ public class TodoCategoryServiceImpl implements TodoCategoryService {
   @Override
   public TodoCategoryResponseDTO insertCategory(String name) {
 
-    int memberId = SecurityUtil.getCurrentUserId();
-    Member member = new Member();
-    member = memberRepository.findById(memberId).orElseThrow();
+    Member member = SecurityUtil.getCurrentMember();
 
     TodoCategory todoCategory = new TodoCategory();
 

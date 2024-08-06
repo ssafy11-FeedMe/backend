@@ -25,9 +25,7 @@ public class TodoCategoryController {
 
   @GetMapping
   public ResponseEntity<List<TodoCategoryResponseDTO>> findTodoCategories(){
-
     return ResponseEntity.ok(todoCategoryService.getCategories());
-
   }
 
   @PostMapping("/{name}")
@@ -38,15 +36,13 @@ public class TodoCategoryController {
   @DeleteMapping
   public ResponseEntity<Void> removeTodoCategory(@RequestBody TodoCategoryRequestDTO category){
     todoCategoryService.deleteCategory(category.getId());
-    return ResponseEntity.ok().build();
+    return ResponseEntity.noContent().build();
   }
 
   @PatchMapping
   public ResponseEntity<TodoCategoryResponseDTO> modifyTodoCategory(@RequestBody
       TodoCategoryRequestDTO category){
-
     return ResponseEntity.ok(todoCategoryService.updateCategory(category));
-
   }
 
 
