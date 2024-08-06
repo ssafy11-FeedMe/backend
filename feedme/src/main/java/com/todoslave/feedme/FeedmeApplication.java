@@ -32,12 +32,12 @@ public class FeedmeApplication {//
 //
 //	}
 
-	public static void main(String[] args) {
-		SpringApplication.run(FeedmeApplication.class, args);
+  public static void main(String[] args) {
+    SpringApplication.run(FeedmeApplication.class, args);
 
 //		String saf = SecurityContextHolder.getContext().getAuthentication().
 
-	}
+  }
 
 //	@Override
 //	public void run(String... args) throws Exception {
