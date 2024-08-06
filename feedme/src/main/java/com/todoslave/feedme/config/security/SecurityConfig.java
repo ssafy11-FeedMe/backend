@@ -40,6 +40,7 @@ public class SecurityConfig {
                         .requestMatchers("/token/**").permitAll()
                         .requestMatchers("/", "/css/**","/images/**","/js/**","/favicon.ico","/h2-console/**").permitAll()
                         .requestMatchers("/login","/testsite" ,"/signup", "/user", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/users/**").permitAll() // 유저 설정
+                        .requestMatchers("/ws/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2
