@@ -3,7 +3,7 @@ package com.todoslave.feedme.DTO;
 import lombok.Getter;
 
 @Getter
-public class ChatMessageRequestDTO {
+public class MemberChatMessageRequestDTO {
 
   private String message;
 

@@ -1,19 +1,19 @@
 package com.todoslave.feedme.service;
 
-import com.todoslave.feedme.DTO.ChatFriendCreateDTO;
-import com.todoslave.feedme.DTO.ChatFriendFindDTO;
-import com.todoslave.feedme.DTO.ChatMessageRequestDTO;
-import com.todoslave.feedme.DTO.ChatMessageResponseDTO;
+import com.todoslave.feedme.DTO.MemberChatMessageRequestDTO;
+import com.todoslave.feedme.DTO.MemberChatMessageResponseDTO;
 import com.todoslave.feedme.domain.entity.communication.MemberChatMessage;
 import com.todoslave.feedme.domain.entity.communication.MemberChatRoom;
+import com.todoslave.feedme.domain.entity.communication.MemberChatRoomChecked;
 import com.todoslave.feedme.domain.entity.membership.Member;
+import com.todoslave.feedme.login.util.SecurityUtil;
 import com.todoslave.feedme.repository.MemberChatMessageRepository;
+import com.todoslave.feedme.repository.MemberChatRoomCheckedRepository;
 import com.todoslave.feedme.repository.MemberChatRoomRepository;
 import com.todoslave.feedme.repository.MemberRepository;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -25,41 +25,40 @@ public class MemberChatServiceImpl implements MemberChatService{
 
   private final MemberChatMessageRepository messageRepository;
   private final MemberChatRoomRepository roomRepository;
-  private final MemberRepository memberRepository;
+  private final MemberChatRoomCheckedRepository roomCheckedRepository;
+  private final AlarmService alarmService;
+
+  @Override
+  public List<MemberChatRoom> getChatRooms() {
+
+    int memberId = SecurityUtil.getCurrentUserId();
+
+    MemberChatRoom memberChatRoom = new MemberChatRoom();
+    List<Integer> members = new ArrayList<>();
+    members.add(memberId);
+
+    List<MemberChatRoom> rooms = roomRepository.findAllByParticipantIdsContaining(members);
 
 
+  }
 
-//  @Override
-//  public List<MemberChatRoom> getChatRooms(ChatFriendFindDTO chatFriendFindDTO) {
-//    List<MemberChatRoom> rooms = roomRepository.findAllByParticipantIdsContaining(chatFriendFindDTO.getMemberId());
-//
-//    int counterpartId = -1;
-//
-//    for(MemberChatRoom room : rooms){
-//
-//      List<Integer> members = room.getParticipantIds();
-//
-//      for(Integer member : members){
-//        if(chatFriendFindDTO.getMemberId().get(0)==member){
-//          continue;
-//        }
-//        counterpartId = member;
-//      }
-//
-////      Member member = memberRepository.findById(counterpartId);
-//
-//
-//
-//    }
-//
-//  }
-//
-//  public MemberChatRoom getChatRoom(ChatFriendCreateDTO chatFriendCreateDTO){
-//
-//    result = roomRepository.save(chatFriendCreateDTO.getMembers());
-//
-//    return result;
-//  }
+  public MemberChatRoom insertChatRoom(List<Integer> members){
+
+    MemberChatRoom room = new MemberChatRoom();
+    room.setParticipantIds(members);
+    room = roomRepository.save(room);
+
+    MemberChatRoomChecked checked = new MemberChatRoomChecked();
+    checked.setMemberId(members.get(0));
+    checked.setIsChecked(1);
+    checked.setMemberChatRoomId(room.getId());
+    roomCheckedRepository.save(checked);
+
+    checked.setMemberId(members.get(1));
+    roomCheckedRepository.save(checked);
+
+
+  }
 
   public Slice<MemberChatMessage> getChatMessage(String roomId, int skip, int limit){
 
@@ -71,21 +70,26 @@ public class MemberChatServiceImpl implements MemberChatService{
     return messages;
   }
 
-  public ChatMessageResponseDTO insertChatMessage(String roomId, ChatMessageRequestDTO chatMessageRequestDTO) {
+  public MemberChatMessageResponseDTO insertChatMessage(String roomId, MemberChatMessageRequestDTO memberChatMessageRequestDTO) {
     MemberChatMessage memberChatMessage = new MemberChatMessage();
 
-    int memberId = -1;
+    int memberId = SecurityUtil.getCurrentUserId();
 
     memberChatMessage.setMemberChatRoomId(roomId);
-    memberChatMessage.setContent(chatMessageRequestDTO.getMessage());
+    memberChatMessage.setContent(memberChatMessageRequestDTO.getMessage());
     memberChatMessage.setSendId(memberId);
 
     memberChatMessage = messageRepository.save(memberChatMessage);
-    ChatMessageResponseDTO response = new ChatMessageResponseDTO();
+
+
+
+    alarmService.renewChattingRoom(memberChatMessage);
+
+    MemberChatMessageResponseDTO response = new MemberChatMessageResponseDTO();
 
     response.setMessage(memberChatMessage.getContent());
     response.setTransmitAt(memberChatMessage.getTransmitAt());
-//    response.getSendNickname() = (대충 시큐리티에서 닉네임 받아오는 메서드);
+    response.setSendNickname(SecurityUtil.getCurrentMember().getNickname());
 
     return response;
   }

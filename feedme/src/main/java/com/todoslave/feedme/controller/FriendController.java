@@ -3,11 +3,9 @@ package com.todoslave.feedme.controller;
 import com.todoslave.feedme.DTO.FriendReqRequestDTO;
 import com.todoslave.feedme.DTO.FriendReqResponseDTO;
 import com.todoslave.feedme.DTO.FriendResponseDTO;
-import com.todoslave.feedme.domain.entity.communication.Friend;
-import com.todoslave.feedme.domain.entity.communication.FriendRequest;
-import com.todoslave.feedme.domain.entity.membership.Member;
 import com.todoslave.feedme.service.AlarmService;
 import com.todoslave.feedme.service.FriendService;
+import com.todoslave.feedme.service.MemberChatService;
 import com.todoslave.feedme.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +21,7 @@ public class FriendController {
     static private MemberService memberService;
     static private FriendService friendService;
     static private AlarmService alarmService;
+    static private MemberChatService memberChatService;
 
     // 친구 요청하기
     @PostMapping

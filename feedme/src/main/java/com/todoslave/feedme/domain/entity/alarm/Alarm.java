@@ -1,4 +1,4 @@
-package com.todoslave.feedme.domain.entity.check;
+package com.todoslave.feedme.domain.entity.alarm;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;

@@ -36,13 +36,19 @@ public class MemberService {
 
     //아이디로 맴버 찾기
     public Member findById(int userId) {
+
         return memberRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Member not found by id: " + userId));
+            .orElseThrow(() -> new RuntimeException("Member not found by id: " + userId));
     }
 
     //이메일로 찾기
     public Optional<Member> findByEmail(String email) {
         return memberRepository.findByEmail(email);
+    }
+
+    // 닉네임으로 찾기
+    public Member findByNickname(String nickname){
+        return memberRepository.findByNickname(nickname);
     }
 
     //토큰으로 맴버 찾기

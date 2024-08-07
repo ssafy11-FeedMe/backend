@@ -6,7 +6,7 @@ import com.todoslave.feedme.domain.entity.Feed.Feed;
 import com.todoslave.feedme.domain.entity.Feed.FeedComment;
 import com.todoslave.feedme.domain.entity.Feed.FeedLike;
 import com.todoslave.feedme.domain.entity.Feed.FeedRecomment;
-import com.todoslave.feedme.domain.entity.check.Alarm;
+import com.todoslave.feedme.domain.entity.alarm.Alarm;
 import com.todoslave.feedme.domain.entity.communication.Friend;
 import com.todoslave.feedme.domain.entity.communication.FriendRequest;
 import com.todoslave.feedme.domain.entity.diary.PictureDiary;
@@ -23,7 +23,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.io.Serializable;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
