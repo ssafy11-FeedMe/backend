@@ -98,19 +98,24 @@ public class FriendServiceImpl implements FriendService{
         FriendRequest friendRequest = friendRequestRepository.findById(requestId);
 
         Friend friend = new Friend();
-        friend.setMember(SecurityUtil.getCurrentMember());
-        friend.setCounterpart(friendRequest.getCounterpartId());
+
+        Member member = SecurityUtil.getCurrentMember();
+        Member counterpart = friendRequest.getCounterpartId();
+
+        friend.setMember(member);
+        friend.setCounterpart(counterpart);
 
         friendRequestRepository.deleteById(requestId);
 
         List<Integer> members = new ArrayList<>();
-        int memberId = SecurityUtil.getCurrentUserId();
-        members.add(memberId);
-        int counterpartId = friendRequest.getCounterpartId().getId();
-        members.add(counterpartId);
+
+        members.add(member.getId());
+        members.add(counterpart.getId());
 
         memberChatService.insertChatRoom(members);
         friendRepository.save(friend);
+
+        memberChatService.insertChatRoom(members);
 
     }
 

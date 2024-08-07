@@ -1,24 +1,27 @@
 package com.todoslave.feedme.service;
 
 
-import com.todoslave.feedme.domain.entity.check.Alarm;
+import com.todoslave.feedme.domain.entity.alarm.Alarm;
+import com.todoslave.feedme.domain.entity.communication.MemberChatMessage;
 import com.todoslave.feedme.domain.entity.membership.Member;
-import com.todoslave.feedme.domain.entity.membership.MemberAlarm;
-import com.todoslave.feedme.domain.entity.task.Todo;
 import com.todoslave.feedme.event.AlarmCreatedEvent;
+import com.todoslave.feedme.login.util.SecurityUserDto;
+import com.todoslave.feedme.login.util.SecurityUtil;
 import com.todoslave.feedme.repository.AlarmRepository;
 import com.todoslave.feedme.repository.MemberAlarmRepository;
 import com.todoslave.feedme.repository.MemberRepository;
 import com.todoslave.feedme.repository.TodoRepository;
-import java.sql.Time;
+import jakarta.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @RequiredArgsConstructor
 public class AlarmServiceImpl implements AlarmService{
@@ -30,6 +33,22 @@ public class AlarmServiceImpl implements AlarmService{
   private MemberRepository memberRepository;
 
   private ApplicationEventPublisher eventPublisher;
+  private final Map<Integer, SseEmitter> emitters = new ConcurrentHashMap<>();
+
+  @Override
+  public SseEmitter createEmitter() {
+
+    int memberId = SecurityUtil.getCurrentUserId();
+
+    SseEmitter emitter = new SseEmitter();
+    emitters.put(memberId, emitter);
+
+    emitter.onCompletion(() -> emitters.remove(memberId));
+    emitter.onTimeout(() -> emitters.remove(memberId));
+    emitter.onError((e) -> emitters.remove(memberId));
+
+    return emitter;
+  }
 
   //1시간 마다 확인, 일정 완료 했는지 여부
   @Scheduled(cron = "0 0 * * * ?")
@@ -43,7 +62,7 @@ public class AlarmServiceImpl implements AlarmService{
       LocalTime currentTime = LocalTime.now();
       int time = currentTime.getHour();
 
-      if(memberAlarmRepository.existsByMemberIdAndAlarmTime(memberId,time)) {
+      if(memberAlarmRepository.existsByMemberIdAndReceiveAt(memberId,time)) {
 
         Alarm alarm = new Alarm();
 
@@ -60,12 +79,14 @@ public class AlarmServiceImpl implements AlarmService{
   }
 
   //친구 요청 알림
-  public boolean requestFriendship(Member requestor,Member counterpart){
+  public boolean requestFriendship(Member counterpart){
 
     Alarm alarm = new Alarm();
+    SecurityUserDto member = SecurityUtil.getCurrentUser();
 
+    alarm.setMember(memberRepository.getById(member.getId()));
     alarm.setMember(counterpart);
-    alarm.setContent(requestor.getNickname()+"님이 친구 요청을 보내셨습니다.");
+    alarm.setContent(member.getNickname()+"님이 친구 요청을 보내셨습니다.");
 
     Alarm a = alarmRepository.save(alarm);
 
@@ -100,8 +121,26 @@ public class AlarmServiceImpl implements AlarmService{
 
   }
 
+  // 채팅방 갱신
   @Override
-  public void checkAlarm() {
+  public void renewChattingRoom(MemberChatMessage memberChatMessage) {
+
+    Alarm alarm = new Alarm();
+    eventPublisher.publishEvent(new AlarmCreatedEvent(this, memberChatMessage,"Chatting"));
+
+  }
+
+  @Override
+  @Transactional
+  public void checkAlarm(LocalDateTime receiveAt) {
+
+    int memberId = SecurityUtil.getCurrentUserId();
+    List<Alarm> alarms = alarmRepository.findByMemberIdAndReceiveAtAndIsChecked(memberId,receiveAt,0);
+
+    for(Alarm alarm : alarms){
+      alarm.setIsChecked(1);
+      alarmRepository.save(alarm);
+    }
 
   }
 

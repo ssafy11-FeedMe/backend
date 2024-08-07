@@ -1,6 +1,7 @@
 package com.todoslave.feedme.controller;
 
 import com.todoslave.feedme.DTO.AlarmCheckRequestDTO;
+import com.todoslave.feedme.login.util.SecurityUtil;
 import com.todoslave.feedme.service.AlarmService;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -18,20 +19,12 @@ import java.util.concurrent.ConcurrentHashMap;
 public class AlarmController {
 
     private AlarmService alarmService;
+    private SecurityUtil securityUtil;
 
-    private final Map<Integer, SseEmitter> emitters = new ConcurrentHashMap<>();
 
     @GetMapping(value = "/subscribe", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter subscribe(){
-
-        int memberId = securityUtil.getId();
-
-        SseEmitter emitter = new SseEmitter();
-        emitters.put(memberId, emitter);
-        emitter.onCompletion(()->emitters.remove(memberId));
-        emitter.onTimeout(()->emitters.remove(memberId));
-        return emitter;
-
+        return alarmService.createEmitter();
     }
 
 //    private void sendAlarmToMember(String message) throws Exception{
@@ -48,12 +41,8 @@ public class AlarmController {
     @RequestMapping("/read")
     private void checkAlarm(@RequestBody AlarmCheckRequestDTO alarmCheckRequestDTO){
 
-        int memberId = securityUtil.getId();
-
         LocalDateTime checkTime = LocalDateTime.parse(alarmCheckRequestDTO.getCheckTime(), DateTimeFormatter.ISO_DATE_TIME);
-        AlarmCheckServiceDTO alarmCheckServiceDTO = new AlarmCheckServiceDTO();
-        alarmCheckServiceDTO.setCheckTime(checkTime);
-
+        alarmService.checkAlarm(checkTime);
 
     }
 

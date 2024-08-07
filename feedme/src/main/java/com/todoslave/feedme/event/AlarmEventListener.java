@@ -1,6 +1,7 @@
 package com.todoslave.feedme.event;
 
-import com.todoslave.feedme.domain.entity.check.Alarm;
+import com.todoslave.feedme.DTO.MemberChatRenewResponseDTO;
+import com.todoslave.feedme.domain.entity.alarm.Alarm;
 import com.todoslave.feedme.service.AlarmService;
 import java.io.IOException;
 import java.util.Map;
@@ -42,7 +43,7 @@ public class AlarmEventListener {
 
     Alarm alarm = event.getAlarm();
 
-    SseEmitter emitter = emitters.get(alarm.getMember());
+    SseEmitter emitter = emitters.get(alarm.getMember().getId());
 
     if(emitter != null){
 
@@ -77,6 +78,16 @@ public class AlarmEventListener {
   }
 
   // 채팅 갱신 알림
+  @EventListener(condition = "#event.alarmType == 'Chatting")
+  public void handlerAlarmChattingEvent(AlarmCreatedEvent event){
+
+    MemberChatRenewResponseDTO chattingRoom = event.getMessage();
+
+    int counter =
+
+    SseEmitter emitter = emitters.get();
+
+  }
 
 
   public void addEmitter(int memberId, SseEmitter emitter){
