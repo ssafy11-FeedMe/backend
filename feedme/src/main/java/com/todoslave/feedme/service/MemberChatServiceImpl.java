@@ -1,5 +1,6 @@
 package com.todoslave.feedme.service;
 
+import com.todoslave.feedme.DTO.MemberChatListResponseDTO;
 import com.todoslave.feedme.DTO.MemberChatMessageRequestDTO;
 import com.todoslave.feedme.DTO.MemberChatMessageResponseDTO;
 import com.todoslave.feedme.domain.entity.communication.MemberChatMessage;
@@ -27,9 +28,12 @@ public class MemberChatServiceImpl implements MemberChatService{
   private final MemberChatRoomRepository roomRepository;
   private final MemberChatRoomCheckedRepository roomCheckedRepository;
   private final AlarmService alarmService;
+  private final MemberRepository memberRepository;
+  private final MemberChatRoomCheckedRepository memberChatRoomCheckedRepository;
 
+  // 채팅방 목록들 가져오기
   @Override
-  public List<MemberChatRoom> getChatRooms() {
+  public List<MemberChatListResponseDTO> getChatRooms() {
 
     int memberId = SecurityUtil.getCurrentUserId();
 
@@ -37,12 +41,37 @@ public class MemberChatServiceImpl implements MemberChatService{
     List<Integer> members = new ArrayList<>();
     members.add(memberId);
 
-    List<MemberChatRoom> rooms = roomRepository.findAllByParticipantIdsContaining(members);
+    List<MemberChatRoom> rooms = roomRepository.findAllByParticipantIdsContainingOrderByReceiveTime(members);
+    List<MemberChatListResponseDTO> chatListResponse = new ArrayList<>();
 
+    for(MemberChatRoom room : rooms){
 
+      MemberChatListResponseDTO chatResponse = new MemberChatListResponseDTO();
+      chatResponse.setId(room.getId());
+
+      members = room.getParticipantIds();
+      int counterPartId = 0;
+
+      for(int m : members){
+        if(m!=memberId){
+          counterPartId=m;
+        }
+      }
+
+      String nickname = memberRepository.findById(counterPartId).orElseThrow().getNickname();
+      chatResponse.setNickname(nickname);
+//      chatResponse.setCreatureImage(
+//              "http://localhost:8080/image/creature/"+{creature_id}+"_"+{creature_level});
+      MemberChatRoomChecked checked = memberChatRoomCheckedRepository.findByMemberChatRoomIdAndMemberId(room.getId(),memberId);
+      chatResponse.setIsChecked(checked.getIsChecked());
+
+    }
+
+    return chatListResponse;
   }
 
-  public MemberChatRoom insertChatRoom(List<Integer> members){
+  // 채팅방 생성
+  public MemberChatListResponseDTO insertChatRoom(List<Integer> members){
 
     MemberChatRoom room = new MemberChatRoom();
     room.setParticipantIds(members);
@@ -57,9 +86,25 @@ public class MemberChatServiceImpl implements MemberChatService{
     checked.setMemberId(members.get(1));
     roomCheckedRepository.save(checked);
 
+    Member countpart = null;
 
+    for(int m : members){
+      if(m!=SecurityUtil.getCurrentUserId()){
+        countpart = memberRepository.findById(m).orElseThrow();
+      }
+    }
+
+    MemberChatListResponseDTO memberChatListResponseDTO = new MemberChatListResponseDTO();
+    memberChatListResponseDTO.setId(room.getId());
+    memberChatListResponseDTO.setNickname(countpart.getNickname());
+//    memberChatListResponseDTO.setCreatureImage(
+//              "http://localhost:8080/image/creature/"+{creature_id}+"_"+{creature_level});
+    memberChatListResponseDTO.setIsChecked(1);
+
+    return memberChatListResponseDTO;
   }
 
+  // 채팅방 메세지 불러오기
   public Slice<MemberChatMessage> getChatMessage(String roomId, int skip, int limit){
 
     System.out.println("receive message? service");
@@ -70,6 +115,7 @@ public class MemberChatServiceImpl implements MemberChatService{
     return messages;
   }
 
+  // 채팅방 메세지 저장
   public MemberChatMessageResponseDTO insertChatMessage(String roomId, MemberChatMessageRequestDTO memberChatMessageRequestDTO) {
     MemberChatMessage memberChatMessage = new MemberChatMessage();
 

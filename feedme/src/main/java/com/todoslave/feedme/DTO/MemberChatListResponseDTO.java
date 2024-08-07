@@ -9,6 +9,9 @@ public class MemberChatListResponseDTO {
   private String id;
   // 상대방 닉네임
   private String nickname;
-//  private
+  // 상대방 크리쳐 이미지
+  private String creatureImage;
+  // 최근에 채팅방 읽었는 지 확인
+  private int isChecked;
 
 }

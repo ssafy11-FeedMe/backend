@@ -19,7 +19,6 @@ import org.springframework.data.mongodb.core.mapping.Field;
 @Data
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
 @Document(collection = "memberchatroom")
 public class MemberChatRoom {
 
@@ -27,5 +26,11 @@ public class MemberChatRoom {
     private String id;
     @Field("participant_ids")
     private List<Integer> participantIds;
+    @Field("receive_time")
+    private LocalDateTime receiveTime;
+
+    public MemberChatRoom(){
+        receiveTime = LocalDateTime.MIN;
+    }
 
 }

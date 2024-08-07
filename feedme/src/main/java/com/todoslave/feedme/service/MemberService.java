@@ -16,7 +16,6 @@ import java.util.Optional;
 
 @Service
 @Transactional
-//@Transactional(readOnly = true) //조회에선
 @RequiredArgsConstructor // 생성자 만들어 주는 얘
 public class MemberService {
 

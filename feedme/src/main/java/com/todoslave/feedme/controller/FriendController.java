@@ -3,6 +3,7 @@ package com.todoslave.feedme.controller;
 import com.todoslave.feedme.DTO.FriendReqRequestDTO;
 import com.todoslave.feedme.DTO.FriendReqResponseDTO;
 import com.todoslave.feedme.DTO.FriendResponseDTO;
+import com.todoslave.feedme.DTO.MemberChatListResponseDTO;
 import com.todoslave.feedme.service.AlarmService;
 import com.todoslave.feedme.service.FriendService;
 import com.todoslave.feedme.service.MemberChatService;
@@ -51,9 +52,8 @@ public class FriendController {
 
     // 친구 요청 수락하기
     @PostMapping("/accept/{id}")
-    public ResponseEntity<Void> acceptFriendship(@PathVariable("id") int requestId){
-        friendService.insertFriendship(requestId);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<MemberChatListResponseDTO> acceptFriendship(@PathVariable("id") int requestId){
+        return ResponseEntity.ok(friendService.insertFriendship(requestId));
     }
 
     // 친구 요청 거절하기

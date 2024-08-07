@@ -1,9 +1,6 @@
 package com.todoslave.feedme.controller;
 
-import com.todoslave.feedme.DTO.MemberChatBuildRequestDTO;
-import com.todoslave.feedme.DTO.MemberChatMessageRequestDTO;
-import com.todoslave.feedme.DTO.MemberChatMessageResponseDTO;
-import com.todoslave.feedme.DTO.PaginationRequestDTO;
+import com.todoslave.feedme.DTO.*;
 import com.todoslave.feedme.domain.entity.communication.MemberChatMessage;
 import com.todoslave.feedme.domain.entity.communication.MemberChatRoom;
 import com.todoslave.feedme.domain.entity.membership.Member;
@@ -37,7 +34,7 @@ public class MemberChatController {
 
   // 유저의 채팅방 목록들 불러오기
   @GetMapping
-  public ResponseEntity<List<MemberChatRoom>> findChatRoomList(){
+  public ResponseEntity<List<MemberChatListResponseDTO>> findChatRoomList(){
     return ResponseEntity.ok(chatService.getChatRooms());
   }
 
