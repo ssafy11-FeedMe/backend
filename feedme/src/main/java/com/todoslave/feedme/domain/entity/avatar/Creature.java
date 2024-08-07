@@ -1,6 +1,8 @@
 package com.todoslave.feedme.domain.entity.avatar;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.todoslave.feedme.domain.entity.membership.Member;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -9,6 +11,7 @@ import lombok.Data;
 @Entity
 @Data
 @Table(name = "creature")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Creature {
 
     // 크리쳐 ID
@@ -17,8 +20,9 @@ public class Creature {
     private int id;
 
     //회원 ID
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", referencedColumnName = "id")
+    @JsonBackReference
     private Member member;
 
     // 레벨

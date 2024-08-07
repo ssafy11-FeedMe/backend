@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,18 +27,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/users")
 @Tag(name = "회원 CRUD")
-//@CrossOrigin(origins = "*", allowedHeaders = "*")
+@RequiredArgsConstructor
 public class MemberController {
 
-    @Autowired
-    MemberRepository memberRepository;
-
-    @Autowired
-    MemberService memberService;
-
-    @Autowired
-    JwtProperties jwtProperties;
-
+    private final MemberService memberService;
 
     @Operation(summary = "맴버 검색 (for 친구추가)")
     @GetMapping("/{searchvalue}")

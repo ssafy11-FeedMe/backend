@@ -1,10 +1,12 @@
-package com.todoslave.feedme.DTO;
+//맴버 채팅 주석
 
-import lombok.Getter;
-
-@Getter
-public class ChatFriendCreateRequestDTO {
-
-  private String CounterpartNickname;
-
-}
+//package com.todoslave.feedme.DTO;
+//
+//import lombok.Getter;
+//
+//@Getter
+//public class ChatFriendCreateRequestDTO {
+//
+//  private String CounterpartNickname;
+//
+//}

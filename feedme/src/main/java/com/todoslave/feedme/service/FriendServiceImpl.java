@@ -1,5 +1,5 @@
 package com.todoslave.feedme.service;
-
+//맴버 채팅 주석
 
 import com.todoslave.feedme.domain.entity.communication.Friend;
 import com.todoslave.feedme.domain.entity.communication.FriendRequest;
@@ -33,9 +33,11 @@ import java.util.List;
 public class FriendServiceImpl implements FriendService{
 
     MemberService memberService;
+    @Autowired
     FriendRepository friendRepository;
+    @Autowired
     FriendRequestRepository friendRequestRepository;
-    MemberChatService memberChatService;
+//    MemberChatService memberChatService;
 
     // 친구 요청
     @Override
@@ -142,7 +144,7 @@ public class FriendServiceImpl implements FriendService{
         int counterpartId = friendRequest.getCounterpartId().getId();
         members.add(counterpartId);
 
-        memberChatService.insertChatRoom(members);
+//        memberChatService.insertChatRoom(members);
         friendRepository.save(friend);
 
     }
