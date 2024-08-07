@@ -27,16 +27,16 @@ public class AlarmController {
         return alarmService.createEmitter();
     }
 
-//    private void sendAlarmToMember(String message) throws Exception{
-//
-//        int memberId = securityUtil.getId();
-//
-//        SseEmitter emitter = emitters.get(memberId);
-//        if(emitter != null){
-//          emitter.send(SseEmitter.event().name("Alarm").data(message));
-//        }
-//
-//    }
+    private void sendAlarmToMember(String message) throws Exception{
+
+        int memberId = securityUtil.getId();
+
+        SseEmitter emitter = emitters.get(memberId);
+        if(emitter != null){
+          emitter.send(SseEmitter.event().name("Alarm").data(message));
+        }
+
+    }
 
     @RequestMapping("/read")
     private void checkAlarm(@RequestBody AlarmCheckRequestDTO alarmCheckRequestDTO){

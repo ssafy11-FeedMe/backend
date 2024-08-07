@@ -3,6 +3,7 @@ package com.todoslave.feedme.service;
 import com.todoslave.feedme.DTO.FriendReqRequestDTO;
 import com.todoslave.feedme.DTO.FriendReqResponseDTO;
 import com.todoslave.feedme.DTO.FriendResponseDTO;
+import com.todoslave.feedme.DTO.MemberChatListResponseDTO;
 import com.todoslave.feedme.domain.entity.communication.Friend;
 import com.todoslave.feedme.domain.entity.communication.FriendRequest;
 import com.todoslave.feedme.domain.entity.membership.Member;
@@ -93,7 +94,7 @@ public class FriendServiceImpl implements FriendService{
 
     // 친구 수락
     @Override
-    public void insertFriendship(int requestId) {
+    public MemberChatListResponseDTO insertFriendship(int requestId) {
 
         FriendRequest friendRequest = friendRequestRepository.findById(requestId);
 
@@ -112,11 +113,10 @@ public class FriendServiceImpl implements FriendService{
         members.add(member.getId());
         members.add(counterpart.getId());
 
-        memberChatService.insertChatRoom(members);
+        // 친구 추가
         friendRepository.save(friend);
-
-        memberChatService.insertChatRoom(members);
-
+        // 채팅방 생성
+        return memberChatService.insertChatRoom(members);
     }
 
     // 친구 거절

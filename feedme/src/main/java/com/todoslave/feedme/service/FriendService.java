@@ -3,6 +3,7 @@ package com.todoslave.feedme.service;
 import com.todoslave.feedme.DTO.FriendReqRequestDTO;
 import com.todoslave.feedme.DTO.FriendReqResponseDTO;
 import com.todoslave.feedme.DTO.FriendResponseDTO;
+import com.todoslave.feedme.DTO.MemberChatListResponseDTO;
 import com.todoslave.feedme.domain.entity.communication.Friend;
 import com.todoslave.feedme.domain.entity.communication.FriendRequest;
 
@@ -24,7 +25,7 @@ public interface FriendService {
     List<FriendReqResponseDTO> getRequestFriend();
 
     // 친구 수락
-    void insertFriendship(int requestId);
+    MemberChatListResponseDTO insertFriendship(int requestId);
 
     // 친구 거절
     void deleteRequestFriend(int requestId);

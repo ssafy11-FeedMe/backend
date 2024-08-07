@@ -1,5 +1,6 @@
 package com.todoslave.feedme.service;
 
+import com.todoslave.feedme.DTO.MemberChatListResponseDTO;
 import com.todoslave.feedme.DTO.MemberChatMessageRequestDTO;
 import com.todoslave.feedme.DTO.MemberChatMessageResponseDTO;
 import com.todoslave.feedme.domain.entity.communication.MemberChatMessage;
@@ -12,10 +13,10 @@ import org.springframework.stereotype.Service;
 public interface MemberChatService {
 
   // 채팅방 목록 불러오기
-  public List<MemberChatRoom> getChatRooms();
+  public List<MemberChatListResponseDTO> getChatRooms();
 
   // 채팅방 생성
-  public MemberChatRoom insertChatRoom(List<Integer> members);
+  public MemberChatListResponseDTO insertChatRoom(List<Integer> members);
 
   // 채팅방 메세지 불러오기
   public Slice<MemberChatMessage> getChatMessage(String roomId, int page, int size);
