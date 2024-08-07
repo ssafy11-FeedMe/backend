@@ -1,16 +1,19 @@
 package com.todoslave.feedme.domain.entity.membership;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import com.todoslave.feedme.domain.entity.avatar.Creature;
 import com.todoslave.feedme.domain.entity.Feed.Feed;
 import com.todoslave.feedme.domain.entity.Feed.FeedComment;
 import com.todoslave.feedme.domain.entity.Feed.FeedLike;
 import com.todoslave.feedme.domain.entity.Feed.FeedRecomment;
-import com.todoslave.feedme.domain.entity.check.Alarm;
+
 import com.todoslave.feedme.domain.entity.communication.Friend;
 import com.todoslave.feedme.domain.entity.communication.FriendRequest;
 import com.todoslave.feedme.domain.entity.diary.PictureDiary;
 import com.todoslave.feedme.domain.entity.task.CreatureTodo;
+import com.todoslave.feedme.domain.entity.task.DayOff;
 import com.todoslave.feedme.domain.entity.task.Todo;
 import com.todoslave.feedme.domain.entity.task.TodoCategory;
 import jakarta.persistence.*;
@@ -32,6 +35,7 @@ import java.util.List;
 @Table(name = "member")
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Member { //유저 디테일은 사용자 인증 정보를 담아두는 인터페이스이다.
 
     //회원 ID
@@ -82,7 +86,8 @@ public class Member { //유저 디테일은 사용자 인증 정보를 담아두
     //여기부터 1대 N
 
     //크리쳐와 매핑
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY) //1:1 중에 1을 맡는다.
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY, orphanRemoval = true) //1:1 중에 1을 맡는다.
+    @JsonManagedReference
     private Creature creature;
 
     //친구와 매핑
@@ -143,8 +148,12 @@ public class Member { //유저 디테일은 사용자 인증 정보를 담아두
     //알람과 매핑
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    private List<Alarm> alarms = new ArrayList<>();
+    private List<com.todoslave.feedme.domain.entity.check.Alarm> alarms = new ArrayList<>();
 
+    //끝내는 날과 매핑
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<DayOff>  dayOffs= new ArrayList<>();
 
 }
 

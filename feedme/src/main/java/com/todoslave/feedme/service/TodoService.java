@@ -8,6 +8,8 @@ import com.todoslave.feedme.DTO.TodoMainResponseDTO;
 import com.todoslave.feedme.DTO.TodoModifyRequestDTO;
 import com.todoslave.feedme.DTO.TodoRequestDTO;
 import com.todoslave.feedme.domain.entity.task.Todo;
+
+import java.time.LocalDate;
 import java.util.List;
 
 public interface TodoService {
@@ -36,7 +38,8 @@ public interface TodoService {
   //일정 완료하기
   public TodoResponseDTO completeTodo(int todoId);
 
-  //모든 일정 완료하기
+  //모든 일정 끝내기
+  public TodoResponseDTO AllcompleteTodo(LocalDate endDate);
 
   // 그림일기 생성
 

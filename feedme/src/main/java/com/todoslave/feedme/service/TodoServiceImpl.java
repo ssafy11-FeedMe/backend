@@ -7,8 +7,11 @@ import com.todoslave.feedme.DTO.TodoResponseDTO;
 import com.todoslave.feedme.DTO.TodoMainResponseDTO;
 import com.todoslave.feedme.DTO.TodoModifyRequestDTO;
 import com.todoslave.feedme.DTO.TodoRequestDTO;
+import com.todoslave.feedme.domain.entity.task.CreatureTodo;
+import com.todoslave.feedme.domain.entity.task.DayOff;
 import com.todoslave.feedme.domain.entity.task.Todo;
 import com.todoslave.feedme.login.util.SecurityUtil;
+import com.todoslave.feedme.repository.CreatureTodoReposito;
 import com.todoslave.feedme.repository.TodoCategoryRepository;
 import com.todoslave.feedme.repository.TodoRepository;
 import jakarta.transaction.Transactional;
@@ -25,7 +28,9 @@ public class TodoServiceImpl implements TodoService {
 
   private final TodoRepository todoRepository;
   private final TodoCategoryRepository todoCategoryRepository;
-
+  private final CreatureTodoReposito creatureTodoReposito;
+  private final DayOffService dayOffService;
+  private  final CreatureService creatureService;
   // 할일 목록에서 일정(일) 불러오기
   @Override
   public List<TodoResponseDTO> getTodoListDaily(TodoDailyRequestDTO todoDailyRequestDTO) {
@@ -208,4 +213,37 @@ public class TodoServiceImpl implements TodoService {
 
     return todoResponseDTO;
   }
+
+  @Override
+  public TodoResponseDTO AllcompleteTodo(LocalDate date) {
+
+    //만약에 완료를 이미 했다면
+    if(dayOffService.findDayOffByMemberIdAndDate(SecurityUtil.getCurrentUserId(),date)!=null){
+      return null;
+    }
+
+    //완료처리
+    DayOff dayOff = new DayOff();
+    dayOff.setEndDay(date);
+    dayOff.setMember(SecurityUtil.getCurrentMember());
+    dayOffService.saveDayOff(dayOff);
+
+    //일정 끝내기
+    List<Todo> todoList = todoRepository.findByMemberIdAndCreatedAt(SecurityUtil.getCurrentUserId(),date);
+    //크리쳐 일정 끝내기
+    List<CreatureTodo> creatureTodoList = creatureTodoReposito.findByMemberIdAndCreatedAt(SecurityUtil.getCurrentUserId(),date);
+
+
+    //일기 써달라고 하기
+    // AI 요청!!!!!!!!!!!!!!!!!!!!!
+
+
+    int completedTodos = (int) todoList.stream().filter(todo -> todo.getIsCompleted() == 1).count();
+    int completedCreatureTodos = (int) creatureTodoList.stream().filter(creatureTodo -> creatureTodo.getIsCompleted() == 1).count();
+
+    //경험치 올리기
+    creatureService.expUp(completedTodos+completedCreatureTodos);
+//예본 해
+      return new TodoResponseDTO();
+    }
 }

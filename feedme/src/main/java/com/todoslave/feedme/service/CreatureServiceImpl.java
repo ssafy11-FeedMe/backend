@@ -29,6 +29,8 @@ public class CreatureServiceImpl implements CreatureService {
         return null;
     }
 
+
+    //크리쳐 만들기
     @Override
     public Creature createFristCreature(String keyword, String photo, String creatureName) {
         //멤버 가져오고
@@ -53,7 +55,7 @@ public class CreatureServiceImpl implements CreatureService {
         return creature;
     }
 
-
+    // 크리쳐 보기
     @Override
     public CreatureInfoResponseDTO CreatureInfo() {
         CreatureInfoResponseDTO creatureInfoResponseDTO = new CreatureInfoResponseDTO();
@@ -75,12 +77,73 @@ public class CreatureServiceImpl implements CreatureService {
         return creatureInfoResponseDTO;
     }
 
+    //크리쳐 삭제(재발급을 위한)
+    @Override
+    public boolean removeCreature() {
+        Member member = SecurityUtil.getCurrentMember();
+        Creature creature = member.getCreature();
+        creatureRepository.delete(creature);
+        member.setCreature(null);
+        memberRepository.save(member);
+        return true;
+    }
 
+    //크리쳐 성장
+    @Override
+    public void expUp(int toDoCnt) {
+        Creature creature = SecurityUtil.getCurrentMember().getCreature();
+
+        int nowExp = creature.getExp()+toDoCnt;
+        if(nowExp>7){nowExp=7;} // 하루 오를 수 있는 최대한의 경험치
+
+        if (creature.getLevel()==0) { // 알
+
+            if( nowExp >= 10) { //레벨업 한다면
+                creature.setLevel(1);
+                creature.setExp(nowExp % 10);
+            }else{
+                creature.setExp(nowExp);
+            }
+
+        } else if (creature.getLevel()==1) { // 1렙
+
+            if( nowExp >= 30) { //레벨업 한다면
+                creature.setLevel(2);
+                creature.setExp(nowExp % 30);
+            }else{
+                creature.setExp(nowExp);
+            }
+        } else if (creature.getLevel()==2) { // 2렙
+
+            if( nowExp >= 100) { //레벨업 한다면
+                creature.setLevel(3);
+                creature.setExp(nowExp % 100);
+            }else{
+                creature.setExp(nowExp);
+            }
+
+        } else { //3렙
+            creature.setExp(nowExp);
+        }
+
+    }
+
+    //크리쳐 레벨업
+    @Override
+    public void LevelUp() {
+        Creature creature = SecurityUtil.getCurrentMember().getCreature();
+        creature.setLevel(creature.getLevel()+1);
+    }
+
+    //크리쳐 이미지 주소
     private String generateCreatureImgPath(Member member) {
         Emotion state = member.getStatus();
         Creature creature = member.getCreature();
+        int creatureLevel = creature.getLevel();
         int creatureId = creature.getId();
-        return "http://localhost:8080/image/creature/" + creatureId + "_" + state;
+        return "http://localhost:8080/image/creature/" + creatureId + "_" +creatureLevel + "_" + state;
     }
+
+
 
 }

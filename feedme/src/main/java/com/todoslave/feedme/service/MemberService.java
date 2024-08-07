@@ -52,6 +52,10 @@ public class MemberService {
         return memberRepository.findByEmail(email);
     }
 
+    // 닉네임으로 맴버 찾기
+    public Member findByNickname(String Nickname) {
+        return memberRepository.findByNickname(Nickname).orElse(null);
+    }
 
     public boolean authenticate(String email) {
         return memberRepository.findByEmail(email).isPresent();
@@ -130,7 +134,9 @@ public class MemberService {
     private String generateCreatureImgPath(Member member) {
             Emotion state = member.getStatus();
             Creature creature = member.getCreature();
+            int creatureLevel = creature.getLevel();
             int creatureId = creature.getId();
-            return "http://localhost:8080/image/creature/" + creatureId + "_" + state;
+            return "http://localhost:8080/image/creature/" + creatureId + "_" +creatureLevel + "_" + state;
     }
+
 }
