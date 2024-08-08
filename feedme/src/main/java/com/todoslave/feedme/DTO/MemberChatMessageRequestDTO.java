@@ -1,10 +1,12 @@
-package com.todoslave.feedme.DTO;
+//맴버 채팅 주석
 
-import lombok.Getter;
-
-@Getter
-public class ChatMessageRequestDTO {
-
-  private String message;
-
-}
+//package com.todoslave.feedme.DTO;
+//
+//import lombok.Getter;
+//
+//@Getter
+//public class ChatMessageRequestDTO {
+//
+//  private String message;
+//
+//}

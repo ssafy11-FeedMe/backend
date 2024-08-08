@@ -16,6 +16,9 @@ import org.springframework.security.config.annotation.web.configurers.HttpBasicC
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -26,6 +29,7 @@ public class SecurityConfig {
     private final JwtAuthFilter jwtAuthFilter;
     private final MyAuthenticationFailureHandler oAuth2LoginFailureHandler;
     private final JwtExceptionFilter jwtExceptionFilter;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
@@ -34,17 +38,16 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
 
                 .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-
 //                .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션관리 정책을 STATELESS(세션이 있으면 쓰지도 않고, 없으면 만들지도 않는다)
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/token/**").permitAll()
                         .requestMatchers("/", "/css/**","/images/**","/js/**","/favicon.ico","/h2-console/**").permitAll()
-                        .requestMatchers("/login","/testsite" ,"/signup", "/user", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/users/**").permitAll() // 유저 설정
+                        .requestMatchers("/login/oauth2/code/**","/login/**","/testsite" ,"/signup", "/user", "/v3/api-docs/**", "/swagger-ui/**","/creature", "/swagger-ui.html", "/users/**").permitAll() // 유저 설정
                         .requestMatchers("/ws/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2
-                        .loginPage("/login")
+                        .loginPage("/test")
                         .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService)) // OAuth2 로그인시 사용자 정보를 가져오는 엔드포인트와 사용자 서비스를 설정
                         .failureHandler(oAuth2LoginFailureHandler) // OAuth2 로그인 실패시 처리할 핸들러를 지정해준다.
                         .successHandler(oAuth2LoginSuccessHandler) // OAuth2 로그인 성공시 처리할 핸들러를 지정해준다.
@@ -58,4 +61,18 @@ public class SecurityConfig {
                 .build();
     }
 
+
+    @Bean
+        // CORS 설정
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.addAllowedOriginPattern("*");
+        configuration.addAllowedMethod("*"); // 모든 HTTP 메서드 허용
+        configuration.addAllowedHeader("*"); // 모든 헤더 허용
+        configuration.setAllowCredentials(true); // 자격 증명 허용 설정
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration); // 모든 경로에 대해 CORS 구성 적용
+        return source;
+    }
     }
