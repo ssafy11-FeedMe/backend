@@ -4,10 +4,12 @@ import com.todoslave.feedme.DTO.FriendReqRequestDTO;
 import com.todoslave.feedme.DTO.FriendReqResponseDTO;
 import com.todoslave.feedme.DTO.FriendResponseDTO;
 import com.todoslave.feedme.DTO.MemberChatListResponseDTO;
+import com.todoslave.feedme.DTO.PaginationRequestDTO;
 import com.todoslave.feedme.domain.entity.communication.Friend;
 import com.todoslave.feedme.domain.entity.communication.FriendRequest;
 import com.todoslave.feedme.domain.entity.membership.Member;
 import com.todoslave.feedme.login.util.SecurityUtil;
+import com.todoslave.feedme.mapper.FriendRequestMapper;
 import com.todoslave.feedme.repository.FriendRepository;
 import com.todoslave.feedme.repository.FriendRequestRepository;
 import jakarta.transaction.Transactional;
@@ -15,6 +17,9 @@ import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 
 @RequiredArgsConstructor
 public class FriendServiceImpl implements FriendService{
@@ -73,23 +78,16 @@ public class FriendServiceImpl implements FriendService{
 
     // 친구 요청 불러오기
     @Override
-    public List<FriendReqResponseDTO> getRequestFriend() {
+    public Slice<FriendReqResponseDTO> getRequestFriend(PaginationRequestDTO paginationRequestDTO) {
 
         int memberId = SecurityUtil.getCurrentUserId();
 
-        List<FriendRequest> friendRequests = friendRequestRepository.findAllByMemberId(memberId);
-        List<FriendReqResponseDTO> friendReqResponseDTOList = new ArrayList<>();
+        Pageable pageable = PageRequest.of(paginationRequestDTO.getSkip() / paginationRequestDTO.getLimit(),
+            paginationRequestDTO.getLimit());
 
-        for(FriendRequest friendRequest : friendRequests){
+        Slice<FriendRequest> friendRequests = friendRequestRepository.findAllByMemberId(memberId, pageable);
 
-            FriendReqResponseDTO friendReqResponseDTO = new FriendReqResponseDTO();
-            friendReqResponseDTO.setId(friendRequest.getId());
-            friendReqResponseDTO.setCounterpartNickname(friendRequest.getCounterpartId().getNickname());
-            friendReqResponseDTOList.add(friendReqResponseDTO);
-
-        }
-
-        return friendReqResponseDTOList;
+        return friendRequests.map(FriendRequestMapper::toDto);
     }
 
     // 친구 수락

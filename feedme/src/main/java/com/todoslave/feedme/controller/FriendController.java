@@ -4,11 +4,13 @@ import com.todoslave.feedme.DTO.FriendReqRequestDTO;
 import com.todoslave.feedme.DTO.FriendReqResponseDTO;
 import com.todoslave.feedme.DTO.FriendResponseDTO;
 import com.todoslave.feedme.DTO.MemberChatListResponseDTO;
+import com.todoslave.feedme.DTO.PaginationRequestDTO;
 import com.todoslave.feedme.service.AlarmService;
 import com.todoslave.feedme.service.FriendService;
 import com.todoslave.feedme.service.MemberChatService;
 import com.todoslave.feedme.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,8 +48,9 @@ public class FriendController {
 
     // 친구 요청 목록 조회
     @GetMapping("/request")
-    public ResponseEntity<List<FriendReqResponseDTO>> findRequestFriend(){
-        return ResponseEntity.ok(friendService.getRequestFriend());
+    public ResponseEntity<Slice<FriendReqResponseDTO>> findRequestFriend(
+        PaginationRequestDTO paginationRequestDTO){
+        return ResponseEntity.ok(friendService.getRequestFriend(paginationRequestDTO));
     }
 
     // 친구 요청 수락하기

@@ -121,13 +121,25 @@ public class MemberChatServiceImpl implements MemberChatService{
 
     int memberId = SecurityUtil.getCurrentUserId();
 
+    MemberChatRoom memberChatRoom = roomRepository.findById(roomId).orElseThrow();
+    String counterpartNickname = null;
+
+    for(int m : memberChatRoom.getParticipantIds()){
+      if(m!=memberId){
+        counterpartNickname = memberRepository.findById(m).orElseThrow().getNickname();
+      }
+    }
+
     memberChatMessage.setMemberChatRoomId(roomId);
     memberChatMessage.setContent(memberChatMessageRequestDTO.getMessage());
     memberChatMessage.setSendId(memberId);
 
     memberChatMessage = messageRepository.save(memberChatMessage);
 
-
+    MemberChatListResponseDTO memberChatListResponseDTO = new MemberChatListResponseDTO();
+    memberChatListResponseDTO.setId(roomId);
+    memberChatListResponseDTO.setNickname(counterpartNickname);
+    memberChatListResponseDTO.setCreatureImage();
 
     alarmService.renewChattingRoom(memberChatMessage);
 
