@@ -7,8 +7,11 @@ import com.todoslave.feedme.DTO.TodoResponseDTO;
 import com.todoslave.feedme.DTO.TodoMainResponseDTO;
 import com.todoslave.feedme.DTO.TodoModifyRequestDTO;
 import com.todoslave.feedme.DTO.TodoRequestDTO;
+import com.todoslave.feedme.domain.entity.task.CreatureTodo;
+import com.todoslave.feedme.domain.entity.task.DayOff;
 import com.todoslave.feedme.domain.entity.task.Todo;
 import com.todoslave.feedme.login.util.SecurityUtil;
+import com.todoslave.feedme.repository.CreatureTodoReposito;
 import com.todoslave.feedme.repository.TodoCategoryRepository;
 import com.todoslave.feedme.repository.TodoRepository;
 import jakarta.transaction.Transactional;
@@ -25,6 +28,9 @@ public class TodoServiceImpl implements TodoService {
 
   private final TodoRepository todoRepository;
   private final TodoCategoryRepository todoCategoryRepository;
+  private final CreatureTodoReposito creatureTodoReposito;
+  private final DayOffService dayOffService;
+  private  final CreatureService creatureService;
 
   // 할일 목록에서 일정(일) 불러오기
   @Override
@@ -131,16 +137,21 @@ public class TodoServiceImpl implements TodoService {
 
       TodoCalendarResponseDTO todoCalendarResponseDTO = new TodoCalendarResponseDTO();
 
-      long inCompleted = todoRepository.countTodoByDateAndIsCompleted(date, 0);
+      long inCompleted = todoRepository.countTodoByDateAndIsCompleted(date, 0)+creatureTodoReposito.countByCreatedAtAndIsCompleted(date,0);
+
       todoCalendarResponseDTO.setInCompleted((int)inCompleted);
-      long completed = todoRepository.countTodoByDateAndIsCompleted(date, 1);
+
+      long completed = todoRepository.countTodoByDateAndIsCompleted(date, 1)+creatureTodoReposito.countByCreatedAtAndIsCompleted(date,1);
+
       todoCalendarResponseDTO.setCompleted((int)completed);
+
       todoCalendarResponseDTO.setTotal((int)(inCompleted+completed));
       todoCalendarResponseDTO.setDate(date);
 
       todoCounts.add(todoCalendarResponseDTO);
 
     }
+
 
     return todoCounts;
   }
@@ -208,4 +219,41 @@ public class TodoServiceImpl implements TodoService {
 
     return todoResponseDTO;
   }
+
+  @Override
+  public boolean AllcompleteTodo(TodoRequestDTO todoRequestDTO) {
+    LocalDate date = todoRequestDTO.getDate();
+    System.out.println("일");
+
+    //만약에 완료를 이미 했다면
+    if(!dayOffService.isActionAllowed(SecurityUtil.getCurrentUserId(),date)){
+      return false;
+    }
+
+    System.out.println("이");
+    //완료처리
+    DayOff dayOff = new DayOff();
+    dayOff.setEndDay(date);
+    dayOff.setMember(SecurityUtil.getCurrentMember());
+    dayOffService.saveDayOff(dayOff);
+    System.out.println("삼");
+    //일정 끝내기
+    List<Todo> todoList = todoRepository.findByMemberIdAndCreatedAt(SecurityUtil.getCurrentUserId(),date);
+    //크리쳐 일정 끝내기
+    List<CreatureTodo> creatureTodoList = creatureTodoReposito.findByMemberIdAndCreatedAt(SecurityUtil.getCurrentUserId(),date);
+
+
+    //일기 써달라고 하기
+    // AI 요청!!!!!!!!!!!!!!!!!!!!!
+
+
+    int completedTodos = (int) todoList.stream().filter(todo -> todo.getIsCompleted() == 1).count();
+    int completedCreatureTodos = (int) creatureTodoList.stream().filter(creatureTodo -> creatureTodo.getIsCompleted() == 1).count();
+
+    //경험치 올리기
+    creatureService.expUp(completedTodos+completedCreatureTodos);
+
+    //예본 해
+      return true;
+    }
 }

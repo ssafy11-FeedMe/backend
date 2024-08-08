@@ -14,7 +14,7 @@ public class Alarm {
 
     // 알람 ID
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     // 회원 ID

@@ -32,6 +32,5 @@ public interface FriendService {
     // 친구 거절
     void deleteRequestFriend(int requestId);
 
-    boolean isFriend
 
 }
