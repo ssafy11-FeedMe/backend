@@ -145,6 +145,7 @@ public class MemberChatServiceImpl implements MemberChatService{
     memberChatMessage.setContent(memberChatMessageRequestDTO.getMessage());
     memberChatMessage.setSendId(memberId);
 
+    // 메세지 저장
     memberChatMessage = messageRepository.save(memberChatMessage);
 
     MemberChatListResponseDTO memberChatListResponseDTO = new MemberChatListResponseDTO();
@@ -154,6 +155,7 @@ public class MemberChatServiceImpl implements MemberChatService{
 
     memberChatListResponseDTO.setCreatureImage("http://localhost:8080/image/creature/"+creature.getMember().getId()+"_"+creature.getLevel());
 
+    // 채팅방 갱신
     alarmService.renewChattingRoom(memberChatListResponseDTO);
 
     MemberChatMessageResponseDTO response = new MemberChatMessageResponseDTO();

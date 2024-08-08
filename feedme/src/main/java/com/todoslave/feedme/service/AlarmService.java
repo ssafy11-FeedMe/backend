@@ -15,13 +15,13 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 public interface AlarmService {
 
     SseEmitter createEmitter();
-    void todoCompleted();
+    void todoCompleted() throws IOException;
     void requestFriendship(FriendReqResponseDTO friendReqResponseDTO) throws IOException;
-    void congratsBirthday();
+    void congratsBirthday() throws IOException;
     SseEmitter renewCreateEmitter();
     SseEmitter friendCreateEmitter();
     void renewChattingRoom(MemberChatListResponseDTO room) throws IOException;
-    void sendAlarm(Alarm alarm);
+    void sendAlarm(Alarm alarm) throws IOException;
     Slice<AlarmResponseDTO> loadAlarms(PaginationRequestDTO paginationRequestDTO);
 
 

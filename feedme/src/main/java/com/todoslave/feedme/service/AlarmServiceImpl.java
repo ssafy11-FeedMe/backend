@@ -63,7 +63,7 @@ public class AlarmServiceImpl implements AlarmService{
 
   //1시간 마다 확인, 일정 완료 했는지 여부
   @Scheduled(cron = "0 0 * * * ?")
-  public void todoCompleted(){
+  public void todoCompleted() throws IOException {
 
     LocalDate currentDay = LocalDate.now();
     List<Integer> members = todoRepository.findMemberIdAllByCreatedAtAndIsCompleted(currentDay);
@@ -111,7 +111,7 @@ public class AlarmServiceImpl implements AlarmService{
 
   //생일 알림
   @Scheduled(cron = "0 0 0 * * *")
-  public void congratsBirthday(){
+  public void congratsBirthday() throws IOException {
 
     LocalDate date = LocalDate.now();
     List<Member> birthdayPerson = memberRepository.findAllByBirthday(date);
@@ -124,7 +124,7 @@ public class AlarmServiceImpl implements AlarmService{
       alarm.setContent(member.getNickname()+"님! 생일 축하합니다!");
 
       alarmRepository.save(alarm);
-
+      sendAlarm(alarm);
 
     }
 
@@ -182,15 +182,20 @@ public class AlarmServiceImpl implements AlarmService{
 
   // 알람 받아라
   @Override
-  public void sendAlarm(Alarm alarm) {
+  public void sendAlarm(Alarm alarm) throws IOException {
 
     int memberId = SecurityUtil.getCurrentUserId();
     SseEmitter emitter = emitters.get(memberId);
 
     if(emitter!=null){
+
+      AlarmResponseDTO dto = AlarmMapper.toDto(alarm);
+
       SseEmitter.SseEventBuilder event = SseEmitter.event()
           .name("")
-          .data();
+          .data(dto);
+
+      emitter.send(event);
     }
 
   }
