@@ -8,7 +8,7 @@ import java.time.LocalDate;
 public class FeedRequestDTO {
 
     private LocalDate diaryDate; //언제
-//    private text content;
 
+    private String content;
 
 }
