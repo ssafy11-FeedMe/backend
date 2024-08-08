@@ -52,8 +52,7 @@ public class CreatureTodoController {
 
     // 할일 목록에서 일정(일) 불러오기
     @GetMapping("/todolist/daily")
-    public ResponseEntity<List<CreatureTodoResponseDTO>> findDailyCreatureTodoList(@RequestBody
-                                                                                   CreatureTodoDailyRequestDTO creatureTodoDailyRequestDTO){
+    public ResponseEntity<List<CreatureTodoResponseDTO>> findDailyCreatureTodoList(@RequestBody CreatureTodoDailyRequestDTO creatureTodoDailyRequestDTO){
         return ResponseEntity.ok(creatureTodoService.getCreatureTodoListDaily(creatureTodoDailyRequestDTO));
     }
 

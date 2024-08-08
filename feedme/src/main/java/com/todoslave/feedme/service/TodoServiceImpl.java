@@ -137,16 +137,22 @@ public class TodoServiceImpl implements TodoService {
 
       TodoCalendarResponseDTO todoCalendarResponseDTO = new TodoCalendarResponseDTO();
 
-      long inCompleted = todoRepository.countTodoByDateAndIsCompleted(date, 0);
+      long inCompleted = todoRepository.countTodoByDateAndIsCompleted(date, 0)+creatureTodoReposito.countByCreatedAtAndIsCompleted(date,0);
+
       todoCalendarResponseDTO.setInCompleted((int)inCompleted);
-      long completed = todoRepository.countTodoByDateAndIsCompleted(date, 1);
+
+      long completed = todoRepository.countTodoByDateAndIsCompleted(date, 1)+creatureTodoReposito.countByCreatedAtAndIsCompleted(date,1);
+
       todoCalendarResponseDTO.setCompleted((int)completed);
+
       todoCalendarResponseDTO.setTotal((int)(inCompleted+completed));
       todoCalendarResponseDTO.setDate(date);
 
       todoCounts.add(todoCalendarResponseDTO);
 
     }
+
+
     return todoCounts;
   }
 
@@ -215,13 +221,13 @@ public class TodoServiceImpl implements TodoService {
   }
 
   @Override
-  public TodoResponseDTO AllcompleteTodo(TodoRequestDTO todoRequestDTO) {
+  public boolean AllcompleteTodo(TodoRequestDTO todoRequestDTO) {
     LocalDate date = todoRequestDTO.getDate();
     System.out.println("일");
 
     //만약에 완료를 이미 했다면
-    if(dayOffService.findDayOffByMemberIdAndDate(SecurityUtil.getCurrentUserId(),date)==null){
-      return null;
+    if(!dayOffService.isActionAllowed(SecurityUtil.getCurrentUserId(),date)){
+      return false;
     }
 
     System.out.println("이");
@@ -243,10 +249,11 @@ public class TodoServiceImpl implements TodoService {
 
     int completedTodos = (int) todoList.stream().filter(todo -> todo.getIsCompleted() == 1).count();
     int completedCreatureTodos = (int) creatureTodoList.stream().filter(creatureTodo -> creatureTodo.getIsCompleted() == 1).count();
-    System.out.println("몇이냐"+completedTodos+completedCreatureTodos);
+
     //경험치 올리기
     creatureService.expUp(completedTodos+completedCreatureTodos);
-//예본 해
-      return new TodoResponseDTO();
+
+    //예본 해
+      return true;
     }
 }
