@@ -86,7 +86,7 @@ public class TodoController {
 
   //오늘 (어제 포함) 일정 완료하기
   @PostMapping("/complete/complateAll")
-  public ResponseEntity<TodoResponseDTO> allCompleteTodo(@RequestBody TodoRequestDTO todoRequestDTO){
+  public ResponseEntity<Boolean> allCompleteTodo(@RequestBody TodoRequestDTO todoRequestDTO){
     return ResponseEntity.ok(todoService.AllcompleteTodo(todoRequestDTO));
   }
 

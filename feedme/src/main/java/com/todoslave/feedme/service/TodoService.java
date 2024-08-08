@@ -39,7 +39,7 @@ public interface TodoService {
   public TodoResponseDTO completeTodo(int todoId);
 
   //모든 일정 끝내기 (크리쳐 미션 포함)
-  public TodoResponseDTO AllcompleteTodo(TodoRequestDTO todoRequestDTO);
+  public boolean AllcompleteTodo(TodoRequestDTO todoRequestDTO);
 
   // 그림일기 생성
 
