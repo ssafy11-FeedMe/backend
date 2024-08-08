@@ -3,15 +3,18 @@ package com.todoslave.feedme.service;
 import com.todoslave.feedme.DTO.MemberChatListResponseDTO;
 import com.todoslave.feedme.DTO.MemberChatMessageRequestDTO;
 import com.todoslave.feedme.DTO.MemberChatMessageResponseDTO;
+import com.todoslave.feedme.domain.entity.avatar.Creature;
 import com.todoslave.feedme.domain.entity.communication.MemberChatMessage;
 import com.todoslave.feedme.domain.entity.communication.MemberChatRoom;
 import com.todoslave.feedme.domain.entity.communication.MemberChatRoomChecked;
 import com.todoslave.feedme.domain.entity.membership.Member;
 import com.todoslave.feedme.login.util.SecurityUtil;
+import com.todoslave.feedme.repository.CreatureRepository;
 import com.todoslave.feedme.repository.MemberChatMessageRepository;
 import com.todoslave.feedme.repository.MemberChatRoomCheckedRepository;
 import com.todoslave.feedme.repository.MemberChatRoomRepository;
 import com.todoslave.feedme.repository.MemberRepository;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +33,7 @@ public class MemberChatServiceImpl implements MemberChatService{
   private final AlarmService alarmService;
   private final MemberRepository memberRepository;
   private final MemberChatRoomCheckedRepository memberChatRoomCheckedRepository;
+  private final CreatureRepository creatureRepository;
 
   // 채팅방 목록들 가져오기
   @Override
@@ -60,8 +64,10 @@ public class MemberChatServiceImpl implements MemberChatService{
 
       String nickname = memberRepository.findById(counterPartId).orElseThrow().getNickname();
       chatResponse.setNickname(nickname);
-//      chatResponse.setCreatureImage(
-//              "http://localhost:8080/image/creature/"+{creature_id}+"_"+{creature_level});
+      Creature creature = creatureRepository.findByMemberId(counterPartId);
+
+      chatResponse.setCreatureImage(
+          "http://localhost:8080/image/creature/"+creature.getMember().getId()+"_"+creature.getLevel());
       MemberChatRoomChecked checked = memberChatRoomCheckedRepository.findByMemberChatRoomIdAndMemberId(room.getId(),memberId);
       chatResponse.setIsChecked(checked.getIsChecked());
 
@@ -94,11 +100,13 @@ public class MemberChatServiceImpl implements MemberChatService{
       }
     }
 
+    Creature creature = creatureRepository.findByMemberId(countpart.getId());
+
     MemberChatListResponseDTO memberChatListResponseDTO = new MemberChatListResponseDTO();
     memberChatListResponseDTO.setId(room.getId());
     memberChatListResponseDTO.setNickname(countpart.getNickname());
-//    memberChatListResponseDTO.setCreatureImage(
-//              "http://localhost:8080/image/creature/"+{creature_id}+"_"+{creature_level});
+    memberChatListResponseDTO.setCreatureImage(
+        "http://localhost:8080/image/creature/"+creature.getMember().getId()+"_"+creature.getLevel());
     memberChatListResponseDTO.setIsChecked(1);
 
     return memberChatListResponseDTO;
@@ -116,16 +124,19 @@ public class MemberChatServiceImpl implements MemberChatService{
   }
 
   // 채팅방 메세지 저장
-  public MemberChatMessageResponseDTO insertChatMessage(String roomId, MemberChatMessageRequestDTO memberChatMessageRequestDTO) {
+  public MemberChatMessageResponseDTO insertChatMessage(String roomId, MemberChatMessageRequestDTO memberChatMessageRequestDTO)
+      throws IOException {
     MemberChatMessage memberChatMessage = new MemberChatMessage();
 
     int memberId = SecurityUtil.getCurrentUserId();
 
     MemberChatRoom memberChatRoom = roomRepository.findById(roomId).orElseThrow();
     String counterpartNickname = null;
+    int counterPartId = 0;
 
     for(int m : memberChatRoom.getParticipantIds()){
       if(m!=memberId){
+        counterPartId = m;
         counterpartNickname = memberRepository.findById(m).orElseThrow().getNickname();
       }
     }
@@ -139,9 +150,11 @@ public class MemberChatServiceImpl implements MemberChatService{
     MemberChatListResponseDTO memberChatListResponseDTO = new MemberChatListResponseDTO();
     memberChatListResponseDTO.setId(roomId);
     memberChatListResponseDTO.setNickname(counterpartNickname);
-    memberChatListResponseDTO.setCreatureImage();
+    Creature creature = creatureRepository.findByMemberId(counterPartId);
 
-    alarmService.renewChattingRoom(memberChatMessage);
+    memberChatListResponseDTO.setCreatureImage("http://localhost:8080/image/creature/"+creature.getMember().getId()+"_"+creature.getLevel());
+
+    alarmService.renewChattingRoom(memberChatListResponseDTO);
 
     MemberChatMessageResponseDTO response = new MemberChatMessageResponseDTO();
 

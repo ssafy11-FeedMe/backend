@@ -60,13 +60,6 @@ public class MemberService {
         return memberRepository.findByEmail(email).isPresent();
     }
 
-
-    public void settoken(String email, String refreshToken) {
-        Member member = memberRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("Member not found by email: " + email));
-        member.setToken(refreshToken);
-        memberRepository.save(member);
-    }
-
     public Member registerMember(MemberSignup memberSignup) {
 //        memberRepository.findByEmail(memberSignup.getEmail()).orElseThrow(() -> new RuntimeException("Member not found by email: " + memberSignup.getEmail()));
 

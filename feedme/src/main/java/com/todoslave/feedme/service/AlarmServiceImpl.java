@@ -1,15 +1,19 @@
 package com.todoslave.feedme.service;
 
 
+import com.todoslave.feedme.DTO.AlarmResponseDTO;
 import com.todoslave.feedme.DTO.FriendReqResponseDTO;
 import com.todoslave.feedme.DTO.MemberChatListResponseDTO;
 import com.todoslave.feedme.DTO.PaginationRequestDTO;
 import com.todoslave.feedme.domain.entity.alarm.Alarm;
+import com.todoslave.feedme.domain.entity.avatar.Creature;
 import com.todoslave.feedme.domain.entity.communication.MemberChatMessage;
 import com.todoslave.feedme.domain.entity.membership.Member;
 import com.todoslave.feedme.login.util.SecurityUserDto;
 import com.todoslave.feedme.login.util.SecurityUtil;
+import com.todoslave.feedme.mapper.AlarmMapper;
 import com.todoslave.feedme.repository.AlarmRepository;
+import com.todoslave.feedme.repository.CreatureRepository;
 import com.todoslave.feedme.repository.MemberAlarmRepository;
 import com.todoslave.feedme.repository.MemberRepository;
 import com.todoslave.feedme.repository.TodoRepository;
@@ -36,8 +40,7 @@ public class AlarmServiceImpl implements AlarmService{
   private MemberAlarmRepository memberAlarmRepository;
   private TodoRepository todoRepository;
   private MemberRepository memberRepository;
-
-  private ApplicationEventPublisher eventPublisher;
+  private CreatureRepository creatureRepository;
 
   private final Map<Integer, SseEmitter> emitters = new ConcurrentHashMap<>();
   private final Map<Integer, SseEmitter> chatEmitters = new ConcurrentHashMap<>();
@@ -77,9 +80,13 @@ public class AlarmServiceImpl implements AlarmService{
         Member member = new Member();
         member.setId(memberId);
 
+        Creature creature = creatureRepository.findByMemberId(memberId);
+
         alarm.setMember(member);
-        alarm.setContent("(크리쳐 이름)"+"이 기다리고 있어요!");
+        alarm.setContent("배고픈 "+creature.getCreatureName()+".. 밥 줄 사람 없나요?");
         alarmRepository.save(alarm);
+
+        sendAlarm(alarm);
 
       }
     }
@@ -173,14 +180,31 @@ public class AlarmServiceImpl implements AlarmService{
 
   }
 
-  public Slice<Alarm> roadAlarms(PaginationRequestDTO paginationRequestDTO){
+  // 알람 받아라
+  @Override
+  public void sendAlarm(Alarm alarm) {
+
+    int memberId = SecurityUtil.getCurrentUserId();
+    SseEmitter emitter = emitters.get(memberId);
+
+    if(emitter!=null){
+      SseEmitter.SseEventBuilder event = SseEmitter.event()
+          .name("")
+          .data();
+    }
+
+  }
+
+  public Slice<AlarmResponseDTO> loadAlarms(PaginationRequestDTO paginationRequestDTO){
 
     Pageable pageable = PageRequest.of(paginationRequestDTO.getSkip() / paginationRequestDTO.getLimit(),
         paginationRequestDTO.getLimit());
 
     int memberId = SecurityUtil.getCurrentUserId();
 
-    return alarmRepository.findByMemberId(memberId, pageable);
+    Slice<Alarm> alarm = alarmRepository.findByMemberId(memberId, pageable);
+
+    return alarm.map(AlarmMapper::toDto);
   }
 
 

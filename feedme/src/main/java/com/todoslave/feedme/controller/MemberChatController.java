@@ -7,6 +7,7 @@ import com.todoslave.feedme.domain.entity.membership.Member;
 import com.todoslave.feedme.login.util.SecurityUtil;
 import com.todoslave.feedme.service.MemberChatService;
 import com.todoslave.feedme.service.MemberService;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -55,7 +56,8 @@ public class MemberChatController {
   // 메세지 저장
   @MessageMapping("/messages/{roomId}")
   @SendTo("/chatRoom/messages/{roomId}")
-  public MemberChatMessageResponseDTO sendMessage(@DestinationVariable String roomId, @Payload MemberChatMessageRequestDTO memberChatMessageRequestDTO) {
+  public MemberChatMessageResponseDTO sendMessage(@DestinationVariable String roomId, @Payload MemberChatMessageRequestDTO memberChatMessageRequestDTO)
+      throws IOException {
     return chatService.insertChatMessage(roomId, memberChatMessageRequestDTO);
   }
 

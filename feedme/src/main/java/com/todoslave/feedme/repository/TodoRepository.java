@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -25,5 +27,5 @@ public interface TodoRepository extends JpaRepository<Todo, Integer> {
   @Query("SELECT COUNT(t) FROM Todo t WHERE t.createdAt = :date AND t.isCompleted = :isCompleted")
   long countTodoByDateAndIsCompleted(@Param("date") LocalDate date, @Param("isCompleted") int isCompleted);
 
-
+  List<Todo> findByMemberIdAndCreatedAt(int memberId, LocalDate createdAt);
 }

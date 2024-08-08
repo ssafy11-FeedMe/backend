@@ -1,5 +1,6 @@
 package com.todoslave.feedme.service;
 
+import com.todoslave.feedme.DTO.AlarmResponseDTO;
 import com.todoslave.feedme.DTO.FriendReqResponseDTO;
 import com.todoslave.feedme.DTO.MemberChatListResponseDTO;
 import com.todoslave.feedme.DTO.PaginationRequestDTO;
@@ -20,7 +21,8 @@ public interface AlarmService {
     SseEmitter renewCreateEmitter();
     SseEmitter friendCreateEmitter();
     void renewChattingRoom(MemberChatListResponseDTO room) throws IOException;
-    Slice<Alarm> roadAlarms(PaginationRequestDTO paginationRequestDTO);
+    void sendAlarm(Alarm alarm);
+    Slice<AlarmResponseDTO> loadAlarms(PaginationRequestDTO paginationRequestDTO);
 
 
 }

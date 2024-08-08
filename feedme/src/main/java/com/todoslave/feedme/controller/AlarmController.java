@@ -1,28 +1,22 @@
 package com.todoslave.feedme.controller;
 
-import com.todoslave.feedme.DTO.AlarmCheckRequestDTO;
+import com.todoslave.feedme.DTO.AlarmResponseDTO;
+import com.todoslave.feedme.login.util.SecurityUtil;
 import com.todoslave.feedme.DTO.PaginationRequestDTO;
 import com.todoslave.feedme.domain.entity.alarm.Alarm;
-import com.todoslave.feedme.login.util.SecurityUtil;
 import com.todoslave.feedme.service.AlarmService;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Slice;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/alarms")
 public class AlarmController {
 
+    private final SecurityUtil securityUtil;
     private AlarmService alarmService;
 
     @GetMapping(value = "/subscribe/alarm")
@@ -42,8 +36,8 @@ public class AlarmController {
 
     // 생일, 투두
     @GetMapping()
-    private ResponseEntity<Slice<Alarm>> roadAlarms(PaginationRequestDTO paginationRequestDTO) {
-        return ResponseEntity.ok(alarmService.roadAlarms(paginationRequestDTO));
+    private ResponseEntity<Slice<AlarmResponseDTO>> loadAlarms(PaginationRequestDTO paginationRequestDTO) {
+        return ResponseEntity.ok(alarmService.loadAlarms(paginationRequestDTO));
     }
 
 
