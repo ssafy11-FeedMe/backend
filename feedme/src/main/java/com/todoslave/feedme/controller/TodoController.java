@@ -8,6 +8,8 @@ import com.todoslave.feedme.DTO.TodoModifyRequestDTO;
 import com.todoslave.feedme.DTO.TodoRequestDTO;
 import com.todoslave.feedme.DTO.TodoResponseDTO;
 import com.todoslave.feedme.service.TodoService;
+
+import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +28,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/todos")
 public class TodoController {
 
-  @Autowired
   private final TodoService todoService;
 
   // 할일 목록에서 일정(일) 불러오기
@@ -58,7 +59,6 @@ public class TodoController {
     return ResponseEntity.ok(todoService.getTodoCalendarCompleted(todoRequestDTO));
   }
 
-
   // 투두 생성
   @PostMapping
   public ResponseEntity<TodoResponseDTO> createTodo(@RequestBody TodoCreateRequestDTO todo){
@@ -83,5 +83,12 @@ public class TodoController {
   public ResponseEntity<TodoResponseDTO> completeTodo(@PathVariable int id){
     return ResponseEntity.ok(todoService.completeTodo(id));
   }
+
+  //오늘 (어제 포함) 일정 완료하기
+  @PostMapping("/complete/complateAll")
+  public ResponseEntity<Boolean> allCompleteTodo(@RequestBody TodoRequestDTO todoRequestDTO){
+    return ResponseEntity.ok(todoService.AllcompleteTodo(todoRequestDTO));
+  }
+
 
 }
