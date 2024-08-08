@@ -104,6 +104,14 @@ public class FriendServiceImpl implements FriendService{
         friend.setMember(member);
         friend.setCounterpart(counterpart);
 
+        // 친구 추가
+        friendRepository.save(friend);
+
+        friend.setMember(counterpart);
+        friend.setCounterpart(member);
+
+        friendRepository.save(friend);
+
         friendRequestRepository.deleteById(requestId);
 
         List<Integer> members = new ArrayList<>();
@@ -111,8 +119,6 @@ public class FriendServiceImpl implements FriendService{
         members.add(member.getId());
         members.add(counterpart.getId());
 
-        // 친구 추가
-        friendRepository.save(friend);
         // 채팅방 생성
         return memberChatService.insertChatRoom(members);
     }
