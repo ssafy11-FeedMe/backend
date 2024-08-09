@@ -20,8 +20,10 @@ import java.util.List;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
+@Service
 public class FriendServiceImpl implements FriendService{
 
     MemberService memberService;
@@ -129,5 +131,11 @@ public class FriendServiceImpl implements FriendService{
 
         friendRequestRepository.deleteById(requestId);
 
+    }
+
+    // 친구 인지 확인하기
+    public boolean isFriend(int memberId, int friendId) {
+        return friendRepository.existsByMemberIdAndCounterpartId(memberId, friendId) ||
+            friendRepository.existsByCounterpartIdAndMemberId(friendId, memberId);
     }
 }

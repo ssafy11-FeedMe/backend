@@ -31,9 +31,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @RequiredArgsConstructor
+@Service
 public class AlarmServiceImpl implements AlarmService{
 
   private AlarmRepository alarmRepository;
@@ -68,27 +70,24 @@ public class AlarmServiceImpl implements AlarmService{
     LocalDate currentDay = LocalDate.now();
     List<Integer> members = todoRepository.findMemberIdAllByCreatedAtAndIsCompleted(currentDay);
 
-    for(int memberId : members){
+    for(int memberId : members) {
 
       LocalTime currentTime = LocalTime.now();
       int time = currentTime.getHour();
 
-      if(memberAlarmRepository.existsByMemberIdAndReceiveAt(memberId,time)) {
+      Alarm alarm = new Alarm();
 
-        Alarm alarm = new Alarm();
+      Member member = new Member();
+      member.setId(memberId);
 
-        Member member = new Member();
-        member.setId(memberId);
+      Creature creature = creatureRepository.findByMemberId(memberId);
 
-        Creature creature = creatureRepository.findByMemberId(memberId);
+      alarm.setMember(member);
+      alarm.setContent("배고픈 " + creature.getCreatureName() + ".. 밥 줄 사람 없나요?");
+      alarmRepository.save(alarm);
 
-        alarm.setMember(member);
-        alarm.setContent("배고픈 "+creature.getCreatureName()+".. 밥 줄 사람 없나요?");
-        alarmRepository.save(alarm);
+      sendAlarm(alarm);
 
-        sendAlarm(alarm);
-
-      }
     }
   }
 
