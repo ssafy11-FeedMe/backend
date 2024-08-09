@@ -201,7 +201,6 @@ public class AlarmServiceImpl implements AlarmService{
   }
 
   public Slice<AlarmResponseDTO> loadAlarms(PaginationRequestDTO paginationRequestDTO){
-
     Pageable pageable = PageRequest.of(paginationRequestDTO.getSkip() / paginationRequestDTO.getLimit(),
         paginationRequestDTO.getLimit());
 
