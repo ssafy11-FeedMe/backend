@@ -14,6 +14,4 @@ public interface FriendRequestRepository extends JpaRepository<FriendRequest, In
     FriendRequest findById(int id);
     Slice<FriendRequest> findAllByMemberId(int memberId, Pageable pageable);
 
-
-
 }
