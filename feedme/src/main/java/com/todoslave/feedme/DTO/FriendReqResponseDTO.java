@@ -11,4 +11,7 @@ public class FriendReqResponseDTO {
   // 상대방 닉네임
   private String counterpartNickname;
 
+  // 상대방 크리쳐 이미지
+  private String creatureImg;
+
 }
