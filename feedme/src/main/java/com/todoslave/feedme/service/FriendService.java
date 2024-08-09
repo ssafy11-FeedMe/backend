@@ -1,24 +1,25 @@
 package com.todoslave.feedme.service;
 
-import com.todoslave.feedme.DTO.FriendReqRequestDTO;
+import com.todoslave.feedme.DTO.FriendInfoResponseDTO;
+import com.todoslave.feedme.DTO.FriendRequestDTO;
 import com.todoslave.feedme.DTO.FriendReqResponseDTO;
 import com.todoslave.feedme.DTO.FriendResponseDTO;
 import com.todoslave.feedme.DTO.MemberChatListResponseDTO;
 import com.todoslave.feedme.DTO.PaginationRequestDTO;
-import com.todoslave.feedme.domain.entity.communication.Friend;
-import com.todoslave.feedme.domain.entity.communication.FriendRequest;
 
-import com.todoslave.feedme.domain.entity.membership.Member;
 import java.util.List;
 import org.springframework.data.domain.Slice;
 
 public interface FriendService {
 
     // 친구 추가
-    void requestFriend(FriendReqRequestDTO friendReqRequestDTO);
+    void requestFriend(FriendRequestDTO friendRequestDTO);
 
     // 친구 삭제
-    void deleteFriend(int friendId);
+    void deleteFriend(FriendRequestDTO friendRequestDTO);
+
+    // 친구 정보 불러오기
+    FriendInfoResponseDTO getFriendInfo(FriendRequestDTO friendRequestDTO);
 
     // 친구 목록 조회
     List<FriendResponseDTO> getFriends();

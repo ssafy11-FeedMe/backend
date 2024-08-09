@@ -1,10 +1,13 @@
 package com.todoslave.feedme.service;
 
-import com.todoslave.feedme.DTO.FriendReqRequestDTO;
+import com.todoslave.feedme.DTO.CreatureInfoResponseDTO;
+import com.todoslave.feedme.DTO.FriendInfoResponseDTO;
+import com.todoslave.feedme.DTO.FriendRequestDTO;
 import com.todoslave.feedme.DTO.FriendReqResponseDTO;
 import com.todoslave.feedme.DTO.FriendResponseDTO;
 import com.todoslave.feedme.DTO.MemberChatListResponseDTO;
 import com.todoslave.feedme.DTO.PaginationRequestDTO;
+import com.todoslave.feedme.domain.entity.avatar.Creature;
 import com.todoslave.feedme.domain.entity.communication.Friend;
 import com.todoslave.feedme.domain.entity.communication.FriendRequest;
 import com.todoslave.feedme.domain.entity.membership.Member;
@@ -12,11 +15,13 @@ import com.todoslave.feedme.login.util.SecurityUtil;
 import com.todoslave.feedme.mapper.FriendRequestMapper;
 import com.todoslave.feedme.repository.FriendRepository;
 import com.todoslave.feedme.repository.FriendRequestRepository;
+import com.todoslave.feedme.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -27,16 +32,21 @@ import org.springframework.stereotype.Service;
 public class FriendServiceImpl implements FriendService{
 
     MemberService memberService;
+    @Autowired
     FriendRepository friendRepository;
+    @Autowired
     FriendRequestRepository friendRequestRepository;
     MemberChatService memberChatService;
+    CreatureService creatureService;
+    @Autowired
+    MemberRepository memberRepository;
 
     // 친구 요청
     @Override
-    public void requestFriend(FriendReqRequestDTO friendReqRequestDTO) {
+    public void requestFriend(FriendRequestDTO friendRequestDTO) {
 
         Member member = SecurityUtil.getCurrentMember();
-        Member counterpart = memberService.findByNickname(friendReqRequestDTO.getCounterpartNickname());
+        Member counterpart = memberService.findByNickname(friendRequestDTO.getCounterpartNickname());
 
         FriendRequest friendRequest = new FriendRequest();
 
@@ -50,10 +60,32 @@ public class FriendServiceImpl implements FriendService{
     // 친구 삭제
     @Override
     @Transactional
-    public void deleteFriend(int friendId) {
+    public void deleteFriend(FriendRequestDTO friendRequestDTO) {
 
-        friendRequestRepository.deleteById(friendId);
+        Member friend = memberRepository.findByNickname(friendRequestDTO.getCounterpartNickname()).orElseThrow();
+        int memberId = SecurityUtil.getCurrentUserId();
+        int friendId = friendRepository.findByMemberIdAndCounterpartId(memberId, friend.getId());
+        friendRepository.deleteById(friendId);
 
+    }
+
+    // 친구 정보 불러오기
+    public FriendInfoResponseDTO getFriendInfo(FriendRequestDTO friendRequestDTO){
+
+        FriendInfoResponseDTO response = new FriendInfoResponseDTO();
+
+        Member member = memberService.findByNickname(friendRequestDTO.getCounterpartNickname());
+
+        response.setFriendId(member.getId());
+        response.setNickname(member.getNickname());
+
+        CreatureInfoResponseDTO creatureInfoResponseDTO = creatureService.creatureInfo(member);
+        response.setCreatureImg(creatureInfoResponseDTO.getImg());
+        response.setLevel(creatureInfoResponseDTO.getLevel());
+        response.setExp(creatureInfoResponseDTO.getExp());
+        response.setJoin(creatureInfoResponseDTO.getDay());
+
+        return response;
     }
 
     // 친구 목록 불러오기

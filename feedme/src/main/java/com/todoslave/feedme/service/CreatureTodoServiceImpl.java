@@ -10,6 +10,7 @@ import com.todoslave.feedme.login.util.SecurityUtil;
 import com.todoslave.feedme.repository.CreatureTodoReposito;
 import com.todoslave.feedme.repository.MissionRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -22,7 +23,9 @@ import java.util.Random;
 @RequiredArgsConstructor
 public class CreatureTodoServiceImpl implements CreatureTodoService{
 
+    @Autowired
     final private MissionRepository missionRepository;
+    @Autowired
     final private CreatureTodoReposito creatureTodoRepository;
     private Random random = new Random();
     // 로그인시에 없으면 생성
