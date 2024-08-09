@@ -10,7 +10,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -55,7 +58,9 @@ public class FeedServiceImpl implements FeedService{
 
     public FeedResponseDTO convertToDTO(Feed feed) {
         FeedResponseDTO dto = new FeedResponseDTO();
-//        dto.setCreatedAt(System.currentTimeMillis());
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+
+        dto.setCreatedAt(timestamp);
         dto.setId(feed.getId());
         dto.setImg(diaryImgPath(feed)); // 이미지 URL이 엔티티에 없다면 필요에 따라 설정
         dto.setContent(feed.getContent());
@@ -69,6 +74,35 @@ public class FeedServiceImpl implements FeedService{
         String day = String.valueOf(feed.getDiaryDay());
         return "http://localhost:8080/image/pictureDiary/" + id + "_" + day;
     }
+
+//    // Feed 엔티티를 FeedResponseDTO로 변환하는 메서드
+//    public FeedResponseDTO convertToDTO(Feed feed) {
+//        FeedResponseDTO dto = new FeedResponseDTO();
+//        dto.setId(feed.getId());
+//        dto.setImg("image_url_placeholder"); // 이미지 URL이 엔티티에 없다면 필요에 따라 설정
+//        dto.setContent(feed.getContent());
+//        dto.setAuthor(feed.getNickname());
+//        dto.setLikeCnt(String.valueOf(feed.getLikeCount()));
+//        return dto;
+//    }
+//
+//    // 모든 피드를 가져와서 DTO 리스트로 반환하는 메서드
+//    public List<FeedResponseDTO> getAllFeeds() {
+//        List<Feed> feeds = feedRepository.findAll();
+//        return feeds.stream()
+//                .map(this::convertToDTO)
+//                .collect(Collectors.toList());
+//    }
+//
+//    // 특정 ID의 피드를 가져와서 DTO로 반환하는 메서드
+//    public FeedResponseDTO getFeedById(int id) {
+//        Feed feed = feedRepository.findById(id)
+//                .orElseThrow(() -> new IllegalArgumentException("Invalid feed ID: " + id));
+//        return convertToDTO(feed);
+//    }
+
+
+
 }
 
 

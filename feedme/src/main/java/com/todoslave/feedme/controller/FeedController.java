@@ -48,21 +48,17 @@ public class FeedController {
         }
     }
 
-//    // 피드 보기
-//    @Operation(summary = "피드 보기")
-//    @GetMapping
-//    public ResponseEntity<> findFeed(@PathVariable int feedId) {
-//
-//        //친구 찾기
-//
-//        //
-//
-//        if(feedService.delectFeed(feedId)){
-//            return new ResponseEntity<String>("삭제되었습니다.", HttpStatus.OK);
-//        }else{
-//            return new ResponseEntity<String>("본인글만 지우세요", HttpStatus.BAD_REQUEST);
-//        }
-//    }
+    // 피드 보기
+    @Operation(summary = "피드 보기")
+    @GetMapping
+    public ResponseEntity<?> findFeed(@PathVariable int feedId) {
+        //친구 찾기
+
+        //
+
+
+     return null;
+    }
 
 
 //
