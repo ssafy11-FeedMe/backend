@@ -9,6 +9,7 @@ import com.todoslave.feedme.domain.entity.Feed.FeedComment;
 import com.todoslave.feedme.domain.entity.Feed.FeedLike;
 import com.todoslave.feedme.domain.entity.Feed.FeedRecomment;
 
+import com.todoslave.feedme.domain.entity.alarm.Alarm;
 import com.todoslave.feedme.domain.entity.communication.Friend;
 import com.todoslave.feedme.domain.entity.communication.FriendRequest;
 import com.todoslave.feedme.domain.entity.diary.PictureDiary;
@@ -27,6 +28,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -148,7 +150,7 @@ public class Member { //유저 디테일은 사용자 인증 정보를 담아두
     //알람과 매핑
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    private List<com.todoslave.feedme.domain.entity.check.Alarm> alarms = new ArrayList<>();
+    private List<com.todoslave.feedme.domain.entity.alarm.Alarm> alarms = new ArrayList<>();
 
     //끝내는 날과 매핑
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)

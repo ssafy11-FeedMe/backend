@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CreatureRepository extends JpaRepository<Creature, Integer> {
 
+  Creature findByMemberId(int memberId);
+
 }

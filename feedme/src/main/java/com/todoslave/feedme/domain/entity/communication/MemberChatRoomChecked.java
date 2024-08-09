@@ -25,7 +25,7 @@ public class MemberChatRoomChecked {
   @Field("member_id")
   private int memberId;
 
-  @Field("recent_check_time")
-  private LocalDateTime recentCheckTime;
+  @Field("is_checked")
+  private int isChecked;
 
 }
