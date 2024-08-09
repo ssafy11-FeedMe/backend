@@ -9,6 +9,7 @@ import com.todoslave.feedme.repository.FeedRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.sql.Time;
 import java.time.LocalDateTime;
 
 
@@ -54,7 +55,7 @@ public class FeedServiceImpl implements FeedService{
 
     public FeedResponseDTO convertToDTO(Feed feed) {
         FeedResponseDTO dto = new FeedResponseDTO();
-        dto.setCreatedAt(LocalDateTime.now());
+//        dto.setCreatedAt(System.currentTimeMillis());
         dto.setId(feed.getId());
         dto.setImg(diaryImgPath(feed)); // 이미지 URL이 엔티티에 없다면 필요에 따라 설정
         dto.setContent(feed.getContent());
