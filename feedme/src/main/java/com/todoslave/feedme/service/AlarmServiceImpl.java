@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -38,10 +39,15 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 @Service
 public class AlarmServiceImpl implements AlarmService{
 
+  @Autowired
   private AlarmRepository alarmRepository;
+  @Autowired
   private MemberAlarmRepository memberAlarmRepository;
+  @Autowired
   private TodoRepository todoRepository;
+  @Autowired
   private MemberRepository memberRepository;
+  @Autowired
   private CreatureRepository creatureRepository;
 
   private final Map<Integer, SseEmitter> emitters = new ConcurrentHashMap<>();
@@ -161,9 +167,7 @@ public class AlarmServiceImpl implements AlarmService{
 
   // 채팅방 갱신
   @Override
-  public void renewChattingRoom(MemberChatListResponseDTO room) throws IOException {
-
-    int memberId = SecurityUtil.getCurrentUserId();
+  public void renewChattingRoom(MemberChatListResponseDTO room, int memberId) throws IOException {
 
     SseEmitter emitter = chatEmitters.get(memberId);
 

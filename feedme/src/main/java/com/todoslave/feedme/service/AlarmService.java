@@ -20,7 +20,7 @@ public interface AlarmService {
     void congratsBirthday() throws IOException;
     SseEmitter renewCreateEmitter();
     SseEmitter friendCreateEmitter();
-    void renewChattingRoom(MemberChatListResponseDTO room) throws IOException;
+    void renewChattingRoom(MemberChatListResponseDTO room, int memberId) throws IOException;
     void sendAlarm(Alarm alarm) throws IOException;
     Slice<AlarmResponseDTO> loadAlarms(PaginationRequestDTO paginationRequestDTO);
 
