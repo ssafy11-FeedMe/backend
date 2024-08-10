@@ -8,6 +8,17 @@ import com.todoslave.feedme.domain.entity.membership.Member;
 import java.util.List;
 import java.util.Optional;
 
+// import java.util.stream.Collectors;
+
+//@Service
+// @Transactional
+// public class MemberService {
+
+//     @Autowired
+//     MemberRepository memberRepository;
+//     @Autowired
+//     FriendService friendService;
+
 
 public interface MemberService {
 
