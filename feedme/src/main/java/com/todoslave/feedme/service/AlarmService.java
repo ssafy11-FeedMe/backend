@@ -21,7 +21,6 @@ public interface AlarmService {
     void requestFriendship(FriendReqResponseDTO friendReqResponseDTO) throws IOException;
     void congratsBirthday() throws IOException;
     SseEmitter renewCreateEmitter();
-    SseEmitter friendCreateEmitter();
     void renewChattingRoom(MemberChatListResponseDTO room, int memberId) throws IOException;
     public <T> void sendAlarm(T alarm, int type) throws IOException;
     Slice<AlarmResponseDTO> loadAlarms(PaginationRequestDTO paginationRequestDTO);
