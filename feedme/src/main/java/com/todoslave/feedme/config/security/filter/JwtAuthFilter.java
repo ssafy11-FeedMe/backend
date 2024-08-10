@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -35,6 +36,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JWTUtill jwtUtil;
     private final MemberRepository memberRepository;
+
     private final RefreshTokenRepository tokenRepository;
 
     @Override
@@ -43,8 +45,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     }
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+
         // request Header에서 AccessToken을 가져온다.
         String atc = request.getHeader("Authorization");
+
+
 
         // 토큰 검사 생략(모두 허용 URL의 경우 토큰 검사 통과)
         if (!StringUtils.hasText(atc)) {
@@ -56,12 +61,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         if (!jwtUtil.verifyToken(atc)) {
 
             Optional<RefreshToken> refreshToken = tokenRepository.findByAccessToken(atc);
-            System.out.println("바보");
-            System.out.println(refreshToken);
+
+//            System.out.println("access token: " + atc + "이고요");
+//            System.out.println("refresh token: " + refreshToken+"입니다");
+//            System.out.println(refreshToken.toString());
+//            System.out.println("refresh token: " + refreshToken.get().getRefreshToken()+"입니다");
 
             if (refreshToken.isPresent() && jwtUtil.verifyToken(refreshToken.get().getRefreshToken())) {
 
-                System.out.println("바봉");
 
                 // RefreshToken 객체를 꺼내온다.
                 RefreshToken resultToken = refreshToken.get();
