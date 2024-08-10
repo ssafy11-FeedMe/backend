@@ -37,29 +37,6 @@ public class AlarmController {
 
     }
 
-//    private void sendAlarmToMember(String message) throws Exception{
-//
-//        int memberId = securityUtil.getId();
-//
-//        SseEmitter emitter = emitters.get(memberId);
-//        if(emitter != null){
-//          emitter.send(SseEmitter.event().name("Alarm").data(message));
-//        }
-//
-//    }
-
-    //DTO 없음 주석
-//    @RequestMapping("/read")
-//    private void checkAlarm(@RequestBody AlarmCheckRequestDTO alarmCheckRequestDTO){
-//
-//        int memberId = securityUtil.getId();
-//
-//        LocalDateTime checkTime = LocalDateTime.parse(alarmCheckRequestDTO.getCheckTime(), DateTimeFormatter.ISO_DATE_TIME);
-//        AlarmCheckServiceDTO alarmCheckServiceDTO = new AlarmCheckServiceDTO();
-//        alarmCheckServiceDTO.setCheckTime(checkTime);
-//
-//
-//    }
 
 
 }
