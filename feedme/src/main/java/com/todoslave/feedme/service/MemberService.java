@@ -12,7 +12,7 @@ public interface MemberService {
 
     // 회원 가입
     Member insertMember(Member member);
-
+  
     // 회원 전체 조회
     List<Member> findMembers();
 

@@ -10,7 +10,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-//@Repository //Component가 들어가있다.
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Integer> {
 
@@ -18,8 +17,8 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
     Optional<Member> findById(Integer id);
     List<Member> findByNicknameContaining(String searchValue);
     Optional<Member> findByNickname(String nickname);
-
     List<Member> findAllByBirthday(LocalDate date);
-
     boolean existsByNickname(String nickname);
+  
 }
+

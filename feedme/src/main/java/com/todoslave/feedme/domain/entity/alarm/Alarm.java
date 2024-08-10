@@ -1,4 +1,4 @@
-package com.todoslave.feedme.domain.entity.check;
+package com.todoslave.feedme.domain.entity.alarm;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -32,9 +32,6 @@ public class Alarm {
     @Column(name = "receive_at", nullable = false, updatable = false)
     private LocalDateTime receiveAt;
 
-    // 확인 했는 지 여부
-    @Column(name = "is_checked")
-    private int isChecked;
 
 //    //==연관관계 메서드==//
 //    public void setMember(Member member) {
