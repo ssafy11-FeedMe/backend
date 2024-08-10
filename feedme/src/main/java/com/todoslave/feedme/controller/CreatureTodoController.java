@@ -4,6 +4,7 @@ import com.todoslave.feedme.DTO.*;
 import com.todoslave.feedme.service.CreatureTodoService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CreatureTodoController {
 
+    @Autowired
     final private CreatureTodoService creatureTodoService;
 
     // 크리쳐 투두 생성

@@ -7,6 +7,7 @@ import com.todoslave.feedme.DTO.FeedResponseDTO;
 import com.todoslave.feedme.service.FeedService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FeedController {
 
+    @Autowired
     private final FeedService feedService;
 
     // 피드 생성
