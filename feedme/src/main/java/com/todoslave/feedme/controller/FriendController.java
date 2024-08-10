@@ -1,7 +1,8 @@
 package com.todoslave.feedme.controller;
 
-import com.todoslave.feedme.DTO.FriendReqRequestDTO;
+import com.todoslave.feedme.DTO.FriendInfoResponseDTO;
 import com.todoslave.feedme.DTO.FriendReqResponseDTO;
+import com.todoslave.feedme.DTO.FriendRequestDTO;
 import com.todoslave.feedme.DTO.FriendResponseDTO;
 import com.todoslave.feedme.DTO.MemberChatListResponseDTO;
 import com.todoslave.feedme.DTO.PaginationRequestDTO;
@@ -9,7 +10,9 @@ import com.todoslave.feedme.service.AlarmService;
 import com.todoslave.feedme.service.FriendService;
 import com.todoslave.feedme.service.MemberChatService;
 import com.todoslave.feedme.service.MemberService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,27 +24,37 @@ import java.util.List;
 @RequestMapping("/friends")
 public class FriendController {
 
+    @Autowired
     static private MemberService memberService;
+    @Autowired
     static private FriendService friendService;
+    @Autowired
     static private AlarmService alarmService;
+    @Autowired
     static private MemberChatService memberChatService;
 
     // 친구 요청하기
     @PostMapping
-    public ResponseEntity<Void> addFriend(FriendReqRequestDTO friendReqRequestDTO){
+    public ResponseEntity<Void> addFriend(@RequestBody FriendRequestDTO friendReqRequestDTO){
         friendService.requestFriend(friendReqRequestDTO);
         return ResponseEntity.noContent().build();
     }
 
     // 친구 삭제하기
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> removeFriend(@RequestParam("id") int friendId){
-        friendService.deleteFriend(friendId);
+    @DeleteMapping()
+    public ResponseEntity<Void> removeFriend(@RequestBody FriendRequestDTO friendRequestDTO){
+        friendService.deleteFriend(friendRequestDTO);
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(summary = "친구 닉네임 검색")
+    @GetMapping("/info")
+    public ResponseEntity<FriendInfoResponseDTO> findFriendInfo(FriendRequestDTO friendRequestDTO){
+        return ResponseEntity.ok(friendService.getFriendInfo(friendRequestDTO));
+    }
+
     // 친구 목록 불러오기
-    @GetMapping
+    @GetMapping("/list")
     public ResponseEntity<List<FriendResponseDTO>> findFriends(){
         return ResponseEntity.ok(friendService.getFriends());
     }

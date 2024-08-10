@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
@@ -30,7 +31,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/friends/chats")
 public class MemberChatController {
 
+  @Autowired
   private final MemberChatService chatService;
+  @Autowired
   private final MemberService memberService;
 
   // 유저의 채팅방 목록들 불러오기

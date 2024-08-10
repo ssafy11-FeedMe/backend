@@ -9,7 +9,6 @@ import org.springframework.data.repository.query.Param;
 
 public interface MemberAlarmRepository extends JpaRepository<MemberAlarm, Integer> {
 
-//  boolean existsByMemberIdAndReceiveAt(@Param("memberId") int memberId, @Param("receiveAt") int receiveAt);
 
 
 }

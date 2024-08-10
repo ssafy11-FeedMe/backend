@@ -20,17 +20,21 @@ import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
 public class TodoServiceImpl implements TodoService {
 
+  @Autowired
   private final TodoRepository todoRepository;
+  @Autowired
   private final TodoCategoryRepository todoCategoryRepository;
+  @Autowired
   private final CreatureTodoReposito creatureTodoReposito;
   private final DayOffService dayOffService;
-  private  final CreatureService creatureService;
+  private final CreatureService creatureService;
 
   // 할일 목록에서 일정(일) 불러오기
   @Override

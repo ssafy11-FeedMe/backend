@@ -20,8 +20,9 @@ import java.time.Period;
 @RequiredArgsConstructor
 public class CreatureServiceImpl implements CreatureService {
 
+    @Autowired
     final private MemberRepository memberRepository;
-
+    @Autowired
     final private CreatureRepository creatureRepository;
 
     //크리쳐 만들기
@@ -46,10 +47,11 @@ public class CreatureServiceImpl implements CreatureService {
 
     // 크리쳐 보기
     @Override
-    public CreatureInfoResponseDTO CreatureInfo() {
+    public CreatureInfoResponseDTO creatureInfo(Member member) {
+
         CreatureInfoResponseDTO creatureInfoResponseDTO = new CreatureInfoResponseDTO();
-        Member member = SecurityUtil.getCurrentMember();
         creatureInfoResponseDTO.setName(member.getCreature().getCreatureName());
+        creatureInfoResponseDTO.setLevel(member.getCreature().getLevel());
         creatureInfoResponseDTO.setExp(member.getCreature().getExp());
         creatureInfoResponseDTO.setImg(generateCreatureImgPath(member));
 
@@ -95,13 +97,10 @@ public class CreatureServiceImpl implements CreatureService {
         // 현재 레벨에 따른 경험치와 레벨업 조건 처리
         switch (creature.getLevel()) {
             case 0: // 알
-                System.out.println("여기 들어가니?");
                 if (nowExp >= 10) { // 레벨업 조건
                     creature.setLevel(1);
                     creature.setExp(nowExp - 10);
                 } else {
-
-                    System.out.println("여기 들어가야 하는데");
                     System.out.println(nowExp);
                     creature.setExp(nowExp);
                 }

@@ -24,8 +24,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor // 생성자 만들어 주는 얘
 public class MemberService {
 
+    @Autowired
     private final MemberRepository memberRepository;
-
     private final FriendService friendService;
 
 
@@ -129,7 +129,7 @@ public class MemberService {
         return memberSerachResponse;
     }
 
-    private String generateCreatureImgPath(Member member) {
+    public String generateCreatureImgPath(Member member) {
         Creature creature = member.getCreature();
         int creatureLevel = creature.getLevel();
         int creatureId = creature.getId();

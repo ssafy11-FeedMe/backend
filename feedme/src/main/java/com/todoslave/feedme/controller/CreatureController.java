@@ -8,6 +8,7 @@ import com.todoslave.feedme.login.util.SecurityUtil;
 import com.todoslave.feedme.service.CreatureService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class CreatureController {
 
+    @Autowired
     private final CreatureService creatureService;
 
 
@@ -35,7 +37,7 @@ public class CreatureController {
     @Operation(summary = "크리쳐 보기")
     @GetMapping
     public ResponseEntity<CreatureInfoResponseDTO> getCreatures(@RequestHeader("Authorization") final String accessToken) {
-        CreatureInfoResponseDTO creature = creatureService.CreatureInfo();
+        CreatureInfoResponseDTO creature = creatureService.creatureInfo(SecurityUtil.getCurrentMember());
 
         return new ResponseEntity<CreatureInfoResponseDTO>(creature, HttpStatus.OK);
     }
