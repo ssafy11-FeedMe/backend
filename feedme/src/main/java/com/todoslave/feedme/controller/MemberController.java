@@ -1,5 +1,6 @@
 package com.todoslave.feedme.controller;
 
+import com.todoslave.feedme.DTO.FriendInfoResponseDTO;
 import com.todoslave.feedme.DTO.MemberSearchResponseDTO;
 import com.todoslave.feedme.DTO.MemberSignupRequestDTO;
 import com.todoslave.feedme.DTO.MypageResponseDTO;

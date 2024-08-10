@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -27,12 +28,18 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class MemberChatServiceImpl implements MemberChatService{
 
+  @Autowired
   private final MemberChatMessageRepository messageRepository;
+  @Autowired
   private final MemberChatRoomRepository roomRepository;
+  @Autowired
   private final MemberChatRoomCheckedRepository roomCheckedRepository;
   private final AlarmService alarmService;
+  @Autowired
   private final MemberRepository memberRepository;
+  @Autowired
   private final MemberChatRoomCheckedRepository memberChatRoomCheckedRepository;
+  @Autowired
   private final CreatureRepository creatureRepository;
 
   // 채팅방 목록들 가져오기
@@ -155,8 +162,17 @@ public class MemberChatServiceImpl implements MemberChatService{
 
     memberChatListResponseDTO.setCreatureImage("http://localhost:8080/image/creature/"+creature.getMember().getId()+"_"+creature.getLevel());
 
-    // 채팅방 갱신
-    alarmService.renewChattingRoom(memberChatListResponseDTO);
+    // 채팅방 갱신 (나)
+    alarmService.renewChattingRoom(memberChatListResponseDTO, SecurityUtil.getCurrentUserId());
+
+    memberChatListResponseDTO.setNickname(SecurityUtil.getCurrentMember().getNickname());
+    creature = creatureRepository.findByMemberId(memberId);
+
+    memberChatListResponseDTO.setCreatureImage("http://localhost:8080/image/creature/"+creature.getMember().getId()+"_"+creature.getLevel());
+
+    // 채팅방 갱신 (상대)
+    alarmService.renewChattingRoom(memberChatListResponseDTO, counterPartId);
+
 
     MemberChatMessageResponseDTO response = new MemberChatMessageResponseDTO();
 

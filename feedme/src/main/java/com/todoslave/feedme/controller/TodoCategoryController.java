@@ -31,7 +31,8 @@ public class TodoCategoryController {
   }
 
   @PostMapping("/{name}")
-  public ResponseEntity<TodoCategoryResponseDTO> createTodoCategory(@PathVariable String name){
+  public ResponseEntity<TodoCategoryResponseDTO> createTodoCategory(@PathVariable("name") String name){
+    System.out.println(name+"되어요?");
     return ResponseEntity.ok(todoCategoryService.insertCategory(name));
   }
 

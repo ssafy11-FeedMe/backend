@@ -8,7 +8,9 @@ import com.todoslave.feedme.domain.entity.membership.Member;
 import java.util.List;
 import java.util.Optional;
 
+
 public interface MemberService {
+
 
     // 회원 가입
     Member insertMember(Member member);
