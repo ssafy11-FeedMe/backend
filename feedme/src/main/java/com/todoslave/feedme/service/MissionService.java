@@ -1,46 +1,24 @@
 package com.todoslave.feedme.service;
 
 import com.todoslave.feedme.domain.entity.mission.Mission;
-import com.todoslave.feedme.repository.MissionRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Random;
+public interface MissionService {
 
-@Service
-public class MissionService {
+    // 지정된 인덱스 범위 내에서 임의의 미션을 가져옵니다.
+    Mission getRandomMissionByIndices(int startIndex, int endIndex);
 
-    @Autowired
-    private MissionRepository missionRepository;
+    // 비가 오는 날의 미션을 가져옵니다.
+    Mission getRainyMission();
 
-    private Random random = new Random();
+    // 눈이 오는 날의 미션을 가져옵니다.
+    Mission getSnowyMission();
 
-    public Mission getRandomMissionByIndices(int startIndex, int endIndex) {
-        List<Mission> missions = missionRepository.findAll();
-        if (missions.isEmpty() || endIndex > missions.size()) {
-            return null;
-        }
-        return missions.get(startIndex - 1 + random.nextInt(endIndex - startIndex + 1));
-    }
+    // 맑은 날의 미션을 가져옵니다.
+    Mission getSunnyMission();
 
-    public Mission getRainyMission() {
-        return getRandomMissionByIndices(1, 20);
-    }
+    // 흐린 날의 미션을 가져옵니다.
+    Mission getCloudyMission();
 
-    public Mission getSnowyMission() {
-        return getRandomMissionByIndices(21, 40);
-    }
-
-    public Mission getSunnyMission() {
-        return getRandomMissionByIndices(41, 60);
-    }
-
-    public Mission getCloudyMission() {
-        return getRandomMissionByIndices(61, 80);
-    }
-
-    public Mission getDefaultMission() {
-        return getRandomMissionByIndices(81, 100);
-    }
+    // 기본 미션을 가져옵니다.
+    Mission getDefaultMission();
 }

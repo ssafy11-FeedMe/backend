@@ -1,6 +1,6 @@
 package com.todoslave.feedme.controller;
 
-import com.todoslave.feedme.DTO.CreatureTodoResponseDTO;
+import com.todoslave.feedme.DTO.FeedDTO;
 import com.todoslave.feedme.DTO.FeedModifyRequest;
 import com.todoslave.feedme.DTO.FeedRequestDTO;
 import com.todoslave.feedme.DTO.FeedResponseDTO;
@@ -12,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -50,33 +49,25 @@ public class FeedController {
         }
     }
 
-//    // 피드 보기
-//    @Operation(summary = "피드 보기")
-//    @GetMapping
-//    public ResponseEntity<> findFeed(@PathVariable int feedId) {
-//
-//        //친구 찾기
-//
-//        //
-//
-//        if(feedService.delectFeed(feedId)){
-//            return new ResponseEntity<String>("삭제되었습니다.", HttpStatus.OK);
-//        }else{
-//            return new ResponseEntity<String>("본인글만 지우세요", HttpStatus.BAD_REQUEST);
-//        }
-//    }
+    // 좋아요/좋아요 취소 버튼
+    @Operation(summary = "피드 삭제")
+    @PostMapping("/{feedId}/like")
+    public void likeButton(@PathVariable int feedId) {
+        feedService.toggleLike(feedId);
+    }
 
+    // 피드 보기
+    @Operation(summary = "피드 보기(테스트)")
+    @GetMapping
+    public List<FeedDTO> getRecentFeeds() {
+        return feedService.getRecentFeeds();
+    }
 
-//
-//    // 크리쳐 투두 생성
-//    @Operation(summary = "크리쳐 투두 생성 / 있으면 생성 X")
-//    @GetMapping("/{weather}")
-//    public ResponseEntity<List<CreatureTodoResponseDTO>> createTodo(@PathVariable String weather) {
-//        System.out.println("이거 맞아?");
-//        List<CreatureTodoResponseDTO> list = new ArrayList<>();
-//        list = creatureTodoService.insertTodo(weather);
-//        return ResponseEntity.ok(list);
-//    }
-
+    // 친구 피드 보기
+    @Operation(summary = " 1달치 친구 피드 보기")
+    @GetMapping("/recent/friends")
+    public List<FeedDTO> getRecentFeedsByFriends() {
+        return feedService.getRecentFeedsByFriends();
+    }
 
 }
