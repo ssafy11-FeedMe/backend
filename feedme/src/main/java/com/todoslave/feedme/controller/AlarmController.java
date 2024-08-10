@@ -34,14 +34,14 @@ public class AlarmController {
     }
 
     @PostMapping("/time")
-    public ResponseEntity<Void> alarmTimeSetting(AlarmSetRequestDTO alarmSetRequestDTO){
+    public ResponseEntity<Void> alarmTimeSetting(@RequestBody AlarmSetRequestDTO alarmSetRequestDTO){
         alarmService.createAlarmtime(alarmSetRequestDTO);
         return ResponseEntity.noContent().build();
     }
 
     // 생일, 투두
     @GetMapping()
-    private ResponseEntity<Slice<AlarmResponseDTO>> loadAlarms(PaginationRequestDTO paginationRequestDTO) {
+    private ResponseEntity<Slice<AlarmResponseDTO>> loadAlarms(@RequestBody PaginationRequestDTO paginationRequestDTO) {
         return ResponseEntity.ok(alarmService.loadAlarms(paginationRequestDTO));
     }
 
