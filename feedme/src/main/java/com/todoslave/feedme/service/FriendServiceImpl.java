@@ -26,10 +26,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class FriendServiceImpl implements FriendService{
 
+    @Autowired
     MemberService memberService;
     FriendRepository friendRepository;
     FriendRequestRepository friendRequestRepository;
     MemberChatService memberChatService;
+
 
     // 친구 요청
     @Override

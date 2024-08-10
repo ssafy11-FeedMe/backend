@@ -17,8 +17,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class TodoCategoryServiceImpl implements TodoCategoryService {
 
-  private TodoCategoryRepository todoCategoryRepository;
-  private MemberRepository memberRepository;
+  private final TodoCategoryRepository todoCategoryRepository;
+  private final MemberRepository memberRepository;
 
   // 카테고리들 가져오기
   @Override
