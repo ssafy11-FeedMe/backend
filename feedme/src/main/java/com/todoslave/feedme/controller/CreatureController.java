@@ -37,6 +37,7 @@ public class CreatureController {
     @Operation(summary = "크리쳐 보기")
     @GetMapping
     public ResponseEntity<CreatureInfoResponseDTO> getCreatures(@RequestHeader("Authorization") final String accessToken) {
+
         CreatureInfoResponseDTO creature = creatureService.creatureInfo(SecurityUtil.getCurrentMember());
 
         return new ResponseEntity<CreatureInfoResponseDTO>(creature, HttpStatus.OK);

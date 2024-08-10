@@ -17,8 +17,6 @@ public class UserViewController {
         return "signup";
     }
 
-
-
     @GetMapping("/test")
     public String test() {
         return "test";
@@ -28,4 +26,5 @@ public class UserViewController {
     public String testsite() {
         return "testsite";
     }
+
 }

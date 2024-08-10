@@ -1,41 +1,21 @@
 package com.todoslave.feedme.service;
 
-
 import com.todoslave.feedme.domain.entity.task.DayOff;
-import com.todoslave.feedme.repository.DayOffRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 
-@Service
-public class DayOffService {
+public interface DayOffService {
 
-    private final DayOffRepository dayOffRepository;
+    // 맴버 아이디와 날짜로 DayOff 찾기
+    Optional<DayOff> findDayOffByMemberIdAndDate(int memberId, LocalDate date);
 
+    // DayOff 생성
+    DayOff saveDayOff(DayOff dayOff);
 
-    @Autowired
-    public DayOffService(DayOffRepository dayOffRepository) {
-        this.dayOffRepository = dayOffRepository;
-    }
-    //맴버 아이디랑 날자로 찾기
-    public Optional<DayOff> findDayOffByMemberIdAndDate(int memberId, LocalDate date) {
-        return dayOffRepository.findByMemberIdAndEndDay(memberId, date);
-    }
-    //데이오프 만들기
-    public DayOff saveDayOff(DayOff dayOff) {
-        return dayOffRepository.save(dayOff);
-    }
+    // 특정 날짜에 DayOff가 있는지 확인
+    boolean isActionAllowed(int memberId, LocalDate date);
 
-    //있는지 검사
-    public boolean isActionAllowed(int memberId, LocalDate date) {
-        // 특정 날짜에 한 개라도 DayOff가 있으면 false 반환
-        return dayOffRepository.countByMemberIdAndEndDay(memberId, date) == 0;
-    }
-    //쓸일 없어
-    public void deleteDayOff(int id) {
-        dayOffRepository.deleteById(id);
-    }
+    // DayOff 삭제
+    void deleteDayOff(int id);
 }
