@@ -33,7 +33,9 @@ public class TodoServiceImpl implements TodoService {
   private final TodoCategoryRepository todoCategoryRepository;
   @Autowired
   private final CreatureTodoReposito creatureTodoReposito;
+  @Autowired
   private final DayOffService dayOffService;
+  @Autowired
   private final CreatureService creatureService;
 
   // 할일 목록에서 일정(일) 불러오기
