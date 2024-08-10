@@ -1,6 +1,7 @@
 package com.todoslave.feedme.service;
 
 import com.todoslave.feedme.DTO.AlarmResponseDTO;
+import com.todoslave.feedme.DTO.AlarmSetRequestDTO;
 import com.todoslave.feedme.DTO.FriendReqResponseDTO;
 import com.todoslave.feedme.DTO.MemberChatListResponseDTO;
 import com.todoslave.feedme.DTO.PaginationRequestDTO;
@@ -14,6 +15,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 public interface AlarmService {
 
+    void createAlarmtime(AlarmSetRequestDTO alarmSetRequestDTO);
     SseEmitter createEmitter();
     void todoCompleted() throws IOException;
     void requestFriendship(FriendReqResponseDTO friendReqResponseDTO) throws IOException;
@@ -21,7 +23,7 @@ public interface AlarmService {
     SseEmitter renewCreateEmitter();
     SseEmitter friendCreateEmitter();
     void renewChattingRoom(MemberChatListResponseDTO room, int memberId) throws IOException;
-    void sendAlarm(Alarm alarm) throws IOException;
+    public <T> void sendAlarm(T alarm, int type) throws IOException;
     Slice<AlarmResponseDTO> loadAlarms(PaginationRequestDTO paginationRequestDTO);
 
 

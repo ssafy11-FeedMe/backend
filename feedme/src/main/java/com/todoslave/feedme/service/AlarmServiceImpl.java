@@ -2,6 +2,7 @@ package com.todoslave.feedme.service;
 
 
 import com.todoslave.feedme.DTO.AlarmResponseDTO;
+import com.todoslave.feedme.DTO.AlarmSetRequestDTO;
 import com.todoslave.feedme.DTO.FriendReqResponseDTO;
 import com.todoslave.feedme.DTO.MemberChatListResponseDTO;
 import com.todoslave.feedme.DTO.PaginationRequestDTO;
@@ -9,6 +10,7 @@ import com.todoslave.feedme.domain.entity.alarm.Alarm;
 import com.todoslave.feedme.domain.entity.avatar.Creature;
 import com.todoslave.feedme.domain.entity.communication.MemberChatMessage;
 import com.todoslave.feedme.domain.entity.membership.Member;
+import com.todoslave.feedme.domain.entity.membership.MemberAlarm;
 import com.todoslave.feedme.login.util.SecurityUserDto;
 import com.todoslave.feedme.login.util.SecurityUtil;
 import com.todoslave.feedme.mapper.AlarmMapper;
@@ -25,6 +27,7 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import javax.swing.text.html.parser.Entity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -39,20 +42,29 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 @Service
 public class AlarmServiceImpl implements AlarmService{
 
-  @Autowired
-  private AlarmRepository alarmRepository;
-  @Autowired
-  private MemberAlarmRepository memberAlarmRepository;
-  @Autowired
-  private TodoRepository todoRepository;
-  @Autowired
-  private MemberRepository memberRepository;
-  @Autowired
-  private CreatureRepository creatureRepository;
+  private final AlarmRepository alarmRepository;
+  private final MemberAlarmRepository memberAlarmRepository;
+  private final TodoRepository todoRepository;
+  private final MemberRepository memberRepository;
+  private final CreatureRepository creatureRepository;
 
   private final Map<Integer, SseEmitter> emitters = new ConcurrentHashMap<>();
   private final Map<Integer, SseEmitter> chatEmitters = new ConcurrentHashMap<>();
-  private final Map<Integer, SseEmitter> friendEmitters = new ConcurrentHashMap<>();
+
+
+  @Override
+  public void createAlarmtime(AlarmSetRequestDTO alarmSetRequestDTO) {
+
+    Member member = SecurityUtil.getCurrentMember();
+
+    MemberAlarm memberAlarm = new MemberAlarm();
+
+    memberAlarm.setMember(member);
+    memberAlarm.setAlarmTime(alarmSetRequestDTO.getAlarmTime());
+
+    memberAlarm = memberAlarmRepository.save(memberAlarm);
+
+  }
 
   @Override
   public SseEmitter createEmitter() {
@@ -92,7 +104,7 @@ public class AlarmServiceImpl implements AlarmService{
       alarm.setContent("배고픈 " + creature.getCreatureName() + ".. 밥 줄 사람 없나요?");
       alarmRepository.save(alarm);
 
-      sendAlarm(alarm);
+      sendAlarm(alarm, 0);
 
     }
   }
@@ -101,16 +113,7 @@ public class AlarmServiceImpl implements AlarmService{
   public void requestFriendship(FriendReqResponseDTO friendReqResponseDTO) throws IOException {
 
     int memberId = SecurityUtil.getCurrentUserId();
-    SseEmitter emitter = friendEmitters.get(memberId);
-
-    if(emitter!=null) {
-      SseEmitter.SseEventBuilder event = SseEmitter.event()
-          .name("friend")
-          .data(friendReqResponseDTO);
-      emitter.send(event);
-    }else{
-      System.out.println("Sse Connection is over" + memberId);
-    }
+    sendAlarm(friendReqResponseDTO,1);
 
   }
 
@@ -129,7 +132,7 @@ public class AlarmServiceImpl implements AlarmService{
       alarm.setContent(member.getNickname()+"님! 생일 축하합니다!");
 
       alarmRepository.save(alarm);
-      sendAlarm(alarm);
+      sendAlarm(alarm, 0);
 
     }
 
@@ -150,21 +153,6 @@ public class AlarmServiceImpl implements AlarmService{
     return emitter;
   }
 
-  // 친구 창에서 SSE 구독
-  @Override
-  public SseEmitter friendCreateEmitter() {
-    int memberId = SecurityUtil.getCurrentUserId();
-
-    SseEmitter emitter = new SseEmitter();
-    friendEmitters.put(memberId, emitter);
-
-    emitter.onCompletion(() -> friendEmitters.remove(memberId));
-    emitter.onTimeout(() -> friendEmitters.remove(memberId));
-    emitter.onError((e) -> emitters.remove(memberId));
-
-    return emitter;
-  }
-
   // 채팅방 갱신
   @Override
   public void renewChattingRoom(MemberChatListResponseDTO room, int memberId) throws IOException {
@@ -178,27 +166,38 @@ public class AlarmServiceImpl implements AlarmService{
 
       emitter.send(event);
     }else{
-      System.out.println("Friend don't connected" + memberId);
+      System.out.println("Sse connect fail");
     }
 
   }
 
   // 알람 받아라
   @Override
-  public void sendAlarm(Alarm alarm) throws IOException {
+  public <T> void sendAlarm(T alarm, int type) throws IOException {
 
     int memberId = SecurityUtil.getCurrentUserId();
     SseEmitter emitter = emitters.get(memberId);
 
     if(emitter!=null){
 
-      AlarmResponseDTO dto = AlarmMapper.toDto(alarm);
+      if(type==0) {
+        AlarmResponseDTO dto = AlarmMapper.toDto((Alarm) alarm);
 
-      SseEmitter.SseEventBuilder event = SseEmitter.event()
-          .name("")
-          .data(dto);
+        SseEmitter.SseEventBuilder event = SseEmitter.event()
+            .name("alarm")
+            .data(dto);
 
-      emitter.send(event);
+        emitter.send(event);
+      }else if(type==1){
+        SseEmitter.SseEventBuilder event = SseEmitter.event()
+            .name("friend")
+            .data(alarm);
+
+        emitter.send(event);
+      }
+
+    }else{
+      System.out.println("Sse connect fail");
     }
 
   }
