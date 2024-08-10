@@ -23,14 +23,14 @@ import java.util.Optional;
 
 @Service
 @Transactional
-@RequiredArgsConstructor
+
 public class MemberServiceImpl implements MemberService {
 
     @Autowired
-    private final MemberRepository memberRepository;
+   MemberRepository memberRepository;
 
     @Autowired
-    private final FriendService friendService;
+     FriendService friendService;
 
     @Override
     public Member insertMember(Member member) {
