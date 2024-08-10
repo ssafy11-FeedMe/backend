@@ -27,16 +27,22 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
-@RequiredArgsConstructor
 @Service
 public class FriendServiceImpl implements FriendService{
 
-    private final MemberService memberService;
-    private final FriendRepository friendRepository;
-    private final FriendRequestRepository friendRequestRepository;
-    private final MemberChatService memberChatService;
-    private final CreatureService creatureService;
-    private final MemberRepository memberRepository;
+    @Autowired
+    MemberService memberService;
+    @Autowired
+    MemberChatService memberChatService;
+    @Autowired
+    CreatureService creatureService;
+    @Autowired
+    MemberRepository memberRepository;
+
+    @Autowired
+    FriendRepository friendRepository;
+    @Autowired
+    FriendRequestRepository friendRequestRepository;
 
     // 친구 요청
     @Override
