@@ -1,6 +1,6 @@
 package com.todoslave.feedme.controller;
 
-import com.todoslave.feedme.DTO.CreatureTodoResponseDTO;
+import com.todoslave.feedme.DTO.FeedDTO;
 import com.todoslave.feedme.DTO.FeedModifyRequest;
 import com.todoslave.feedme.DTO.FeedRequestDTO;
 import com.todoslave.feedme.DTO.FeedResponseDTO;
@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -48,17 +47,38 @@ public class FeedController {
         }
     }
 
+    // 좋아요/좋아요 취소 버튼
+    @Operation(summary = "피드 삭제")
+    @PostMapping("/{feedId}/like")
+    public void likeButton(@PathVariable int feedId) {
+        feedService.toggleLike(feedId);
+    }
+
+
     // 피드 보기
     @Operation(summary = "피드 보기")
     @GetMapping
-    public ResponseEntity<?> findFeed(@PathVariable int feedId) {
-        //친구 찾기
-
-        //
-
-
-     return null;
+    public List<FeedDTO> getRecentFeeds() {
+        return feedService.getRecentFeeds();
     }
+
+    // 친구 피드 보기
+    @GetMapping("/recent/friends")
+    public List<FeedDTO> getRecentFeedsByFriends() {
+        return feedService.getRecentFeedsByFriends();
+    }
+
+//    @Operation(summary = "피드 보기")
+//    @GetMapping
+//    public ResponseEntity<?> findFeed(@PathVariable int feedId) {
+//        //친구 찾기
+//
+//        //
+//     return null;
+//    }
+//
+
+
 
 
 //
