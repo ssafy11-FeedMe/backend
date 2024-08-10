@@ -54,43 +54,18 @@ public class FeedController {
         feedService.toggleLike(feedId);
     }
 
-
     // 피드 보기
-    @Operation(summary = "피드 보기")
+    @Operation(summary = "피드 보기(테스트)")
     @GetMapping
     public List<FeedDTO> getRecentFeeds() {
         return feedService.getRecentFeeds();
     }
 
     // 친구 피드 보기
+    @Operation(summary = " 1달치 친구 피드 보기")
     @GetMapping("/recent/friends")
     public List<FeedDTO> getRecentFeedsByFriends() {
         return feedService.getRecentFeedsByFriends();
     }
-
-//    @Operation(summary = "피드 보기")
-//    @GetMapping
-//    public ResponseEntity<?> findFeed(@PathVariable int feedId) {
-//        //친구 찾기
-//
-//        //
-//     return null;
-//    }
-//
-
-
-
-
-//
-//    // 크리쳐 투두 생성
-//    @Operation(summary = "크리쳐 투두 생성 / 있으면 생성 X")
-//    @GetMapping("/{weather}")
-//    public ResponseEntity<List<CreatureTodoResponseDTO>> createTodo(@PathVariable String weather) {
-//        System.out.println("이거 맞아?");
-//        List<CreatureTodoResponseDTO> list = new ArrayList<>();
-//        list = creatureTodoService.insertTodo(weather);
-//        return ResponseEntity.ok(list);
-//    }
-
 
 }

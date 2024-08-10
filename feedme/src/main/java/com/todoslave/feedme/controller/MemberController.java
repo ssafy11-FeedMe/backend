@@ -39,6 +39,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MemberController {
 
+
     private final JwtProperties jwtProperties;
     private final MemberService memberService;
     private final TokenBlacklistService tokenBlacklistService;
@@ -60,7 +61,13 @@ public class MemberController {
 
     @Operation(summary = "맴버 가입")
     @PostMapping
-    public ResponseEntity<Member> SignupMember(@RequestBody MemberSignupRequestDTO memberSignupRequestDTO){
+    public ResponseEntity<?> signupMember(@RequestBody MemberSignupRequestDTO memberSignupRequestDTO){
+
+        // 닉네임 중복 체크
+        if (memberService.checkNickname(memberSignupRequestDTO.getNickname())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("Nickname already exists");
+        }
 
         Member member = memberService.registerMember(memberSignupRequestDTO);
         return ResponseEntity.ok(member);
@@ -68,7 +75,13 @@ public class MemberController {
 
     @Operation(summary = "맴버 수정")
     @PatchMapping
-    public ResponseEntity<Member> UpdateMember(@RequestBody MemberSignupRequestDTO memberSignupRequestDTO){
+    public ResponseEntity<?> updateMember(@RequestBody MemberSignupRequestDTO memberSignupRequestDTO){
+
+        // 닉네임 중복 체크
+        if (memberService.checkNickname(memberSignupRequestDTO.getNickname())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("Nickname already exists");
+        }
 
         Member member = memberService.updateMember(memberSignupRequestDTO);
 
@@ -83,8 +96,7 @@ public class MemberController {
 
     @Operation(summary = "내 정보 페이지")
     @GetMapping("/mypage")
-    public ResponseEntity<MypageResponseDTO> mypage(@RequestHeader("Authorization") final String accessToken) {
-//        MypageResponseDTO dto = memberService.getMyPage();
+    public ResponseEntity<MypageResponseDTO> getMypage(@RequestHeader("Authorization") final String accessToken) {
 
         return ResponseEntity.ok(memberService.getMyPage());
     }
@@ -124,9 +136,6 @@ public class MemberController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 삭제된 회원이거나, 로그인 상태를 확인해주세요.");
         }
     }
-
-
-
 
 
 }

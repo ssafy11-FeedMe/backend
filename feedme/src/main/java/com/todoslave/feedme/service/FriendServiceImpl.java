@@ -6,38 +6,29 @@ import com.todoslave.feedme.domain.entity.communication.FriendRequest;
 import com.todoslave.feedme.domain.entity.membership.Member;
 import com.todoslave.feedme.repository.FriendRepository;
 import com.todoslave.feedme.repository.FriendRequestRepository;
-import com.todoslave.feedme.repository.MemberRepository;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import com.todoslave.feedme.DTO.FriendReqRequestDTO;
 import com.todoslave.feedme.DTO.FriendReqResponseDTO;
 import com.todoslave.feedme.DTO.FriendResponseDTO;
-import com.todoslave.feedme.domain.entity.communication.Friend;
-import com.todoslave.feedme.domain.entity.communication.FriendRequest;
-import com.todoslave.feedme.domain.entity.membership.Member;
 import com.todoslave.feedme.login.util.SecurityUtil;
-import com.todoslave.feedme.repository.FriendRepository;
-import com.todoslave.feedme.repository.FriendRequestRepository;
-import jakarta.transaction.Transactional;
 import java.util.ArrayList;
-import lombok.RequiredArgsConstructor;
 import java.util.List;
 
 @RequiredArgsConstructor
 @Service
 public class FriendServiceImpl implements FriendService{
 
+    @Autowired
     MemberService memberService;
     @Autowired
     FriendRepository friendRepository;
     @Autowired
     FriendRequestRepository friendRequestRepository;
-//    MemberChatService memberChatService;
+
+    //    MemberChatService memberChatService;
 
     // 친구 요청
     @Override
