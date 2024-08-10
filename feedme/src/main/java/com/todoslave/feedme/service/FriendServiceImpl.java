@@ -1,21 +1,26 @@
 package com.todoslave.feedme.service;
-//맴버 채팅 주석
 
-import com.todoslave.feedme.domain.entity.communication.Friend;
-import com.todoslave.feedme.domain.entity.communication.FriendRequest;
-import com.todoslave.feedme.domain.entity.membership.Member;
-import com.todoslave.feedme.repository.FriendRepository;
-import com.todoslave.feedme.repository.FriendRequestRepository;
-import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import com.todoslave.feedme.DTO.FriendReqRequestDTO;
 import com.todoslave.feedme.DTO.FriendReqResponseDTO;
 import com.todoslave.feedme.DTO.FriendResponseDTO;
+import com.todoslave.feedme.DTO.MemberChatListResponseDTO;
+import com.todoslave.feedme.DTO.PaginationRequestDTO;
+import com.todoslave.feedme.domain.entity.communication.Friend;
+import com.todoslave.feedme.domain.entity.communication.FriendRequest;
+import com.todoslave.feedme.domain.entity.membership.Member;
 import com.todoslave.feedme.login.util.SecurityUtil;
+import com.todoslave.feedme.mapper.FriendRequestMapper;
+import com.todoslave.feedme.repository.FriendRepository;
+import com.todoslave.feedme.repository.FriendRequestRepository;
+import jakarta.transaction.Transactional;
 import java.util.ArrayList;
+import lombok.RequiredArgsConstructor;
+
 import java.util.List;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
@@ -23,12 +28,10 @@ public class FriendServiceImpl implements FriendService{
 
     @Autowired
     MemberService memberService;
-    @Autowired
     FriendRepository friendRepository;
-    @Autowired
     FriendRequestRepository friendRequestRepository;
+    MemberChatService memberChatService;
 
-    //    MemberChatService memberChatService;
 
     // 친구 요청
     @Override
@@ -55,25 +58,6 @@ public class FriendServiceImpl implements FriendService{
 
     }
 
-
-//     @Override
-//     public List<Friend> getFriends(Integer memberId) {
-//         return friendRepository.findAllByMemberId(memberId);
-//     }
-
-  
-//     @Override
-//     public List<FriendRequest> getRequestFriend(Integer memberId) {
-//         return friendRequestRepository.findAllByMemberId(memberId);
-//     }
-  
-
-    // 친구 인지 확인하기
-    public boolean isFriend(int memberId, int friendId) {
-        return friendRepository.existsByMemberIdAndCounterpartId(memberId, friendId) ||
-                friendRepository.existsByCounterpartIdAndMemberId(friendId, memberId);
-    }
-
     // 친구 목록 불러오기
     @Override
     public List<FriendResponseDTO> getFriends() {
@@ -98,46 +82,49 @@ public class FriendServiceImpl implements FriendService{
 
     // 친구 요청 불러오기
     @Override
-    public List<FriendReqResponseDTO> getRequestFriend() {
+    public Slice<FriendReqResponseDTO> getRequestFriend(PaginationRequestDTO paginationRequestDTO) {
 
         int memberId = SecurityUtil.getCurrentUserId();
 
-        List<FriendRequest> friendRequests = friendRequestRepository.findAllByMemberId(memberId);
-        List<FriendReqResponseDTO> friendReqResponseDTOList = new ArrayList<>();
+        Pageable pageable = PageRequest.of(paginationRequestDTO.getSkip() / paginationRequestDTO.getLimit(),
+            paginationRequestDTO.getLimit());
 
-        for(FriendRequest friendRequest : friendRequests){
+        Slice<FriendRequest> friendRequests = friendRequestRepository.findAllByMemberId(memberId, pageable);
 
-            FriendReqResponseDTO friendReqResponseDTO = new FriendReqResponseDTO();
-            friendReqResponseDTO.setId(friendRequest.getId());
-            friendReqResponseDTO.setCounterpartNickname(friendRequest.getCounterpartId().getNickname());
-            friendReqResponseDTOList.add(friendReqResponseDTO);
-
-        }
-
-        return friendReqResponseDTOList;
+        return friendRequests.map(FriendRequestMapper::toDto);
     }
 
     // 친구 수락
     @Override
-    public void insertFriendship(int requestId) {
+    public MemberChatListResponseDTO insertFriendship(int requestId) {
 
         FriendRequest friendRequest = friendRequestRepository.findById(requestId);
 
         Friend friend = new Friend();
-        friend.setMember(SecurityUtil.getCurrentMember());
-        friend.setCounterpart(friendRequest.getCounterpartId());
+
+        Member member = SecurityUtil.getCurrentMember();
+        Member counterpart = friendRequest.getCounterpartId();
+
+        friend.setMember(member);
+        friend.setCounterpart(counterpart);
+
+        // 친구 추가
+        friendRepository.save(friend);
+
+        friend.setMember(counterpart);
+        friend.setCounterpart(member);
+
+        friendRepository.save(friend);
 
         friendRequestRepository.deleteById(requestId);
 
         List<Integer> members = new ArrayList<>();
-        int memberId = SecurityUtil.getCurrentUserId();
-        members.add(memberId);
-        int counterpartId = friendRequest.getCounterpartId().getId();
-        members.add(counterpartId);
 
-//        memberChatService.insertChatRoom(members);
-        friendRepository.save(friend);
+        members.add(member.getId());
+        members.add(counterpart.getId());
 
+        // 채팅방 생성
+        return memberChatService.insertChatRoom(members);
     }
 
     // 친구 거절
@@ -148,4 +135,9 @@ public class FriendServiceImpl implements FriendService{
 
     }
 
+    // 친구 인지 확인하기
+    public boolean isFriend(int memberId, int friendId) {
+        return friendRepository.existsByMemberIdAndCounterpartId(memberId, friendId) ||
+            friendRepository.existsByCounterpartIdAndMemberId(friendId, memberId);
+    }
 }
