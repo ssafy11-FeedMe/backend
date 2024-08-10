@@ -31,15 +31,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class FriendServiceImpl implements FriendService{
 
-    MemberService memberService;
-    @Autowired
-    FriendRepository friendRepository;
-    @Autowired
-    FriendRequestRepository friendRequestRepository;
-    MemberChatService memberChatService;
-    CreatureService creatureService;
-    @Autowired
-    MemberRepository memberRepository;
+    private final MemberService memberService;
+    private final FriendRepository friendRepository;
+    private final FriendRequestRepository friendRequestRepository;
+    private final MemberChatService memberChatService;
+    private final CreatureService creatureService;
+    private final MemberRepository memberRepository;
 
     // 친구 요청
     @Override
