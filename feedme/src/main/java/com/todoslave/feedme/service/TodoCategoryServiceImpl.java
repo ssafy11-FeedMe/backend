@@ -23,6 +23,7 @@ public class TodoCategoryServiceImpl implements TodoCategoryService {
   @Autowired
   private MemberRepository memberRepository;
 
+
   // 카테고리들 가져오기
   @Override
   public List<TodoCategoryResponseDTO> getCategories() {

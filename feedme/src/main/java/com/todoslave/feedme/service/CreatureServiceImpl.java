@@ -47,6 +47,7 @@ public class CreatureServiceImpl implements CreatureService {
 
     // 크리쳐 보기
     @Override
+
     public CreatureInfoResponseDTO creatureInfo(Member member) {
 
         CreatureInfoResponseDTO creatureInfoResponseDTO = new CreatureInfoResponseDTO();
@@ -129,12 +130,6 @@ public class CreatureServiceImpl implements CreatureService {
         creatureRepository.save(creature);
     }
 
-    //크리쳐 레벨업
-    @Override
-    public void LevelUp() {
-        Creature creature = SecurityUtil.getCurrentMember().getCreature();
-        creature.setLevel(creature.getLevel()+1);
-    }
 
     //크리쳐 이미지 주소
     private String generateCreatureImgPath(Member member) {
