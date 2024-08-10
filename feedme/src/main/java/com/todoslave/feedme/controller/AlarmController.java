@@ -1,6 +1,7 @@
 package com.todoslave.feedme.controller;
 
 import com.todoslave.feedme.DTO.AlarmResponseDTO;
+import com.todoslave.feedme.DTO.AlarmSetRequestDTO;
 import com.todoslave.feedme.login.util.SecurityUtil;
 import com.todoslave.feedme.DTO.PaginationRequestDTO;
 import com.todoslave.feedme.domain.entity.alarm.Alarm;
@@ -27,14 +28,15 @@ public class AlarmController {
         return alarmService.createEmitter();
     }
 
-    @GetMapping(value = "/subscribe/friend")
-    public SseEmitter friendSubscribe(){
-        return alarmService.friendCreateEmitter();
-    }
-
     @GetMapping(value = "/subscribe/chat")
     public SseEmitter chatSubscribe(){
         return alarmService.renewCreateEmitter();
+    }
+
+    @PostMapping("/time")
+    public ResponseEntity<Void> alarmTimeSetting(AlarmSetRequestDTO alarmSetRequestDTO){
+        alarmService.createAlarmtime(alarmSetRequestDTO);
+        return ResponseEntity.noContent().build();
     }
 
     // 생일, 투두
