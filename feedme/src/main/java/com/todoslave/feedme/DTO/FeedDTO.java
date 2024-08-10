@@ -6,8 +6,8 @@ import java.util.List;
 
 @Data
 public class FeedDTO {
-        private int id;
-        private String name;
+        private int feedId;
+        private String nickname;
         private String img;
         private String caption;
         private String time;

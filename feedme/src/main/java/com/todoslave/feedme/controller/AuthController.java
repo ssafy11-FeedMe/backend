@@ -44,7 +44,7 @@ public class AuthController {
         // RefreshToken이 존재하고 유효하다면 실행
         if (refreshToken.isPresent() && jwtUtil.verifyToken(refreshToken.get().getRefreshToken())) {
 
-            System.out.println("바봉");
+
 
             // RefreshToken 객체를 꺼내온다.
             RefreshToken resultToken = refreshToken.get();
