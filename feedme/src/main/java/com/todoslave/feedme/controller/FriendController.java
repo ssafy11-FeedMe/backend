@@ -25,13 +25,13 @@ import java.util.List;
 public class FriendController {
 
     @Autowired
-    static private MemberService memberService;
+    MemberService memberService;
     @Autowired
-    static private FriendService friendService;
+    FriendService friendService;
     @Autowired
-    static private AlarmService alarmService;
+    AlarmService alarmService;
     @Autowired
-    static private MemberChatService memberChatService;
+    MemberChatService memberChatService;
 
     // 친구 요청하기
     @PostMapping
@@ -49,7 +49,7 @@ public class FriendController {
 
     @Operation(summary = "친구 닉네임 검색")
     @GetMapping("/info")
-    public ResponseEntity<FriendInfoResponseDTO> findFriendInfo(FriendRequestDTO friendRequestDTO){
+    public ResponseEntity<FriendInfoResponseDTO> findFriendInfo(@RequestBody FriendRequestDTO friendRequestDTO){
         return ResponseEntity.ok(friendService.getFriendInfo(friendRequestDTO));
     }
 
