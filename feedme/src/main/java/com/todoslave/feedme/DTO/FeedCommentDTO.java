@@ -6,8 +6,8 @@ import java.util.List;
 
 @Data
 public class FeedCommentDTO {
-    private String name;
+    private int feedComentId;
+    private String nickname;
     private String comment;
     private String time;
-    private List<FeedReplyDTO> replies;
 }
