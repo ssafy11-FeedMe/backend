@@ -34,6 +34,7 @@ public class MemberChatServiceImpl implements MemberChatService{
   private final MemberChatRoomRepository roomRepository;
   @Autowired
   private final MemberChatRoomCheckedRepository roomCheckedRepository;
+  @Autowired
   private final AlarmService alarmService;
   @Autowired
   private final MemberRepository memberRepository;

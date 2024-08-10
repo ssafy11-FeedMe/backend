@@ -20,13 +20,12 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
-//@Transactional(readOnly = true) //조회에선
-@RequiredArgsConstructor // 생성자 만들어 주는 얘
 public class MemberService {
 
     @Autowired
-    private final MemberRepository memberRepository;
-    private final FriendService friendService;
+    MemberRepository memberRepository;
+    @Autowired
+    FriendService friendService;
 
 
     //그냥 가입 시켜주는 얘
