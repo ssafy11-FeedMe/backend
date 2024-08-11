@@ -6,6 +6,7 @@ import com.todoslave.feedme.DTO.FriendRequestDTO;
 import com.todoslave.feedme.DTO.FriendResponseDTO;
 import com.todoslave.feedme.DTO.MemberChatListResponseDTO;
 import com.todoslave.feedme.DTO.PaginationRequestDTO;
+import com.todoslave.feedme.domain.entity.communication.FriendRequest;
 import com.todoslave.feedme.service.AlarmService;
 import com.todoslave.feedme.service.FriendService;
 import com.todoslave.feedme.service.MemberChatService;
@@ -42,7 +43,9 @@ public class FriendController {
 
     // 친구 삭제하기
     @DeleteMapping()
-    public ResponseEntity<Void> removeFriend(@RequestBody FriendRequestDTO friendRequestDTO){
+    public ResponseEntity<Void> removeFriend(@RequestParam("counterpartNickname") String counterpartNickname){
+        FriendRequestDTO friendRequestDTO = new FriendRequestDTO();
+        friendRequestDTO.setCounterpartNickname(counterpartNickname);
         friendService.deleteFriend(friendRequestDTO);
         return ResponseEntity.noContent().build();
     }
