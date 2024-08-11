@@ -41,7 +41,10 @@ public class AlarmController {
 
     // 생일, 투두
     @GetMapping()
-    private ResponseEntity<Slice<AlarmResponseDTO>> loadAlarms(@RequestBody PaginationRequestDTO paginationRequestDTO) {
+    private ResponseEntity<Slice<AlarmResponseDTO>> loadAlarms(@RequestParam("skip") int skip, @RequestParam("limit") int limit) {
+        PaginationRequestDTO paginationRequestDTO = new PaginationRequestDTO();
+        paginationRequestDTO.setSkip(skip);
+        paginationRequestDTO.setLimit(limit);
         return ResponseEntity.ok(alarmService.loadAlarms(paginationRequestDTO));
     }
 
