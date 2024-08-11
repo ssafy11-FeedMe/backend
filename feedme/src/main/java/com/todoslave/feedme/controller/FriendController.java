@@ -47,6 +47,7 @@ public class FriendController {
         return ResponseEntity.noContent().build();
     }
 
+    //친구 정보 얻기
     @Operation(summary = "친구 닉네임 검색")
     @GetMapping("/info")
     public ResponseEntity<FriendInfoResponseDTO> findFriendInfo(FriendRequestDTO friendRequestDTO){

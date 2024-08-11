@@ -6,5 +6,6 @@ import lombok.Data;
 public class MemberSearchResponseDTO {
     String nickname;
     boolean isFriend;
+    boolean isRequested;
     String creatureImg;
 }

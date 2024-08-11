@@ -60,6 +60,7 @@ public class MemberController {
         return new ResponseEntity<List<MemberSearchResponseDTO>>(list, HttpStatus.OK);
     }
 
+
     @Operation(summary = "맴버 가입")
     @PostMapping
     public ResponseEntity<?> signupMember(@RequestBody MemberSignupRequestDTO memberSignupRequestDTO){
