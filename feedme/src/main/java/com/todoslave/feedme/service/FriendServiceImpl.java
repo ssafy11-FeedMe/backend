@@ -85,6 +85,7 @@ public class FriendServiceImpl implements FriendService{
         response.setNickname(member.getNickname());
 
         CreatureInfoResponseDTO creatureInfoResponseDTO = creatureService.creatureInfo(member);
+        response.setCreatureNickname(creatureInfoResponseDTO.getName());
         response.setCreatureImg(creatureInfoResponseDTO.getImg());
         response.setLevel(creatureInfoResponseDTO.getLevel());
         response.setExp(creatureInfoResponseDTO.getExp());
