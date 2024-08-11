@@ -4,8 +4,10 @@ import com.todoslave.feedme.DTO.MemberSearchResponseDTO;
 import com.todoslave.feedme.DTO.MemberSignupRequestDTO;
 import com.todoslave.feedme.DTO.MypageResponseDTO;
 import com.todoslave.feedme.domain.entity.avatar.Creature;
+import com.todoslave.feedme.domain.entity.communication.FriendRequest;
 import com.todoslave.feedme.domain.entity.membership.Member;
 import com.todoslave.feedme.login.util.SecurityUtil;
+import com.todoslave.feedme.repository.FriendRequestRepository;
 import com.todoslave.feedme.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -27,10 +29,15 @@ import java.util.Optional;
 public class MemberServiceImpl implements MemberService {
 
     @Autowired
-   MemberRepository memberRepository;
+    MemberRepository memberRepository;
+
+    @Autowired
+    FriendRequestRepository requestRepository;
 
     @Autowired
      FriendService friendService;
+    @Autowired
+    private FriendRequestRepository friendRequestRepository;
 
     @Override
     public Member insertMember(Member member) {
@@ -101,6 +108,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public List<MemberSearchResponseDTO> getMemberList(String searchvalue) {
+
         List<Member> members = memberRepository.findByNicknameContaining(searchvalue);
         List<MemberSearchResponseDTO> memberSearchResponse = new ArrayList<>();
 
@@ -123,6 +131,10 @@ public class MemberServiceImpl implements MemberService {
             } else {
                 mem.setFriend(false);
             }
+
+            // 친구 신청을 보냈는지 체크
+            Optional<FriendRequest> friendRequest = friendRequestRepository.findByMember_IdAndCounterpartId_Id(SecurityUtil.getCurrentUserId(), member.getId());
+            mem.setRequested(friendRequest.isPresent());
 
             memberSearchResponse.add(mem);
         }
