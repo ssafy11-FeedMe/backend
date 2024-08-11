@@ -49,7 +49,9 @@ public class FriendController {
 
     @Operation(summary = "친구 닉네임 검색")
     @GetMapping("/info")
-    public ResponseEntity<FriendInfoResponseDTO> findFriendInfo(@RequestBody FriendRequestDTO friendRequestDTO){
+    public ResponseEntity<FriendInfoResponseDTO> findFriendInfo(@RequestParam String counterpartNickname){
+        FriendRequestDTO friendRequestDTO = new FriendRequestDTO();
+        friendRequestDTO.setCounterpartNickname(counterpartNickname);
         return ResponseEntity.ok(friendService.getFriendInfo(friendRequestDTO));
     }
 
@@ -62,7 +64,10 @@ public class FriendController {
     // 친구 요청 목록 조회
     @GetMapping("/request")
     public ResponseEntity<Slice<FriendReqResponseDTO>> findRequestFriend(
-        PaginationRequestDTO paginationRequestDTO){
+            @RequestParam("skip") int skip, @RequestParam("limit") int limit) {
+        PaginationRequestDTO paginationRequestDTO = new PaginationRequestDTO();
+        paginationRequestDTO.setSkip(skip);
+        paginationRequestDTO.setLimit(limit);
         return ResponseEntity.ok(friendService.getRequestFriend(paginationRequestDTO));
     }
 
