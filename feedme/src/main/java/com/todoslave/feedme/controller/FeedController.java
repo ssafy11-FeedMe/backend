@@ -50,7 +50,7 @@ public class FeedController {
     }
 
     // 좋아요/좋아요 취소 버튼
-    @Operation(summary = "피드 삭제")
+    @Operation(summary = "피드 좋아요/취소")
     @PostMapping("/{feedId}/like")
     public void likeButton(@PathVariable int feedId) {
         feedService.toggleLike(feedId);
