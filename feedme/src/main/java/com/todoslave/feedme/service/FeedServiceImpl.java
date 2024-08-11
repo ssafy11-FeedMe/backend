@@ -127,7 +127,7 @@ public class FeedServiceImpl implements FeedService{
         feedDTO.setNickname(feed.getNickname());
         feedDTO.setImg("http://localhost:8080/image/pictureDiary/"+SecurityUtil.getCurrentUserId()+"_"+feed.getDiaryDay()); // 이미지 처리 로직 필요
         feedDTO.setCaption(feed.getContent());
-        feedDTO.setTime(feed.getCreatedAt().toString());
+        feedDTO.setLastCreateTime(feed.getUpdatedAt());
         feedDTO.setLikes(feed.getLikeCount());
         feedDTO.setComments(feed.getFeedComments().stream()
                 .map(this::convertToCommentDTO)
@@ -152,6 +152,7 @@ public class FeedServiceImpl implements FeedService{
         dto.setContent(feed.getContent());
         dto.setAuthor(feed.getNickname());
         dto.setLikeCnt(String.valueOf(feed.getLikeCount()));
+        dto.setCreatedAt(feed.getCreatedAt());
         return dto;
     }
 

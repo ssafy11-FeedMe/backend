@@ -17,7 +17,6 @@ public interface FeedService {
 
     void toggleLike(int feedId);
 
-
     List<FeedDTO> getRecentFeeds();
 
     List<FeedDTO> getRecentFeedsByFriends();

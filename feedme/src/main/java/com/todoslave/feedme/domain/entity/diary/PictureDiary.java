@@ -23,7 +23,6 @@ public class PictureDiary {
     private Member member;
 
     //일기쓴 날
-    @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
