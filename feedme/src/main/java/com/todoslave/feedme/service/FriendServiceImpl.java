@@ -58,8 +58,8 @@ public class FriendServiceImpl implements FriendService{
 
         FriendRequest friendRequest = new FriendRequest();
 
-        friendRequest.setMember(member);
-        friendRequest.setCounterpartId(counterpart);
+        friendRequest.setMember(counterpart);
+        friendRequest.setCounterpartId(member);
 
         friendRequestRepository.save(friendRequest);
 
