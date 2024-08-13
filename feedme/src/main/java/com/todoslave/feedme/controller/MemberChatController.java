@@ -48,24 +48,12 @@ public class MemberChatController {
     return ResponseEntity.noContent().build();
   }
 
-  @EventListener
-  public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
-    StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
-    String sessionId = headerAccessor.getSessionId();
-    // 추가적인 연결 초기화 로직을 여기에 작성할 수 있습니다.
-
-    String destination = headerAccessor.getDestination();
-
-    if (destination != null && destination.startsWith("/chatRoom/")) {
-      String[] pathSegments = destination.split("/");
-      if (pathSegments.length > 2) {
-        String roomId = pathSegments[pathSegments.length - 1];
-        chatService.exitTheRoom(roomId);
-      }
-    }
-
+  @PostMapping("/disconnect")
+  public ResponseEntity<Void> webSocketDisConnect(@RequestParam("room") String roomId){
+    System.out.println("close the socket : "+roomId);
+    chatService.exitTheRoom(roomId);
+    return ResponseEntity.noContent().build();
   }
-
 
   // 유저의 채팅방 목록들 불러오기
   @GetMapping
