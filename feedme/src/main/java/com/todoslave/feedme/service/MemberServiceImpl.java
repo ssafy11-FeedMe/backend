@@ -126,8 +126,6 @@ public class MemberServiceImpl implements MemberService {
                 continue;
             }
 
-
-
             if (friendService.isFriend(member.getId(), SecurityUtil.getCurrentUserId())) {
                 mem.setFriend(true);
             } else {
@@ -185,7 +183,7 @@ public class MemberServiceImpl implements MemberService {
         Creature creature = member.getCreature();
         int creatureLevel = creature.getLevel();
         int creatureId = creature.getId();
-        return "https://i11b104.p.ssafy.io/image/creature/" + creatureId + "_" + creatureLevel;
+        return "http://localhost:8080/image/creature/" + creatureId + "_" + creatureLevel;
     }
 }
 

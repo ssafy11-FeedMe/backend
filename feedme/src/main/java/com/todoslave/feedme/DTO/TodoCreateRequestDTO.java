@@ -1,9 +1,8 @@
 package com.todoslave.feedme.DTO;
 
-import lombok.Data;
 import lombok.Getter;
 
-@Data
+@Getter
 public class TodoCreateRequestDTO {
 
   private String content;

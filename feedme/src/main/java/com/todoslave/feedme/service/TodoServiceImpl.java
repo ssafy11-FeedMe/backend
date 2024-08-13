@@ -10,8 +10,6 @@ import com.todoslave.feedme.DTO.TodoRequestDTO;
 import com.todoslave.feedme.domain.entity.task.CreatureTodo;
 import com.todoslave.feedme.domain.entity.task.DayOff;
 import com.todoslave.feedme.domain.entity.task.Todo;
-import com.todoslave.feedme.gpt.dto.ChatGPTRequest;
-import com.todoslave.feedme.gpt.dto.ChatGPTResponse;
 import com.todoslave.feedme.login.util.SecurityUtil;
 import com.todoslave.feedme.repository.CreatureTodoReposito;
 import com.todoslave.feedme.repository.TodoCategoryRepository;
@@ -23,9 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 @RequiredArgsConstructor
 @Service
@@ -41,8 +37,6 @@ public class TodoServiceImpl implements TodoService {
   private final DayOffService dayOffService;
   @Autowired
   private final CreatureService creatureService;
-  @Autowired
-  private RestTemplate template;
 
   // 할일 목록에서 일정(일) 불러오기
   @Override
@@ -142,15 +136,13 @@ public class TodoServiceImpl implements TodoService {
     YearMonth yearMonth = YearMonth.of(year, month);
     LocalDate firstDay = yearMonth.atDay(1);
     LocalDate lastDay = yearMonth.atEndOfMonth();
-    //리스트 만들고
+
     List<TodoCalendarResponseDTO> todoCounts = new ArrayList<>();
 
-    //1~31일까지 쭉 불러와
     for (LocalDate date = firstDay; !date.isAfter(lastDay); date = date.plusDays(1)) {
 
       TodoCalendarResponseDTO todoCalendarResponseDTO = new TodoCalendarResponseDTO();
 
-      //안한거 갯수 더라기
       long inCompleted = todoRepository.countTodoByDateAndIsCompleted(date, 0)+creatureTodoReposito.countByCreatedAtAndIsCompleted(date,0);
 
       todoCalendarResponseDTO.setInCompleted((int)inCompleted);
@@ -255,88 +247,18 @@ public class TodoServiceImpl implements TodoService {
     List<CreatureTodo> creatureTodoList = creatureTodoReposito.findByMemberIdAndCreatedAt(SecurityUtil.getCurrentUserId(),date);
 
 
-
-
-    // StringBuilder로 문자열 누적
-    StringBuilder todoAllBuilder = new StringBuilder();
-    int completedTodos = 0;
-    int completedCreatureTodos = 0;
-
-    for (Todo todo : todoList) {
-      if (todo.getIsCompleted() == 1) {
-        todoAllBuilder.append(todo.getTodoCategory().getName()).append(" - ").append(todo.getContent()).append("\n");
-        completedTodos++;
-      }
-    }
-
-    for (CreatureTodo creatureTodo : creatureTodoList) {
-      if (creatureTodo.getIsCompleted() == 1) {
-        todoAllBuilder.append(creatureTodo.getContent()).append("\n");
-        completedCreatureTodos++;
-      }
-    }
-
-    // todoAll을 String으로 변환
-    String todoAll = todoAllBuilder.toString();
-
-    String generatedDiaryEntry = generateDiaryEntry(todoAll);// 여기 하는중!!!!!!!!!!!!!
-
-
-
-
-//    int completedTodos =0 ;
-//    int completedCreatureTodos=0;
-//    //일기 써달라고 하기
-//    String todoAll = null;
-//    for(Todo todo : todoList){
-//      if(todo.getIsCompleted()==1){
-//      todoAll += (todo.getTodoCategory() +" - "+ todo.getContent()+"\n");
-//      completedTodos++;
-//      }
-//    }
-//
-//    for(CreatureTodo creatureTodo : creatureTodoList){
-//      if(creatureTodo.getIsCompleted()==1){
-//        todoAll+=(creatureTodo.getContent()+"\n");
-//        completedCreatureTodos++;
-//      }
-//    }
+    //일기 써달라고 하기
     //요청할때 날자랑 내 id 줘야함
     // AI 요청!!!!!!!!!!!!!!!!!!!!!
 
 
-//    int completedTodos = (int) todoList.stream().filter(todo -> todo.getIsCompleted() == 1).count();
-//    int completedCreatureTodos = (int) creatureTodoList.stream().filter(creatureTodo -> creatureTodo.getIsCompleted() == 1).count();
+    int completedTodos = (int) todoList.stream().filter(todo -> todo.getIsCompleted() == 1).count();
+    int completedCreatureTodos = (int) creatureTodoList.stream().filter(creatureTodo -> creatureTodo.getIsCompleted() == 1).count();
 
     //경험치 올리기
     creatureService.expUp(completedTodos+completedCreatureTodos);
 
-
     //예본 해
       return true;
     }
-
-
-  // GPT API 호출을 통해 일기를 생성하는 메서드
-  @Value("${openai.api.url}")
-  private String apiURL;
-
-  private String generateDiaryEntry(String todoAll) {
-    String prompt = "다음 항목들을 바탕으로 한글로 일기를 작성해주세요:\n" + todoAll;
-
-    // ChatGPTRequest와 RestTemplate을 사용하여 GPT API 호출
-    ChatGPTRequest request = new ChatGPTRequest("gpt-3.5-turbo", prompt);
-    ChatGPTResponse response = template.postForObject(apiURL, request, ChatGPTResponse.class);
-
-    // 에러 처리 및 응답 처리
-    if (response != null && !response.getChoices().isEmpty()) {
-      return response.getChoices().get(0).getMessage().getContent();
-    }
-
-    // 기본 응답 또는 오류 처리
-    return "일기 작성에 실패했습니다.";
-  }
-
-
-
 }

@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,11 +22,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AuthController {
 
-    @Autowired
     private final RefreshTokenRepository tokenRepository;
-    @Autowired
     private final RefreshTokenService tokenService;
-    @Autowired
     private final JWTUtill jwtUtil;
 
     @PostMapping("token/logout")
@@ -36,15 +34,25 @@ public class AuthController {
         return ResponseEntity.ok(StatusResponseDto.addStatus(200));
     }
 
+
+//    @PostMapping("/token/refresh2")
+//    public ResponseEntity<TokenResponseStatus> refresh2(@RequestHeader("Authorization") final String accessToken) {
+//
+//        String newAccessToken = tokenService.republishAccessToken(accessToken);
+//        if (StringUtils.hasText(newAccessToken)) {
+//            return ResponseEntity.ok(TokenResponseStatus.addStatus(200, newAccessToken));
+//        }
+//
+//        return ResponseEntity.badRequest().body(TokenResponseStatus.addStatus(400, null));
+//    }
+
     @PostMapping("/token/refresh")
     public ResponseEntity<TokenResponseStatus> refresh(@RequestHeader("Authorization") final String accessToken) {
 
         // 액세스 토큰으로 Refresh 토큰 객체를 조회
         Optional<RefreshToken> refreshToken = tokenRepository.findByAccessToken(accessToken);
 
-        System.out.println(refreshToken.get().getRefreshToken());
-
-
+//        System.out.println(refreshToken.get().getRefreshToken());
         // RefreshToken이 존재하고 유효하다면 실행
         if (refreshToken.isPresent() && jwtUtil.verifyToken(refreshToken.get().getRefreshToken())) {
 
@@ -57,9 +65,6 @@ public class AuthController {
             // 액세스 토큰의 값을 수정해준다.
             resultToken.updateAccessToken(newAccessToken);
             tokenRepository.save(resultToken);
-            System.out.println();
-            System.out.println(accessToken);
-            System.out.println(resultToken);
 
             // 새로운 액세스 토큰을 반환해준다.
             return ResponseEntity.ok(TokenResponseStatus.addStatus(200, newAccessToken));
@@ -67,5 +72,7 @@ public class AuthController {
 
         return ResponseEntity.badRequest().body(TokenResponseStatus.addStatus(400, null));
     }
+
+
 
 }

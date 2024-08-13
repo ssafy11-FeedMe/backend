@@ -6,7 +6,6 @@ import com.todoslave.feedme.DTO.FriendRequestDTO;
 import com.todoslave.feedme.DTO.FriendResponseDTO;
 import com.todoslave.feedme.DTO.MemberChatListResponseDTO;
 import com.todoslave.feedme.DTO.PaginationRequestDTO;
-import com.todoslave.feedme.domain.entity.communication.FriendRequest;
 import com.todoslave.feedme.service.AlarmService;
 import com.todoslave.feedme.service.FriendService;
 import com.todoslave.feedme.service.MemberChatService;
@@ -26,13 +25,13 @@ import java.util.List;
 public class FriendController {
 
     @Autowired
-    MemberService memberService;
+    static private MemberService memberService;
     @Autowired
-    FriendService friendService;
+    static private FriendService friendService;
     @Autowired
-    AlarmService alarmService;
+    static private AlarmService alarmService;
     @Autowired
-    MemberChatService memberChatService;
+    static private MemberChatService memberChatService;
 
     // 친구 요청하기
     @PostMapping
@@ -43,9 +42,7 @@ public class FriendController {
 
     // 친구 삭제하기
     @DeleteMapping()
-    public ResponseEntity<Void> removeFriend(@RequestParam("counterpartNickname") String counterpartNickname){
-        FriendRequestDTO friendRequestDTO = new FriendRequestDTO();
-        friendRequestDTO.setCounterpartNickname(counterpartNickname);
+    public ResponseEntity<Void> removeFriend(@RequestBody FriendRequestDTO friendRequestDTO){
         friendService.deleteFriend(friendRequestDTO);
         return ResponseEntity.noContent().build();
     }
@@ -53,9 +50,7 @@ public class FriendController {
     //친구 정보 얻기
     @Operation(summary = "친구 닉네임 검색")
     @GetMapping("/info")
-    public ResponseEntity<FriendInfoResponseDTO> findFriendInfo(@RequestParam String counterpartNickname){
-        FriendRequestDTO friendRequestDTO = new FriendRequestDTO();
-        friendRequestDTO.setCounterpartNickname(counterpartNickname);
+    public ResponseEntity<FriendInfoResponseDTO> findFriendInfo(FriendRequestDTO friendRequestDTO){
         return ResponseEntity.ok(friendService.getFriendInfo(friendRequestDTO));
     }
 
@@ -68,10 +63,7 @@ public class FriendController {
     // 친구 요청 목록 조회
     @GetMapping("/request")
     public ResponseEntity<Slice<FriendReqResponseDTO>> findRequestFriend(
-            @RequestParam("skip") int skip, @RequestParam("limit") int limit) {
-        PaginationRequestDTO paginationRequestDTO = new PaginationRequestDTO();
-        paginationRequestDTO.setSkip(skip);
-        paginationRequestDTO.setLimit(limit);
+        PaginationRequestDTO paginationRequestDTO){
         return ResponseEntity.ok(friendService.getRequestFriend(paginationRequestDTO));
     }
 

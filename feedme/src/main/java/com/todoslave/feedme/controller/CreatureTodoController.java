@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -49,9 +48,7 @@ public class CreatureTodoController {
     //  메인 달력에서 일정 불러오기
     @GetMapping("/calendar/daily")
     @Operation(summary = "해당일의 크리쳐 투두 목록 가져오기")
-    public ResponseEntity<List<CreatureTodoResponseDTO>> findCalendarCreatureTodoList(@RequestParam("date") LocalDate date) {
-        CretureTodoRequestDTO cretureTodoRequestDTO = new CretureTodoRequestDTO();
-        cretureTodoRequestDTO.setDate(date);
+    public ResponseEntity<List<CreatureTodoResponseDTO>> findCalendarCreatureTodoList(@RequestBody CretureTodoRequestDTO cretureTodoRequestDTO) {
         List<CreatureTodoResponseDTO> list = creatureTodoService.getCreatureTodoCalendarDaily(cretureTodoRequestDTO);
         return ResponseEntity.ok(list);
     }
@@ -59,11 +56,7 @@ public class CreatureTodoController {
     // 할일 목록에서 일정(일) 불러오기
     @Operation(summary = "할일 목록에서 일정(일) 불러오기 - 다음날 이동 가능하게")
     @GetMapping("/todolist/daily")
-    public ResponseEntity<List<CreatureTodoResponseDTO>> findDailyCreatureTodoList(@RequestParam("date") LocalDate date,
-                                                                                   @RequestParam("next") int next){
-        CreatureTodoDailyRequestDTO creatureTodoDailyRequestDTO = new CreatureTodoDailyRequestDTO();
-        creatureTodoDailyRequestDTO.setDate(date);
-        creatureTodoDailyRequestDTO.setNext(next);
+    public ResponseEntity<List<CreatureTodoResponseDTO>> findDailyCreatureTodoList(@RequestBody CreatureTodoDailyRequestDTO creatureTodoDailyRequestDTO){
         return ResponseEntity.ok(creatureTodoService.getCreatureTodoListDaily(creatureTodoDailyRequestDTO));
     }
 

@@ -25,7 +25,7 @@ import java.util.Date;
 public class JWTUtill {
     private final JwtProperties jwtProperties;
     private final RefreshTokenService tokenService;
-    private final MemberService memberService;
+
     private final TokenBlacklistService tokenBlacklistService;
     private String secretKey;
 
@@ -75,8 +75,8 @@ public class JWTUtill {
 
 
     public String generateAccessToken(String email, String role) {
-        long tokenPeriod = 1000L * 60L * 30L * 4; // 2시간
-//        long tokenPeriod = 1000L * 30L;
+//        long tokenPeriod = 1000L * 60L * 30L * 4; // 2시간
+        long tokenPeriod = 1000L * 30L; //
         Claims claims = Jwts.claims().setSubject(email);
         claims.put("role", role);
 
@@ -109,6 +109,8 @@ public class JWTUtill {
 //            return false;
 //        }
 //    }
+
+
 public boolean verifyToken(String token) {
     try {
         if (tokenBlacklistService.isBlacklisted(token)) {
