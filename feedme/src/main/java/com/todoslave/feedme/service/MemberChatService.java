@@ -20,10 +20,14 @@ public interface MemberChatService {
   public MemberChatListResponseDTO insertChatRoom(List<Integer> members);
 
   // 채팅방 메세지 불러오기
-  public Slice<MemberChatMessage> getChatMessage(String roomId, int page, int size);
+  public Slice<MemberChatMessageResponseDTO> getChatMessage(String roomId, int page, int size);
 
   // 채팅방 메세지 저장
   public MemberChatMessageResponseDTO insertChatMessage(String roomId, MemberChatMessageRequestDTO memberChatMessageRequestDTO)
       throws IOException;
+
+  void enterTheRoom(String roomId);
+
+  void exitTheRoom(String roomId);
 
 }

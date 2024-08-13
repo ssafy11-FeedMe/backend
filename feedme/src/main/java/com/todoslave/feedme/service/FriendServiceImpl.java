@@ -17,6 +17,7 @@ import com.todoslave.feedme.repository.FriendRepository;
 import com.todoslave.feedme.repository.FriendRequestRepository;
 import com.todoslave.feedme.repository.MemberRepository;
 import jakarta.transaction.Transactional;
+import java.io.IOException;
 import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 
@@ -39,30 +40,39 @@ public class FriendServiceImpl implements FriendService{
     private final FriendRequestRepository friendRequestRepository;
 
 
-//    @Autowired
-//    MemberService memberService;
-
-//    @Autowired
-//    MemberChatService memberChatService;
-//    @Autowired
-//    CreatureService creatureService;
-//    @Autowired
-//    MemberRepository memberRepository;
-
-//    @Autowired
-//    FriendRepository friendRepository;
-//    @Autowired
-//    FriendRequestRepository friendRequestRepository;
 
     //유틸 닉네임으로 찾기
     private Member findByNickname(String nickname) {
         return memberRepository.findByNickname(nickname).orElse(null);
     }
 
+// 문희 
+//     @Autowired
+//     MemberService memberService;
+//     @Autowired
+//     MemberChatService memberChatService;
+//     @Autowired
+//     CreatureService creatureService;
+//     @Autowired
+//     MemberRepository memberRepository;
+
+//     @Autowired
+//     AlarmService alarmService;
+
+//     @Autowired
+//     FriendRepository friendRepository;
+//     @Autowired
+//     FriendRequestRepository friendRequestRepository;
+//     @Autowired
+//     private com.todoslave.feedme.imageUtil imageUtil;
+
+//     private final MemberChatRoomRepository memberChatRoomRepository;
+//     private final MemberChatMessageRepository memberChatMessageRepository;
+
 
     // 친구 요청
     @Override
-    public void requestFriend(FriendRequestDTO friendRequestDTO) {
+    public void requestFriend(FriendRequestDTO friendRequestDTO) throws IOException {
 
         Member member = SecurityUtil.getCurrentMember();
         Member counterpart = findByNickname(friendRequestDTO.getCounterpartNickname());
@@ -72,8 +82,14 @@ public class FriendServiceImpl implements FriendService{
         friendRequest.setMember(member);
         friendRequest.setCounterpartId(counterpart);
 
-        friendRequestRepository.save(friendRequest);
+        FriendRequest request = friendRequestRepository.save(friendRequest);
 
+        FriendReqResponseDTO friendReqResponseDTO = new FriendReqResponseDTO();
+        friendReqResponseDTO.setId(request.getId());
+        friendReqResponseDTO.setCounterpartNickname(request.getCounterpartId().getNickname());
+        friendReqResponseDTO.setCreatureImg(generateCreatureImgPath(request.getCounterpartId()));
+
+        alarmService.requestFriendship(friendReqResponseDTO, counterpart.getId());
     }
 
     // 친구 삭제
@@ -97,6 +113,13 @@ public class FriendServiceImpl implements FriendService{
 
         response.setFriendId(member.getId());
         response.setNickname(member.getNickname());
+
+        List<Integer> members = new ArrayList<>();
+
+        members.add(SecurityUtil.getCurrentUserId());
+        members.add(member.getId());
+
+        response.setRoomId(memberChatRoomRepository.findByParticipantIdsContainingAll(members).getId());
 
         CreatureInfoResponseDTO creatureInfoResponseDTO = creatureService.creatureInfo(member);
         response.setCreatureNickname(creatureInfoResponseDTO.getName());
@@ -162,7 +185,7 @@ public class FriendServiceImpl implements FriendService{
         Friend friend = new Friend();
 
         Member member = SecurityUtil.getCurrentMember();
-        Member counterpart = friendRequest.getCounterpartId();
+        Member counterpart = friendRequest.getMember();
 
         friend.setMember(member);
         friend.setCounterpart(counterpart);

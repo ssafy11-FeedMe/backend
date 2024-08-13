@@ -23,8 +23,17 @@ public class AlarmController {
     @Autowired
     private AlarmService alarmService;
 
-    @GetMapping(value = "/subscribe/alarm")
+
+    @GetMapping(value = "/subscribe/friend", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public SseEmitter friendSubscribe(){
+        System.out.println("subscribe open!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        return alarmService.friendCreateEmitter();
+    }
+
+    @GetMapping(value = "/subscribe/alarm", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+
     public SseEmitter subscribe(){
+        System.out.println("subscribe open!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         return alarmService.createEmitter();
     }
 
