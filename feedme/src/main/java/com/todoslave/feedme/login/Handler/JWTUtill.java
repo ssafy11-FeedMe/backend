@@ -25,7 +25,7 @@ import java.util.Date;
 public class JWTUtill {
     private final JwtProperties jwtProperties;
     private final RefreshTokenService tokenService;
-    private final MemberService memberService;
+
     private final TokenBlacklistService tokenBlacklistService;
     private String secretKey;
 
@@ -75,8 +75,7 @@ public class JWTUtill {
 
 
     public String generateAccessToken(String email, String role) {
-//        long tokenPeriod = 1000L * 60L * 30L * 4; // 2시간
-        long tokenPeriod = 1000L * 30L;
+       long tokenPeriod = 1000L * 60L * 30L * 4; // 2시간
         Claims claims = Jwts.claims().setSubject(email);
         claims.put("role", role);
 
@@ -96,19 +95,8 @@ public class JWTUtill {
     }
 
 
-//    public boolean verifyToken(String token) { //토큰 검증 하기 (시간 체크)
-//        try {
-//            Jws<Claims> claims = Jwts.parser()
-//                    .setSigningKey(secretKey) // 비밀키를 설정하여 파싱한다.
-//                    .parseClaimsJws(token);  // 주어진 토큰을 파싱하여 Claims 객체를 얻는다.
-//            // 토큰의 만료 시간과 현재 시간비교
-//            return claims.getBody()
-//                    .getExpiration()
-//                    .after(new Date());  // 만료 시간이 현재 시간 이후인지 확인하여 유효성 검사 결과를 반환
-//        } catch (Exception e) {
-//            return false;
-//        }
-//    }
+
+
 public boolean verifyToken(String token) {
     try {
         if (tokenBlacklistService.isBlacklisted(token)) {

@@ -10,7 +10,6 @@ import com.todoslave.feedme.login.util.SecurityUtil;
 import com.todoslave.feedme.repository.CreatureTodoReposito;
 import com.todoslave.feedme.repository.DayOffRepository;
 import com.todoslave.feedme.repository.MissionRepository;
-import com.todoslave.feedme.repository.TodoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,7 +25,6 @@ import java.util.Random;
 public class CreatureTodoServiceImpl implements CreatureTodoService{
 
     final private DayOffRepository dayOffRepository;
-
 
     @Autowired
     final private MissionRepository missionRepository;
@@ -86,13 +84,15 @@ public class CreatureTodoServiceImpl implements CreatureTodoService{
     //DTO 변환
     private CreatureTodoResponseDTO toResponseDTO(CreatureTodo creatureTodo) {
 
+        //false면 있는거
+        boolean checked = isActionAllowed(SecurityUtil.getCurrentMember().getId(), creatureTodo.getCreatedAt());
 
         return CreatureTodoResponseDTO.builder()
                 .id(creatureTodo.getId())
                 .content(creatureTodo.getContent())
                 .createdAt(creatureTodo.getCreatedAt())
                 .isCompleted(creatureTodo.getIsCompleted())
-//                .diaryIsCompleted(!checked)  //그래서 역전
+                .diaryIsCompleted(!checked)
                 .build();
     }
 
@@ -152,7 +152,6 @@ public class CreatureTodoServiceImpl implements CreatureTodoService{
         LocalDate date = creatureTodoDailyRequestDTO.getDate();
         //멤버
         int memberId = SecurityUtil.getCurrentUserId();
-
         //누른 버튼
         if(creatureTodoDailyRequestDTO.getNext() < 0 ){ //-1 일때
             date.minusDays(1);

@@ -14,7 +14,6 @@ import com.todoslave.feedme.repository.MemberChatMessageRepository;
 import com.todoslave.feedme.repository.MemberChatRoomCheckedRepository;
 import com.todoslave.feedme.repository.MemberChatRoomRepository;
 import com.todoslave.feedme.repository.MemberRepository;
-import jakarta.transaction.Transactional;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +43,6 @@ public class MemberChatServiceImpl implements MemberChatService{
   private final MemberChatRoomCheckedRepository memberChatRoomCheckedRepository;
   @Autowired
   private final CreatureRepository creatureRepository;
-
 
   // 채팅방 목록들 가져오기
   @Override
@@ -78,7 +76,7 @@ public class MemberChatServiceImpl implements MemberChatService{
       Creature creature = creatureRepository.findByMemberId(counterPartId);
 
       chatResponse.setCreatureImage(
-          "https://i11b104.p.ssafy.io/image/creature/"+creature.getMember().getId()+"_"+creature.getLevel());
+          "http://localhost:8080/image/creature/"+creature.getMember().getId()+"_"+creature.getLevel());
       MemberChatRoomChecked checked = memberChatRoomCheckedRepository.findByMemberChatRoomIdAndMemberId(room.getId(),memberId);
       chatResponse.setIsChecked(checked.getIsChecked());
 
@@ -117,28 +115,25 @@ public class MemberChatServiceImpl implements MemberChatService{
     memberChatListResponseDTO.setId(room.getId());
     memberChatListResponseDTO.setNickname(countpart.getNickname());
     memberChatListResponseDTO.setCreatureImage(
-        "https://i11b104.p.ssafy.io/image/creature/"+creature.getMember().getId()+"_"+creature.getLevel());
+        "http://localhost:8080/image/creature/"+creature.getMember().getId()+"_"+creature.getLevel());
     memberChatListResponseDTO.setIsChecked(1);
 
     return memberChatListResponseDTO;
   }
 
   // 채팅방 메세지 불러오기
-  @Transactional
   public Slice<MemberChatMessage> getChatMessage(String roomId, int skip, int limit){
-
-    if(roomRepository.findById(roomId).orElseThrow()==null){
-      return null;
-    }
 
     System.out.println("receive message? service");
     Pageable pageable = PageRequest.of(skip / limit, limit);
 
     Slice<MemberChatMessage> messages = messageRepository.findByMemberChatRoomIdOrderByTransmitAtDesc(roomId, pageable);
 
+
     int memberId = SecurityUtil.getCurrentUserId();
     MemberChatRoomChecked checked = memberChatRoomCheckedRepository.findByMemberChatRoomIdAndMemberId(roomId,memberId);
     checked.setIsChecked(1);
+
 
     return messages;
   }
@@ -173,7 +168,8 @@ public class MemberChatServiceImpl implements MemberChatService{
     memberChatListResponseDTO.setNickname(counterpartNickname);
     Creature creature = creatureRepository.findByMemberId(counterPartId);
 
-    memberChatListResponseDTO.setCreatureImage("https://i11b104.p.ssafy.io/image/creature/"+creature.getMember().getId()+"_"+creature.getLevel());
+
+    memberChatListResponseDTO.setCreatureImage("http://localhost:8080/image/creature/"+creature.getMember().getId()+"_"+creature.getLevel());
 
     // 채팅방 갱신 (나)
     alarmService.renewChattingRoom(memberChatListResponseDTO, SecurityUtil.getCurrentUserId());
@@ -181,7 +177,9 @@ public class MemberChatServiceImpl implements MemberChatService{
     memberChatListResponseDTO.setNickname(SecurityUtil.getCurrentMember().getNickname());
     creature = creatureRepository.findByMemberId(memberId);
 
-    memberChatListResponseDTO.setCreatureImage("https://i11b104.p.ssafy.io/image/creature/"+creature.getMember().getId()+"_"+creature.getLevel());
+
+    memberChatListResponseDTO.setCreatureImage("http://localhost:8080/image/creature/"+creature.getMember().getId()+"_"+creature.getLevel());
+
 
     // 채팅방 갱신 (상대)
     alarmService.renewChattingRoom(memberChatListResponseDTO, counterPartId);

@@ -71,9 +71,9 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
                     memberAttribute, "email");
         }
 
-        //일단 아이디 잘 따지나 체크
-        System.out.println(findMember.get().getId());
-        System.out.println("ROLE_".concat(findMember.get().getUserRole()));
+//        //일단 아이디 잘 따지나 체크
+//        System.out.println(findMember.get().getId());
+//        System.out.println("ROLE_".concat(findMember.get().getUserRole()));
 
         // 여기는 회원인 사람 -> SuccessHandler 에서 jwt 토큰을 발급해서 프론트로 넘겨 주게 된다!!
 

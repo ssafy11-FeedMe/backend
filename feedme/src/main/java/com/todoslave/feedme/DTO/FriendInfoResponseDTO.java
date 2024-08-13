@@ -7,7 +7,6 @@ public class FriendInfoResponseDTO {
 
   private int friendId;
   private String nickname;
-  private String creatureNickname;
   private String creatureImg;
   private int level;
   private int exp;

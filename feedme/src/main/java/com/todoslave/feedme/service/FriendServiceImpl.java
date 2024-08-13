@@ -28,7 +28,6 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
 public class FriendServiceImpl implements FriendService{
 
 
@@ -38,21 +37,6 @@ public class FriendServiceImpl implements FriendService{
     private final FriendRepository friendRepository;
     private final FriendRequestRepository friendRequestRepository;
 
-
-//    @Autowired
-//    MemberService memberService;
-
-//    @Autowired
-//    MemberChatService memberChatService;
-//    @Autowired
-//    CreatureService creatureService;
-//    @Autowired
-//    MemberRepository memberRepository;
-
-//    @Autowired
-//    FriendRepository friendRepository;
-//    @Autowired
-//    FriendRequestRepository friendRequestRepository;
 
     //유틸 닉네임으로 찾기
     private Member findByNickname(String nickname) {
@@ -99,7 +83,6 @@ public class FriendServiceImpl implements FriendService{
         response.setNickname(member.getNickname());
 
         CreatureInfoResponseDTO creatureInfoResponseDTO = creatureService.creatureInfo(member);
-        response.setCreatureNickname(creatureInfoResponseDTO.getName());
         response.setCreatureImg(creatureInfoResponseDTO.getImg());
         response.setLevel(creatureInfoResponseDTO.getLevel());
         response.setExp(creatureInfoResponseDTO.getExp());
@@ -136,7 +119,7 @@ public class FriendServiceImpl implements FriendService{
         Creature creature = member.getCreature();
         int creatureLevel = creature.getLevel();
         int creatureId = creature.getId();
-        return "https://i11b104.p.ssafy.io/image/creature/" + creatureId + "_" +creatureLevel;
+        return "http://localhost:8080/image/creature/" + creatureId + "_" +creatureLevel;
     }
 
     // 친구 요청 불러오기

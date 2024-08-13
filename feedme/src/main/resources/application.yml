@@ -79,6 +79,7 @@ redis:
 jwt:
   issuer: todoslave@ssafy.com
   secret_key: ${JWT_SECRET_KEY}
+
   #이건 살림
 openai:
   model: "gpt-3.5-turbo"

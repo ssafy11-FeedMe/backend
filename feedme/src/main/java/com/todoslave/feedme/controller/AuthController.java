@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,11 +22,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AuthController {
 
-    @Autowired
     private final RefreshTokenRepository tokenRepository;
-    @Autowired
     private final RefreshTokenService tokenService;
-    @Autowired
     private final JWTUtill jwtUtil;
 
     @PostMapping("token/logout")
@@ -59,5 +57,7 @@ public class AuthController {
 
         return ResponseEntity.badRequest().body(TokenResponseStatus.addStatus(400, null));
     }
+
+
 
 }
