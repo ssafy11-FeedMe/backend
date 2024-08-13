@@ -17,6 +17,7 @@ import com.todoslave.feedme.repository.MemberRepository;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -128,6 +129,12 @@ public class MemberChatServiceImpl implements MemberChatService{
 
     Slice<MemberChatMessage> messages = messageRepository.findByMemberChatRoomIdOrderByTransmitAtDesc(roomId, pageable);
 
+
+    int memberId = SecurityUtil.getCurrentUserId();
+    MemberChatRoomChecked checked = memberChatRoomCheckedRepository.findByMemberChatRoomIdAndMemberId(roomId,memberId);
+    checked.setIsChecked(1);
+
+
     return messages;
   }
 
@@ -161,6 +168,7 @@ public class MemberChatServiceImpl implements MemberChatService{
     memberChatListResponseDTO.setNickname(counterpartNickname);
     Creature creature = creatureRepository.findByMemberId(counterPartId);
 
+
     memberChatListResponseDTO.setCreatureImage("http://localhost:8080/image/creature/"+creature.getMember().getId()+"_"+creature.getLevel());
 
     // 채팅방 갱신 (나)
@@ -169,7 +177,9 @@ public class MemberChatServiceImpl implements MemberChatService{
     memberChatListResponseDTO.setNickname(SecurityUtil.getCurrentMember().getNickname());
     creature = creatureRepository.findByMemberId(memberId);
 
+
     memberChatListResponseDTO.setCreatureImage("http://localhost:8080/image/creature/"+creature.getMember().getId()+"_"+creature.getLevel());
+
 
     // 채팅방 갱신 (상대)
     alarmService.renewChattingRoom(memberChatListResponseDTO, counterPartId);

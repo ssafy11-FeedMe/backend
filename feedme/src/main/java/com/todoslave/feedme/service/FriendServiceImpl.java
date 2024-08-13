@@ -30,28 +30,26 @@ import org.springframework.stereotype.Service;
 @Service
 public class FriendServiceImpl implements FriendService{
 
-    @Autowired
-    MemberService memberService;
-    @Autowired
-    MemberChatService memberChatService;
-    @Autowired
-    CreatureService creatureService;
-    @Autowired
-    MemberRepository memberRepository;
 
-    @Autowired
-    FriendRepository friendRepository;
-    @Autowired
-    FriendRequestRepository friendRequestRepository;
-    @Autowired
-    private com.todoslave.feedme.imageUtil imageUtil;
+    private final MemberChatService memberChatService;
+    private final CreatureService creatureService;
+    private final MemberRepository memberRepository;
+    private final FriendRepository friendRepository;
+    private final FriendRequestRepository friendRequestRepository;
+
+
+    //유틸 닉네임으로 찾기
+    private Member findByNickname(String nickname) {
+        return memberRepository.findByNickname(nickname).orElse(null);
+    }
+
 
     // 친구 요청
     @Override
     public void requestFriend(FriendRequestDTO friendRequestDTO) {
 
         Member member = SecurityUtil.getCurrentMember();
-        Member counterpart = memberService.findByNickname(friendRequestDTO.getCounterpartNickname());
+        Member counterpart = findByNickname(friendRequestDTO.getCounterpartNickname());
 
         FriendRequest friendRequest = new FriendRequest();
 
@@ -79,7 +77,7 @@ public class FriendServiceImpl implements FriendService{
 
         FriendInfoResponseDTO response = new FriendInfoResponseDTO();
 
-        Member member = memberService.findByNickname(friendRequestDTO.getCounterpartNickname());
+        Member member = findByNickname(friendRequestDTO.getCounterpartNickname());
 
         response.setFriendId(member.getId());
         response.setNickname(member.getNickname());

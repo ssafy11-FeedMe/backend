@@ -34,29 +34,14 @@ public class AuthController {
         return ResponseEntity.ok(StatusResponseDto.addStatus(200));
     }
 
-
-//    @PostMapping("/token/refresh2")
-//    public ResponseEntity<TokenResponseStatus> refresh2(@RequestHeader("Authorization") final String accessToken) {
-//
-//        String newAccessToken = tokenService.republishAccessToken(accessToken);
-//        if (StringUtils.hasText(newAccessToken)) {
-//            return ResponseEntity.ok(TokenResponseStatus.addStatus(200, newAccessToken));
-//        }
-//
-//        return ResponseEntity.badRequest().body(TokenResponseStatus.addStatus(400, null));
-//    }
-
     @PostMapping("/token/refresh")
     public ResponseEntity<TokenResponseStatus> refresh(@RequestHeader("Authorization") final String accessToken) {
 
         // 액세스 토큰으로 Refresh 토큰 객체를 조회
         Optional<RefreshToken> refreshToken = tokenRepository.findByAccessToken(accessToken);
 
-//        System.out.println(refreshToken.get().getRefreshToken());
         // RefreshToken이 존재하고 유효하다면 실행
         if (refreshToken.isPresent() && jwtUtil.verifyToken(refreshToken.get().getRefreshToken())) {
-
-
 
             // RefreshToken 객체를 꺼내온다.
             RefreshToken resultToken = refreshToken.get();
