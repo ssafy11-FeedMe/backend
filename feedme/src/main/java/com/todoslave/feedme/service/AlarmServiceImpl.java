@@ -112,7 +112,7 @@ public class AlarmServiceImpl implements AlarmService{
   public void todoCompleted() throws IOException {
 
     LocalDate currentDay = LocalDate.now();
-    List<Integer> members = todoRepository.findMemberIdAllByCreatedAtAndIsCompleted(currentDay);
+    List<Integer> members = todoRepository.findMemberIdAllByCreatedAtAndIsCompleted(currentDay, 0);
 
     for(int memberId : members) {
 
