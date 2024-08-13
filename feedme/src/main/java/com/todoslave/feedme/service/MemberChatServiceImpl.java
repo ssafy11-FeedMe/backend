@@ -80,6 +80,7 @@ public class MemberChatServiceImpl implements MemberChatService{
           "http://localhost:8080/image/creature/"+creature.getMember().getId()+"_"+creature.getLevel());
       MemberChatRoomChecked checked = memberChatRoomCheckedRepository.findByMemberChatRoomIdAndMemberId(room.getId(),memberId);
       chatResponse.setIsChecked(checked.getIsChecked());
+      chatListResponse.add(chatResponse);
 
     }
 
