@@ -10,11 +10,12 @@ import com.todoslave.feedme.DTO.PaginationRequestDTO;
 import com.todoslave.feedme.domain.entity.avatar.Creature;
 import com.todoslave.feedme.domain.entity.communication.Friend;
 import com.todoslave.feedme.domain.entity.communication.FriendRequest;
-import com.todoslave.feedme.domain.entity.communication.MemberChatRoom;
 import com.todoslave.feedme.domain.entity.membership.Member;
 import com.todoslave.feedme.login.util.SecurityUtil;
 import com.todoslave.feedme.mapper.FriendRequestMapper;
-import com.todoslave.feedme.repository.*;
+import com.todoslave.feedme.repository.FriendRepository;
+import com.todoslave.feedme.repository.FriendRequestRepository;
+import com.todoslave.feedme.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -31,39 +32,55 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class FriendServiceImpl implements FriendService{
 
-    @Autowired
-    MemberService memberService;
-    @Autowired
-    MemberChatService memberChatService;
-    @Autowired
-    CreatureService creatureService;
-    @Autowired
-    MemberRepository memberRepository;
 
-    @Autowired
-    AlarmService alarmService;
+    private final MemberChatService memberChatService;
+    private final CreatureService creatureService;
+    private final MemberRepository memberRepository;
+    private final FriendRepository friendRepository;
+    private final FriendRequestRepository friendRequestRepository;
 
-    @Autowired
-    FriendRepository friendRepository;
-    @Autowired
-    FriendRequestRepository friendRequestRepository;
-    @Autowired
-    private com.todoslave.feedme.imageUtil imageUtil;
 
-    private final MemberChatRoomRepository memberChatRoomRepository;
-    private final MemberChatMessageRepository memberChatMessageRepository;
+
+    //유틸 닉네임으로 찾기
+    private Member findByNickname(String nickname) {
+        return memberRepository.findByNickname(nickname).orElse(null);
+    }
+
+// 문희 
+//     @Autowired
+//     MemberService memberService;
+//     @Autowired
+//     MemberChatService memberChatService;
+//     @Autowired
+//     CreatureService creatureService;
+//     @Autowired
+//     MemberRepository memberRepository;
+
+//     @Autowired
+//     AlarmService alarmService;
+
+//     @Autowired
+//     FriendRepository friendRepository;
+//     @Autowired
+//     FriendRequestRepository friendRequestRepository;
+//     @Autowired
+//     private com.todoslave.feedme.imageUtil imageUtil;
+
+//     private final MemberChatRoomRepository memberChatRoomRepository;
+//     private final MemberChatMessageRepository memberChatMessageRepository;
+
 
     // 친구 요청
     @Override
     public void requestFriend(FriendRequestDTO friendRequestDTO) throws IOException {
 
         Member member = SecurityUtil.getCurrentMember();
-        Member counterpart = memberService.findByNickname(friendRequestDTO.getCounterpartNickname());
+        Member counterpart = findByNickname(friendRequestDTO.getCounterpartNickname());
 
         FriendRequest friendRequest = new FriendRequest();
 
-        friendRequest.setMember(counterpart);
-        friendRequest.setCounterpartId(member);
+        friendRequest.setMember(member);
+        friendRequest.setCounterpartId(counterpart);
 
         FriendRequest request = friendRequestRepository.save(friendRequest);
 
@@ -80,26 +97,10 @@ public class FriendServiceImpl implements FriendService{
     @Transactional
     public void deleteFriend(FriendRequestDTO friendRequestDTO) {
 
-        Member f = memberRepository.findByNickname(friendRequestDTO.getCounterpartNickname()).orElseThrow();
+        Member friend = memberRepository.findByNickname(friendRequestDTO.getCounterpartNickname()).orElseThrow();
         int memberId = SecurityUtil.getCurrentUserId();
-        Friend friend = friendRepository.findByMemberIdAndCounterpartId(memberId, f.getId());
-        friendRepository.deleteById(friend.getId());
-        friend = friendRepository.findByMemberIdAndCounterpartId(f.getId(), memberId);
-        friendRepository.deleteById(friend.getId());
-
-        // 채팅방 번호 얻어오기
-        List<Integer> members = new ArrayList<>();
-        members.add(memberId);
-        members.add(f.getId());
-        MemberChatRoom room = memberChatRoomRepository.findByParticipantIdsContainingAll(members);
-
-        String roomId = room.getId();
-
-        // 메세지 전부 삭제
-        memberChatMessageRepository.deleteAllByMemberChatRoomId(roomId);
-
-        // 채팅방 삭제
-        memberChatRoomRepository.deleteById(roomId);
+        int friendId = friendRepository.findByMemberIdAndCounterpartId(memberId, friend.getId());
+        friendRepository.deleteById(friendId);
 
     }
 
@@ -108,7 +109,7 @@ public class FriendServiceImpl implements FriendService{
 
         FriendInfoResponseDTO response = new FriendInfoResponseDTO();
 
-        Member member = memberService.findByNickname(friendRequestDTO.getCounterpartNickname());
+        Member member = findByNickname(friendRequestDTO.getCounterpartNickname());
 
         response.setFriendId(member.getId());
         response.setNickname(member.getNickname());
@@ -158,7 +159,7 @@ public class FriendServiceImpl implements FriendService{
         Creature creature = member.getCreature();
         int creatureLevel = creature.getLevel();
         int creatureId = creature.getId();
-        return "http://localhost:8080/image/creature/" + creatureId + "_" +creatureLevel;
+        return "https://i11b104.p.ssafy.io/image/creature/" + creatureId + "_" +creatureLevel;
     }
 
     // 친구 요청 불러오기
@@ -181,30 +182,32 @@ public class FriendServiceImpl implements FriendService{
 
         FriendRequest friendRequest = friendRequestRepository.findById(requestId);
 
+        Friend friend = new Friend();
+
         Member member = SecurityUtil.getCurrentMember();
         Member counterpart = friendRequest.getMember();
 
-        Friend friend1 = new Friend();
-        friend1.setMember(member);
-        friend1.setCounterpart(counterpart);
-        friendRepository.save(friend1);
+        friend.setMember(member);
+        friend.setCounterpart(counterpart);
 
-        Friend friend2 = new Friend();
-        friend2.setMember(counterpart);
-        friend2.setCounterpart(member);
-        friendRepository.save(friend2);
+        // 친구 추가
+        friendRepository.save(friend);
 
-        // 친구 요청 삭제
+        friend.setMember(counterpart);
+        friend.setCounterpart(member);
+
+        friendRepository.save(friend);
+
         friendRequestRepository.deleteById(requestId);
 
         List<Integer> members = new ArrayList<>();
+
         members.add(member.getId());
         members.add(counterpart.getId());
 
         // 채팅방 생성
         return memberChatService.insertChatRoom(members);
     }
-
 
     // 친구 거절
     @Override
