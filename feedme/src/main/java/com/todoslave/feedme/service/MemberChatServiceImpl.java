@@ -1,6 +1,7 @@
 package com.todoslave.feedme.service;
 
 import com.todoslave.feedme.DTO.MemberChatListResponseDTO;
+import com.todoslave.feedme.DTO.MemberChatMessageRequestDTO;
 import com.todoslave.feedme.DTO.MemberChatMessageResponseDTO;
 import com.todoslave.feedme.domain.entity.avatar.Creature;
 import com.todoslave.feedme.domain.entity.communication.MemberChatMessage;
@@ -45,6 +46,8 @@ public class MemberChatServiceImpl implements MemberChatService{
   private final MemberChatRoomCheckedRepository memberChatRoomCheckedRepository;
   @Autowired
   private final CreatureRepository creatureRepository;
+
+  private final MessageMapper messageMapper;
 
   Map<String, int[]> rooms = new HashMap<>();
 
@@ -131,9 +134,9 @@ public class MemberChatServiceImpl implements MemberChatService{
 
   // 채팅방 메세지 불러오기
   @Transactional
-  public Slice<MemberChatMessageResponseDTO> getChatMessage(String roomId, int skip, int limit){
+  public Slice<MemberChatMessageResponseDTO> getChatMessage(String roomId, int skip, int limit) {
 
-    if(roomRepository.findById(roomId).orElseThrow()==null){
+    if (roomRepository.findById(roomId).orElseThrow() == null) {
       return null;
     }
 
@@ -144,21 +147,21 @@ public class MemberChatServiceImpl implements MemberChatService{
 
     int memberId = 1;
 
-    System.out.println("memberId is : "+memberId);
-    System.out.println("Room Id is : "+roomId);
+    System.out.println("memberId is : " + memberId);
+    System.out.println("Room Id is : " + roomId);
 
-    MemberChatRoomChecked checked = memberChatRoomCheckedRepository.findByMemberChatRoomIdAndMemberId(roomId,memberId);
+    MemberChatRoomChecked checked = memberChatRoomCheckedRepository.findByMemberChatRoomIdAndMemberId(roomId, memberId);
     checked.setIsChecked(1);
 
-    return messages.map(MessageMapper::toDto);
+    return messages.map(messageMapper::toDto); // MessageMapper 인스턴스를 사용하여 map 메서드 호출
   }
 
   // 채팅방 메세지 저장
-  public MemberChatMessageResponseDTO insertChatMessage(String roomId, String message)
+  public MemberChatMessageResponseDTO insertChatMessage(String roomId, MemberChatMessageRequestDTO message)
       throws IOException {
     MemberChatMessage memberChatMessage = new MemberChatMessage();
 
-    int memberId = SecurityUtil.getCurrentUserId();
+    int memberId = message.getSnedId();
 
     MemberChatRoom memberChatRoom = roomRepository.findById(roomId).orElseThrow();
     String counterpartNickname = null;
@@ -172,8 +175,9 @@ public class MemberChatServiceImpl implements MemberChatService{
     }
 
     memberChatMessage.setMemberChatRoomId(roomId);
-    memberChatMessage.setContent(message);
+    memberChatMessage.setContent(message.getContent());
     memberChatMessage.setSendId(memberId);
+    System.out.println("memberID is :"+memberId);
 
     // 메세지 저장
     memberChatMessage = messageRepository.save(memberChatMessage);

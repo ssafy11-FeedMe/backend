@@ -163,7 +163,7 @@ public class MemberServiceImpl implements MemberService {
                 .toLocalDate();
 
         myPage.setBrithday(birthdayLocalDate);
-
+        myPage.setSendId(member.getId());
         myPage.setCreatureId(creature.getId());
         myPage.setCreatureName(creature.getCreatureName());
         myPage.setExp(creature.getExp());

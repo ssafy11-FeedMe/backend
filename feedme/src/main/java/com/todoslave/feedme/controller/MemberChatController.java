@@ -100,9 +100,9 @@ public class MemberChatController {
   // 메세지 저장
   @MessageMapping("/messages/{roomId}")
   @SendTo("/chatRoom/messages/{roomId}")
-  public MemberChatMessageResponseDTO sendMessage(@DestinationVariable String roomId, @Payload String content)
+  public MemberChatMessageResponseDTO sendMessage(@DestinationVariable String roomId, @Payload MemberChatMessageRequestDTO request)
       throws IOException {
-    return chatService.insertChatMessage(roomId, content);
+    return chatService.insertChatMessage(roomId, request);
   }
 
 

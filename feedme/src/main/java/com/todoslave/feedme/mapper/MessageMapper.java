@@ -5,15 +5,16 @@ import com.todoslave.feedme.domain.entity.communication.MemberChatMessage;
 import com.todoslave.feedme.domain.entity.membership.Member;
 import com.todoslave.feedme.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
+@Component
 @RequiredArgsConstructor
 public class MessageMapper {
 
-  @Autowired
-  static MemberRepository memberRepository;
+  private final MemberRepository memberRepository;
 
-  public static MemberChatMessageResponseDTO toDto(MemberChatMessage message){
+  public MemberChatMessageResponseDTO toDto(MemberChatMessage message){
 
     MemberChatMessageResponseDTO dto = new MemberChatMessageResponseDTO();
 

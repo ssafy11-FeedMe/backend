@@ -50,6 +50,8 @@ public class FriendServiceImpl implements FriendService{
     @Autowired
     private com.todoslave.feedme.imageUtil imageUtil;
 
+    private final FriendRequestMapper friendRequestMapper;
+
     private final MemberChatRoomRepository memberChatRoomRepository;
     private final MemberChatMessageRepository memberChatMessageRepository;
 
@@ -161,18 +163,22 @@ public class FriendServiceImpl implements FriendService{
         return "http://localhost:8080/image/creature/" + creatureId + "_" +creatureLevel;
     }
 
+
+
     // 친구 요청 불러오기
-    @Override
     public Slice<FriendReqResponseDTO> getRequestFriend(PaginationRequestDTO paginationRequestDTO) {
 
         int memberId = SecurityUtil.getCurrentUserId();
 
-        Pageable pageable = PageRequest.of(paginationRequestDTO.getSkip() / paginationRequestDTO.getLimit(),
-            paginationRequestDTO.getLimit());
+        Pageable pageable = PageRequest.of(
+            paginationRequestDTO.getSkip() / paginationRequestDTO.getLimit(),
+            paginationRequestDTO.getLimit()
+        );
 
         Slice<FriendRequest> friendRequests = friendRequestRepository.findAllByMemberId(memberId, pageable);
 
-        return friendRequests.map(FriendRequestMapper::toDto);
+        // Mapper 인스턴스를 사용하여 변환
+        return friendRequests.map(friendRequestMapper::toDto);
     }
 
     // 친구 수락
