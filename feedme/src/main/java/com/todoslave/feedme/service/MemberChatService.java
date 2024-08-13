@@ -24,4 +24,8 @@ public interface MemberChatService {
   public MemberChatMessageResponseDTO insertChatMessage(String roomId, String message)
       throws IOException;
 
+  void enterTheRoom(String roomId);
+
+  void exitTheRoom(String roomId);
+
 }

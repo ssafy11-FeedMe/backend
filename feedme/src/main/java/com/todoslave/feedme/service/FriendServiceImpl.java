@@ -16,6 +16,7 @@ import com.todoslave.feedme.login.util.SecurityUtil;
 import com.todoslave.feedme.mapper.FriendRequestMapper;
 import com.todoslave.feedme.repository.*;
 import jakarta.transaction.Transactional;
+import java.io.IOException;
 import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 
@@ -40,6 +41,9 @@ public class FriendServiceImpl implements FriendService{
     MemberRepository memberRepository;
 
     @Autowired
+    AlarmService alarmService;
+
+    @Autowired
     FriendRepository friendRepository;
     @Autowired
     FriendRequestRepository friendRequestRepository;
@@ -51,7 +55,7 @@ public class FriendServiceImpl implements FriendService{
 
     // 친구 요청
     @Override
-    public void requestFriend(FriendRequestDTO friendRequestDTO) {
+    public void requestFriend(FriendRequestDTO friendRequestDTO) throws IOException {
 
         Member member = SecurityUtil.getCurrentMember();
         Member counterpart = memberService.findByNickname(friendRequestDTO.getCounterpartNickname());
@@ -61,8 +65,14 @@ public class FriendServiceImpl implements FriendService{
         friendRequest.setMember(counterpart);
         friendRequest.setCounterpartId(member);
 
-        friendRequestRepository.save(friendRequest);
+        FriendRequest request = friendRequestRepository.save(friendRequest);
 
+        FriendReqResponseDTO friendReqResponseDTO = new FriendReqResponseDTO();
+        friendReqResponseDTO.setId(request.getId());
+        friendReqResponseDTO.setCounterpartNickname(request.getCounterpartId().getNickname());
+        friendReqResponseDTO.setCreatureImg(generateCreatureImgPath(request.getCounterpartId()));
+
+        alarmService.requestFriendship(friendReqResponseDTO, counterpart.getId());
     }
 
     // 친구 삭제
@@ -102,6 +112,13 @@ public class FriendServiceImpl implements FriendService{
 
         response.setFriendId(member.getId());
         response.setNickname(member.getNickname());
+
+        List<Integer> members = new ArrayList<>();
+
+        members.add(SecurityUtil.getCurrentUserId());
+        members.add(member.getId());
+
+        response.setRoomId(memberChatRoomRepository.findByParticipantIdsContainingAll(members).getId());
 
         CreatureInfoResponseDTO creatureInfoResponseDTO = creatureService.creatureInfo(member);
         response.setCreatureNickname(creatureInfoResponseDTO.getName());
