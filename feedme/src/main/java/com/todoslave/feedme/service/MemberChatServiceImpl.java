@@ -1,6 +1,7 @@
 package com.todoslave.feedme.service;
 
 import com.todoslave.feedme.DTO.MemberChatListResponseDTO;
+import com.todoslave.feedme.DTO.MemberChatMessageRequestDTO;
 import com.todoslave.feedme.DTO.MemberChatMessageResponseDTO;
 import com.todoslave.feedme.domain.entity.avatar.Creature;
 import com.todoslave.feedme.domain.entity.communication.MemberChatMessage;
@@ -17,6 +18,7 @@ import jakarta.transaction.Transactional;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -92,17 +94,14 @@ public class MemberChatServiceImpl implements MemberChatService{
     room.setParticipantIds(members);
     room = roomRepository.save(room);
 
-    MemberChatRoomChecked checked1 = new MemberChatRoomChecked();
-    checked1.setMemberId(members.get(0));
-    checked1.setIsChecked(1);
-    checked1.setMemberChatRoomId(room.getId());
-    roomCheckedRepository.save(checked1);
+    MemberChatRoomChecked checked = new MemberChatRoomChecked();
+    checked.setMemberId(members.get(0));
+    checked.setIsChecked(1);
+    checked.setMemberChatRoomId(room.getId());
+    roomCheckedRepository.save(checked);
 
-    MemberChatRoomChecked checked2 = new MemberChatRoomChecked();
-    checked2.setMemberId(members.get(1));
-    checked2.setIsChecked(1);
-    checked2.setMemberChatRoomId(room.getId());
-    roomCheckedRepository.save(checked2);
+    checked.setMemberId(members.get(1));
+    roomCheckedRepository.save(checked);
 
     Member countpart = null;
 
@@ -137,11 +136,7 @@ public class MemberChatServiceImpl implements MemberChatService{
 
     Slice<MemberChatMessage> messages = messageRepository.findByMemberChatRoomIdOrderByTransmitAtDesc(roomId, pageable);
 
-    int memberId = 1;
-
-    System.out.println("memberId is : "+memberId);
-    System.out.println("Room Id is : "+roomId);
-
+    int memberId = SecurityUtil.getCurrentUserId();
     MemberChatRoomChecked checked = memberChatRoomCheckedRepository.findByMemberChatRoomIdAndMemberId(roomId,memberId);
     checked.setIsChecked(1);
 
@@ -149,7 +144,7 @@ public class MemberChatServiceImpl implements MemberChatService{
   }
 
   // 채팅방 메세지 저장
-  public MemberChatMessageResponseDTO insertChatMessage(String roomId, String message)
+  public MemberChatMessageResponseDTO insertChatMessage(String roomId, MemberChatMessageRequestDTO memberChatMessageRequestDTO)
       throws IOException {
     MemberChatMessage memberChatMessage = new MemberChatMessage();
 
@@ -167,7 +162,7 @@ public class MemberChatServiceImpl implements MemberChatService{
     }
 
     memberChatMessage.setMemberChatRoomId(roomId);
-    memberChatMessage.setContent(message);
+    memberChatMessage.setContent(memberChatMessageRequestDTO.getMessage());
     memberChatMessage.setSendId(memberId);
 
     // 메세지 저장
@@ -178,27 +173,25 @@ public class MemberChatServiceImpl implements MemberChatService{
     memberChatListResponseDTO.setNickname(counterpartNickname);
     Creature creature = creatureRepository.findByMemberId(counterPartId);
 
+    memberChatListResponseDTO.setCreatureImage("https://i11b104.p.ssafy.io/image/creature/"+creature.getMember().getId()+"_"+creature.getLevel());
 
-//    memberChatListResponseDTO.setCreatureImage("http://localhost:8080/image/creature/"+creature.getMember().getId()+"_"+creature.getLevel());
-//
-//    // 채팅방 갱신 (나)
-//    alarmService.renewChattingRoom(memberChatListResponseDTO, SecurityUtil.getCurrentUserId());
-//
-//    memberChatListResponseDTO.setNickname(SecurityUtil.getCurrentMember().getNickname());
-//    creature = creatureRepository.findByMemberId(memberId);
-//
-//    memberChatListResponseDTO.setCreatureImage("http://localhost:8080/image/creature/"+creature.getMember().getId()+"_"+creature.getLevel());
-//
-//    // 채팅방 갱신 (상대)
-//    alarmService.renewChattingRoom(memberChatListResponseDTO, counterPartId);
+    // 채팅방 갱신 (나)
+    alarmService.renewChattingRoom(memberChatListResponseDTO, SecurityUtil.getCurrentUserId());
 
+    memberChatListResponseDTO.setNickname(SecurityUtil.getCurrentMember().getNickname());
+    creature = creatureRepository.findByMemberId(memberId);
+
+    memberChatListResponseDTO.setCreatureImage("https://i11b104.p.ssafy.io/image/creature/"+creature.getMember().getId()+"_"+creature.getLevel());
+
+    // 채팅방 갱신 (상대)
+    alarmService.renewChattingRoom(memberChatListResponseDTO, counterPartId);
 
 
     MemberChatMessageResponseDTO response = new MemberChatMessageResponseDTO();
 
     response.setMessage(memberChatMessage.getContent());
     response.setTransmitAt(memberChatMessage.getTransmitAt());
-//    response.setSendNickname(SecurityUtil.getCurrentMember().getNickname());
+    response.setSendNickname(SecurityUtil.getCurrentMember().getNickname());
 
     return response;
   }

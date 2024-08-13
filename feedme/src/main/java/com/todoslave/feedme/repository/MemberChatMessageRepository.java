@@ -12,6 +12,5 @@ public interface MemberChatMessageRepository extends
 
   // 메세지 불러오기
   Slice<MemberChatMessage> findByMemberChatRoomIdOrderByTransmitAtDesc(String memberChatRoomId, Pageable pageable);
-  void deleteAllByMemberChatRoomId(String memberChatRoomId);
 
 }

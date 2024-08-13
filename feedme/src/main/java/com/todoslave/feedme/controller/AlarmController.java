@@ -9,7 +9,6 @@ import com.todoslave.feedme.service.AlarmService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Slice;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -24,12 +23,12 @@ public class AlarmController {
     @Autowired
     private AlarmService alarmService;
 
-    @GetMapping(value = "/subscribe/alarm", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @GetMapping(value = "/subscribe/alarm")
     public SseEmitter subscribe(){
         return alarmService.createEmitter();
     }
 
-    @GetMapping(value = "/subscribe/chat", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @GetMapping(value = "/subscribe/chat")
     public SseEmitter chatSubscribe(){
         return alarmService.renewCreateEmitter();
     }
