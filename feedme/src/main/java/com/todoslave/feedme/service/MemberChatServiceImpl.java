@@ -8,6 +8,7 @@ import com.todoslave.feedme.domain.entity.communication.MemberChatRoom;
 import com.todoslave.feedme.domain.entity.communication.MemberChatRoomChecked;
 import com.todoslave.feedme.domain.entity.membership.Member;
 import com.todoslave.feedme.login.util.SecurityUtil;
+import com.todoslave.feedme.mapper.MessageMapper;
 import com.todoslave.feedme.repository.CreatureRepository;
 import com.todoslave.feedme.repository.MemberChatMessageRepository;
 import com.todoslave.feedme.repository.MemberChatRoomCheckedRepository;
@@ -126,7 +127,7 @@ public class MemberChatServiceImpl implements MemberChatService{
 
   // 채팅방 메세지 불러오기
   @Transactional
-  public Slice<MemberChatMessage> getChatMessage(String roomId, int skip, int limit){
+  public Slice<MemberChatMessageResponseDTO> getChatMessage(String roomId, int skip, int limit){
 
     if(roomRepository.findById(roomId).orElseThrow()==null){
       return null;
@@ -145,7 +146,7 @@ public class MemberChatServiceImpl implements MemberChatService{
     MemberChatRoomChecked checked = memberChatRoomCheckedRepository.findByMemberChatRoomIdAndMemberId(roomId,memberId);
     checked.setIsChecked(1);
 
-    return messages;
+    return messages.map(MessageMapper::toDto);
   }
 
   // 채팅방 메세지 저장

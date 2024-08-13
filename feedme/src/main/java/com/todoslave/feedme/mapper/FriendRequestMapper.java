@@ -5,11 +5,12 @@ import com.todoslave.feedme.domain.entity.avatar.Creature;
 import com.todoslave.feedme.domain.entity.communication.FriendRequest;
 import com.todoslave.feedme.repository.CreatureRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 
-@RequiredArgsConstructor
 public class FriendRequestMapper {
 
-  private static CreatureRepository creatureRepository;
+  @Autowired
+  static CreatureRepository creatureRepository;
 
   public static FriendReqResponseDTO toDto(FriendRequest friendRequest){
     FriendReqResponseDTO dto = new FriendReqResponseDTO();
