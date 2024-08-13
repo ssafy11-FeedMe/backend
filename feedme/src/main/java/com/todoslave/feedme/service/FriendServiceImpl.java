@@ -166,19 +166,14 @@ public class FriendServiceImpl implements FriendService{
 
 
     // 친구 요청 불러오기
-    public Slice<FriendReqResponseDTO> getRequestFriend(PaginationRequestDTO paginationRequestDTO) {
+    public List<FriendRequest> getRequestFriend() {
 
         int memberId = SecurityUtil.getCurrentUserId();
 
-        Pageable pageable = PageRequest.of(
-            paginationRequestDTO.getSkip() / paginationRequestDTO.getLimit(),
-            paginationRequestDTO.getLimit()
-        );
-
-        Slice<FriendRequest> friendRequests = friendRequestRepository.findAllByMemberId(memberId, pageable);
+        List<FriendRequest> friendRequests = friendRequestRepository.findAllByMemberId(memberId);
 
         // Mapper 인스턴스를 사용하여 변환
-        return friendRequests.map(friendRequestMapper::toDto);
+        return friendRequests;
     }
 
     // 친구 수락

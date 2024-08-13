@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public class MemberChatMessageRequestDTO {
 
-  int snedId;
+  int sendId;
   String content;
 
 }

@@ -69,12 +69,8 @@ public class FriendController {
 
     // 친구 요청 목록 조회
     @GetMapping("/request")
-    public ResponseEntity<Slice<FriendReqResponseDTO>> findRequestFriend(
-            @RequestParam("skip") int skip, @RequestParam("limit") int limit) {
-        PaginationRequestDTO paginationRequestDTO = new PaginationRequestDTO();
-        paginationRequestDTO.setSkip(skip);
-        paginationRequestDTO.setLimit(limit);
-        return ResponseEntity.ok(friendService.getRequestFriend(paginationRequestDTO));
+    public ResponseEntity<List<FriendRequest>> findRequestFriend() {
+        return ResponseEntity.ok(friendService.getRequestFriend());
     }
 
     // 친구 요청 수락하기

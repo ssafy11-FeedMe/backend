@@ -80,10 +80,10 @@ public class MemberChatServiceImpl implements MemberChatService{
 
       String nickname = memberRepository.findById(counterPartId).orElseThrow().getNickname();
       chatResponse.setNickname(nickname);
-      Creature creature = creatureRepository.findByMemberId(counterPartId);
-
-      chatResponse.setCreatureImage(
-          "http://localhost:8080/image/creature/"+creature.getMember().getId()+"_"+creature.getLevel());
+//      Creature creature = creatureRepository.findByMemberId(counterPartId);
+//
+//      chatResponse.setCreatureImage(
+//          "http://localhost:8080/image/creature/"+creature.getMember().getId()+"_"+creature.getLevel());
       MemberChatRoomChecked checked = memberChatRoomCheckedRepository.findByMemberChatRoomIdAndMemberId(room.getId(),memberId);
       chatResponse.setIsChecked(checked.getIsChecked());
       chatListResponse.add(chatResponse);
@@ -161,7 +161,7 @@ public class MemberChatServiceImpl implements MemberChatService{
       throws IOException {
     MemberChatMessage memberChatMessage = new MemberChatMessage();
 
-    int memberId = message.getSnedId();
+    int memberId = message.getSendId();
 
     MemberChatRoom memberChatRoom = roomRepository.findById(roomId).orElseThrow();
     String counterpartNickname = null;
@@ -233,6 +233,7 @@ public class MemberChatServiceImpl implements MemberChatService{
     if(rooms.get(roomId)==null){
       int[] members = new int[2];
       members[0] = SecurityUtil.getCurrentUserId();
+      rooms.put(roomId, members);
     }else{
       int[] members = rooms.get(roomId);
       for(int i=0; i<2; i++){
@@ -245,6 +246,8 @@ public class MemberChatServiceImpl implements MemberChatService{
 
     MemberChatRoomChecked checked = roomCheckedRepository.findByMemberChatRoomIdAndMemberId(roomId, SecurityUtil.getCurrentUserId());
     checked.setIsChecked(1);
+
+    System.out.println("enter the room : "+rooms.get(roomId));
 
   }
 
