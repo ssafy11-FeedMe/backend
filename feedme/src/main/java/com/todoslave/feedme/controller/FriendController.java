@@ -37,6 +37,7 @@ public class FriendController {
     // 친구 요청하기
     @PostMapping
     public ResponseEntity<Void> addFriend(@RequestBody FriendRequestDTO friendReqRequestDTO){
+
         friendService.requestFriend(friendReqRequestDTO);
         return ResponseEntity.noContent().build();
     }

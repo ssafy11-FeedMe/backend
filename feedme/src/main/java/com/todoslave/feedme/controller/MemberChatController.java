@@ -75,11 +75,11 @@ public class MemberChatController {
   // 메세지 불러오기
   @MessageMapping("/loadMessages/{roomId}")
   @SendTo("/chatRoom/loadMessages/{roomId}")
-  public Slice<MemberChatMessage> findMessages(@DestinationVariable String roomId,
+  public Slice<MemberChatMessageResponseDTO> findMessages(@DestinationVariable String roomId,
                                               @Payload PaginationRequestDTO request){
-    Slice<MemberChatMessage> messages = chatService.getChatMessage(roomId, request.getSkip(), request.getLimit());
+    Slice<MemberChatMessageResponseDTO> messages = chatService.getChatMessage(roomId, request.getSkip(), request.getLimit());
 
-    for (MemberChatMessage message : messages) {
+    for (MemberChatMessageResponseDTO message : messages) {
       System.out.println(message.toString());
     }
 

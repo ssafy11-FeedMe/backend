@@ -165,7 +165,7 @@ public class FriendServiceImpl implements FriendService{
         FriendRequest friendRequest = friendRequestRepository.findById(requestId);
 
         Member member = SecurityUtil.getCurrentMember();
-        Member counterpart = friendRequest.getCounterpartId();
+        Member counterpart = friendRequest.getMember();
 
         Friend friend1 = new Friend();
         friend1.setMember(member);
