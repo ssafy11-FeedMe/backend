@@ -15,6 +15,7 @@ import com.todoslave.feedme.login.util.SecurityUtil;
 import com.todoslave.feedme.mapper.FriendRequestMapper;
 import com.todoslave.feedme.repository.FriendRepository;
 import com.todoslave.feedme.repository.FriendRequestRepository;
+import com.todoslave.feedme.repository.MemberChatRoomRepository;
 import com.todoslave.feedme.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import java.io.IOException;
@@ -36,38 +37,17 @@ public class FriendServiceImpl implements FriendService{
     private final MemberChatService memberChatService;
     private final CreatureService creatureService;
     private final MemberRepository memberRepository;
+    private final MemberChatRoomRepository memberChatRoomRepository;
     private final FriendRepository friendRepository;
     private final FriendRequestRepository friendRequestRepository;
 
-
+    @Autowired
+    AlarmService alarmService;
 
     //유틸 닉네임으로 찾기
     private Member findByNickname(String nickname) {
         return memberRepository.findByNickname(nickname).orElse(null);
     }
-
-// 문희 
-//     @Autowired
-//     MemberService memberService;
-//     @Autowired
-//     MemberChatService memberChatService;
-//     @Autowired
-//     CreatureService creatureService;
-//     @Autowired
-//     MemberRepository memberRepository;
-
-//     @Autowired
-//     AlarmService alarmService;
-
-//     @Autowired
-//     FriendRepository friendRepository;
-//     @Autowired
-//     FriendRequestRepository friendRequestRepository;
-//     @Autowired
-//     private com.todoslave.feedme.imageUtil imageUtil;
-
-//     private final MemberChatRoomRepository memberChatRoomRepository;
-//     private final MemberChatMessageRepository memberChatMessageRepository;
 
 
     // 친구 요청
