@@ -41,14 +41,16 @@ public class CreatureServiceImpl implements CreatureService {
         Creature creature = new Creature();
         //이름 설정하고
         creature.setCreatureName(creatureName);
+        //키워드 저장
+        creature.setCreatureKeyword(keyword);
         //멤버와 매핑 시켜주고
         creature.setMember(member);
         //경험치와 레벨은 자동 0으로 설정
 
-        creature.setCreatureKeyword(keyword);
         creatureRepository.save(creature); //저장
 
         //여기서 사진 만들라고 명령 내리시고!!!!!!!!!!!!!!!!!!!!!!
+        //AI
 
         return creature;
     }

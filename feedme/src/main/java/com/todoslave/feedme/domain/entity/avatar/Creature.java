@@ -39,6 +39,7 @@ public class Creature {
     @Column(name = "creature_name")
     private String creatureName;
 
+    //크리쳐 키워드
     @Column(name = "creature_keyword")
     private String creatureKeyword;
 

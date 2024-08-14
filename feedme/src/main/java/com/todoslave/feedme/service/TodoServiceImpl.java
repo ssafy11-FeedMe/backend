@@ -282,8 +282,8 @@ public class TodoServiceImpl implements TodoService {
     String generatedDiaryEntry = generateDiaryEntry(todoAll);// 여기서 AI가 했던일을 일기로 만들어줌
 
 //    System.out.println(todoAll);
-//    System.out.println("이거야");
-//    System.out.println(generatedDiaryEntry);
+    System.out.println("이거야");
+    System.out.println(generatedDiaryEntry);
 //
 //
 //    //요청할때 날자랑 내 id 줘야함
