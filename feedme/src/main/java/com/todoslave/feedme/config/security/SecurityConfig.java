@@ -40,15 +40,15 @@ public class SecurityConfig {
                 .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 //                .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션관리 정책을 STATELESS(세션이 있으면 쓰지도 않고, 없으면 만들지도 않는다)
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/token/**").permitAll()
+                        .requestMatchers("/token/**", "/bot/**").permitAll()
                         .requestMatchers("/", "/css/**", "/images/**", "/js/**", "/favicon.ico", "/h2-console/**").permitAll()
                         .requestMatchers("/login/oauth2/code/**", "/login/**", "/testsite", "/signup", "/user", "/v3/api-docs/**",
                                 "/swagger-ui/**", "/creature", "/swagger-ui.html", "/users/**").permitAll() // 유저 설정
-                        .requestMatchers("/ws/**").permitAll()
+                        .requestMatchers("/ws/**","/alarms/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2
-                        .loginPage("/test")
+                        .loginPage("https://i11b104.p.ssafy.io")
                         .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService)) // OAuth2 로그인시 사용자 정보를 가져오는 엔드포인트와 사용자 서비스를 설정
                         .failureHandler(oAuth2LoginFailureHandler) // OAuth2 로그인 실패시 처리할 핸들러를 지정해준다.
                         .successHandler(oAuth2LoginSuccessHandler) // OAuth2 로그인 성공시 처리할 핸들러를 지정해준다.
@@ -57,7 +57,7 @@ public class SecurityConfig {
 
         // JWT 인증 필터를 UsernamePasswordAuthenticationFilter 앞에 추가한다.
         return http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(jwtExceptionFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtExceptionFilter, JwtAuthFilter.class)
                 .build();
     }
 
@@ -66,6 +66,7 @@ public class SecurityConfig {
         // CORS 설정
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
+        configuration.addAllowedOrigin("https://i11b104.p.ssafy.io"); // 특정 도메인 허용
         configuration.addAllowedOriginPattern("*");
         configuration.addAllowedMethod("*"); // 모든 HTTP 메서드 허용
         configuration.addAllowedHeader("*"); // 모든 헤더 허용

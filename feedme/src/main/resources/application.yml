@@ -81,31 +81,46 @@ jwt:
   secret_key: ${JWT_SECRET_KEY}
 
 
+  #이건 살림
+openai:
+  model: "gpt-3.5-turbo"
+  api:
+    key: ${GPT_SECRET_KEY}
+    url: "https://api.openai.com/v1/chat/completions"
+
+
+
+
+#
 #spring:
 #  application:
 #    name: feedme
+#    admin:
+#      enabled: false # Spring Boot Admin 비활성화
+#  jmx:
+#    enabled: false # JMX 비활성화
 #  main:
 #    application-class: com.todoslave.FeedmeApplication
-#
+#    allow-circular-references: true #뺄지도?
 #  security:
 #    oauth2:
 #      client:
 #        registration:
 #          naver:
-#            client-id: QdiZgbrsCQdA7Zw1pJNN
-#            client-secret: iGL_mF23OA
+#            client-id: ${NAVER_CLIENT_ID}
+#            client-secret: ${NAVER_CLIENT_SECRET}
 #            client-name: Naver
-#            redirect-uri: http://localhost:8080/login/oauth2/code/naver
+#            redirect-uri: https://i11b104.p.ssafy.io/api/login/oauth2/code/naver
 #            authorization-grant-type: authorization_code
 #            scope:
 #              - name
 #              - email
 #          kakao:
-#            client-id: e76f1a4a0c79727d85cd6b3b1969c892
-#            client-secret: 69gLvDJgSBZs87Wlus2nXNKHltx0pEYg
+#            client-id: ${KAKAO_CLIENT_ID}
+#            client-secret: ${KAKAO_CLIENT_SECRET}
 #            client-name: Kakao
 #            client-authentication-method: client_secret_post
-#            redirect-uri: http://localhost:8080/login/oauth2/code/Kakao
+#            redirect-uri: https://i11b104.p.ssafy.io/api/login/oauth2/code/kakao
 #            authorization-grant-type: authorization_code
 #            scope:
 #              - profile_nickname
@@ -122,18 +137,23 @@ jwt:
 #            userInfoUri: https://kapi.kakao.com/v2/user/me
 #            userNameAttribute: id
 #
-#    datasource:
-#    url: jdbc:mysql://localhost:3306/feedme
-#    username: ssafy
-#    password: ssafy
+#  datasource:
+#    url: jdbc:mysql://mysql:3306/feedme  # MySQL 컨테이너 이름 사용
+#    username: ${DB_USERNAME}
+#    password: ${DB_PASSWORD}
 #    driver-class-name: com.mysql.cj.jdbc.Driver
 #
 #  data:
 #    mongodb:
-#      host: localhost
+#      host: mongodb  # MongoDB 컨테이너 이름 사용
 #      port: 27017
 #      database: feedme
-#      uri: mongodb://localhost:27017/feedme
+#      uri: mongodb://mongodb:27017/feedme
+#
+#  redis:
+#    host: redis
+#    port: 6379
+#
 #
 #  jpa:
 #    hibernate:
@@ -151,11 +171,15 @@ jwt:
 #        SQL: debug
 #        type: trace
 #
-#redis:
-#  host: localhost
-#  port: 6379
-#
 #jwt:
 #  issuer: todoslave@ssafy.com
-#  secret_key: SMidolHJFillsogoodteamjangJGnamunifristloverichHSJUSTMANBON
+#  secret_key: ${JWT_SECRET_KEY}
 #
+#openai:
+#  model: "gpt-3.5-turbo"
+#  api:
+#    key: ${GPT_SECRET_KEY}
+#    url: "https://api.openai.com/v1/chat/completions"
+#
+#server:
+#  port: 8085
