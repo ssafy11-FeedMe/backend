@@ -22,7 +22,9 @@ public class FriendRequestMapper {
     dto.setId(friendRequest.getId());
     dto.setCounterpartNickname(friendRequest.getCounterpartId().getNickname());
     Creature creature = creatureRepository.findByMemberId(friendRequest.getId());
-    dto.setCreatureImg("http://localhost:8080/image/creature/" + creature.getMember().getId() + "_" + creature.getLevel());
+
+    dto.setCreatureImg("https://i11b104.p.ssafy.io/image/creature/"+creature.getMember().getId()+"_"+creature.getLevel());
+
     return dto;
   }
 
