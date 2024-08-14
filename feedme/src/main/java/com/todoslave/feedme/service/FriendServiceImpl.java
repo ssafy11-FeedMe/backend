@@ -166,14 +166,27 @@ public class FriendServiceImpl implements FriendService{
 
 
     // 친구 요청 불러오기
-    public List<FriendRequest> getRequestFriend() {
+    public List<FriendReqResponseDTO> getRequestFriend() {
 
         int memberId = SecurityUtil.getCurrentUserId();
 
         List<FriendRequest> friendRequests = friendRequestRepository.findAllByMemberId(memberId);
+        List<FriendReqResponseDTO> friendResponses = new ArrayList<>();
+
+        for(FriendRequest f : friendRequests){
+
+            FriendReqResponseDTO dto = new FriendReqResponseDTO();
+            dto.setId(f.getId());
+            dto.setCounterpartNickname(f.getCounterpartId().getNickname());
+            String img = generateCreatureImgPath(f.getCounterpartId());
+            dto.setCreatureImg(img);
+
+            friendResponses.add(dto);
+
+        }
 
         // Mapper 인스턴스를 사용하여 변환
-        return friendRequests;
+        return friendResponses;
     }
 
     // 친구 수락

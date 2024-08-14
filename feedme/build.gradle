@@ -61,7 +61,7 @@ dependencies {
 	//redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
-	// .env 받아오기
+	// ..env 받아오기
 	implementation 'io.github.cdimascio:java-dotenv:5.2.2'
 
 	//JUnit4 추가
