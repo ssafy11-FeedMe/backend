@@ -69,7 +69,7 @@ public class FriendController {
 
     // 친구 요청 목록 조회
     @GetMapping("/request")
-    public ResponseEntity<List<FriendRequest>> findRequestFriend() {
+    public ResponseEntity<List<FriendReqResponseDTO>> findRequestFriend() {
         return ResponseEntity.ok(friendService.getRequestFriend());
     }
 

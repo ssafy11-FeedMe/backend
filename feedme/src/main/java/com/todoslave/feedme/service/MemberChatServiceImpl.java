@@ -114,6 +114,8 @@ public class MemberChatServiceImpl implements MemberChatService{
 
     Member countpart = null;
 
+    System.out.println("member 리스트 : "+members);
+
     for(int m : members){
       if(m!=SecurityUtil.getCurrentUserId()){
         countpart = memberRepository.findById(m).orElseThrow();

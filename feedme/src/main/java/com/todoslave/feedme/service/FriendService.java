@@ -27,7 +27,7 @@ public interface FriendService {
     List<FriendResponseDTO> getFriends();
 
     // 친구 요청 목록 조회
-    List<FriendRequest> getRequestFriend();
+    List<FriendReqResponseDTO> getRequestFriend();
 
     // 친구 수락
     MemberChatListResponseDTO insertFriendship(int requestId);
