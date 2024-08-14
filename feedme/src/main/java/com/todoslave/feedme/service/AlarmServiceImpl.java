@@ -53,28 +53,7 @@ public class AlarmServiceImpl implements AlarmService{
 
   private final Map<Integer, SseEmitter> emitters = new ConcurrentHashMap<>();
   private final Map<Integer, SseEmitter> chatEmitters = new ConcurrentHashMap<>();
-  private final Map<Integer, SseEmitter> friendEmitters = new ConcurrentHashMap<>();
 
-  @Override
-  public SseEmitter friendCreateEmitter() {
-
-    int memberId = SecurityUtil.getCurrentUserId();
-
-    SseEmitter emitter = new SseEmitter();
-    friendEmitters.put(memberId, emitter);
-
-    System.out.println("friend subscribe open!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+memberId);
-
-    if(friendEmitters.get(memberId)!=null){
-      System.out.println("friend subscribe has!!!");
-    }
-
-    emitter.onCompletion(() -> friendEmitters.remove(memberId));
-    emitter.onTimeout(() -> friendEmitters.remove(memberId));
-    emitter.onError((e) -> friendEmitters.remove(memberId));
-
-    return emitter;
-  }
 
   @Override
   public void createAlarmtime(AlarmSetRequestDTO alarmSetRequestDTO) {
@@ -98,8 +77,6 @@ public class AlarmServiceImpl implements AlarmService{
     SseEmitter emitter = new SseEmitter();
     emitters.put(memberId, emitter);
 
-    System.out.println("구독 열려용!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+memberId);
-
     emitter.onCompletion(() -> emitters.remove(memberId));
     emitter.onTimeout(() -> emitters.remove(memberId));
     emitter.onError((e) -> emitters.remove(memberId));
@@ -112,7 +89,7 @@ public class AlarmServiceImpl implements AlarmService{
   public void todoCompleted() throws IOException {
 
     LocalDate currentDay = LocalDate.now();
-    List<Integer> members = todoRepository.findMemberIdAllByCreatedAtAndIsCompleted(currentDay, 0);
+    List<Integer> members = todoRepository.findMemberIdAllByCreatedAtAndIsCompleted(currentDay);
 
     for(int memberId : members) {
 
@@ -130,15 +107,16 @@ public class AlarmServiceImpl implements AlarmService{
       alarm.setContent("배고픈 " + creature.getCreatureName() + ".. 밥 줄 사람 없나요?");
       alarmRepository.save(alarm);
 
-      sendAlarm(alarm, 0, emitters.get(memberId));
+      sendAlarm(alarm, 0);
 
     }
   }
 
   //친구 요청 알림
-  public void requestFriendship(FriendReqResponseDTO friendReqResponseDTO, int memberId) throws IOException {
+  public void requestFriendship(FriendReqResponseDTO friendReqResponseDTO) throws IOException {
 
-    sendAlarm(friendReqResponseDTO,1, friendEmitters.get(memberId));
+    int memberId = SecurityUtil.getCurrentUserId();
+    sendAlarm(friendReqResponseDTO,1);
 
   }
 
@@ -157,7 +135,7 @@ public class AlarmServiceImpl implements AlarmService{
       alarm.setContent(member.getNickname()+"님! 생일 축하합니다!");
 
       alarmRepository.save(alarm);
-      sendAlarm(alarm, 0, emitters.get(member.getId()));
+      sendAlarm(alarm, 0);
 
     }
 
@@ -181,14 +159,11 @@ public class AlarmServiceImpl implements AlarmService{
   // 채팅방 갱신
   @Override
   @Transactional
-  public void renewChattingRoom(MemberChatListResponseDTO room, int memberId, int checked) throws IOException {
+  public void renewChattingRoom(MemberChatListResponseDTO room, int memberId) throws IOException {
 
     SseEmitter emitter = chatEmitters.get(memberId);
 
     if(emitter!=null) {
-
-      room.setIsChecked(checked);
-
       SseEmitter.SseEventBuilder event = SseEmitter.event()
           .name("chattingRoom")
           .data(room);
@@ -202,9 +177,10 @@ public class AlarmServiceImpl implements AlarmService{
 
   // 알람 받아라
   @Override
-  public <T> void sendAlarm(T alarm, int type, SseEmitter emitter) throws IOException {
+  public <T> void sendAlarm(T alarm, int type) throws IOException {
 
-    System.out.println("alarm send!!!!!!!!!!"+alarm);
+    int memberId = SecurityUtil.getCurrentUserId();
+    SseEmitter emitter = emitters.get(memberId);
 
     if(emitter!=null){
 
@@ -215,30 +191,13 @@ public class AlarmServiceImpl implements AlarmService{
             .name("alarm")
             .data(dto);
 
-        try {
-          emitter.send(event);
-        }catch (IOException e){
-          emitter.completeWithError(e);
-          throw e;
-        }catch (Exception e){
-          emitter.completeWithError(e);
-          throw new RuntimeException("알람전송중 문제 발생",e);
-        }
+        emitter.send(event);
       }else if(type==1){
-
         SseEmitter.SseEventBuilder event = SseEmitter.event()
             .name("friend")
             .data(alarm);
 
-        try {
-          emitter.send(event);
-        }catch (IOException e){
-          emitter.completeWithError(e);
-          throw e;
-        }catch (Exception e){
-          emitter.completeWithError(e);
-          throw new RuntimeException("알람전송중 문제 발생",e);
-        }
+        emitter.send(event);
       }
 
     }else{

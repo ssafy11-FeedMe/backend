@@ -52,7 +52,6 @@ public class MemberChatController {
       String[] pathSegments = destination.split("/");
       if (pathSegments.length > 2) {
         String roomId = pathSegments[pathSegments.length - 1];
-        chatService.enterTheRoom(roomId);
       }
     }
 
@@ -62,17 +61,7 @@ public class MemberChatController {
   public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
     StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
     String sessionId = headerAccessor.getSessionId();
-    // 추가적인 연결 초기화 로직을 여기에 작성할 수 있습니다.
-
-    String destination = headerAccessor.getDestination();
-
-    if (destination != null && destination.startsWith("/chatRoom/")) {
-      String[] pathSegments = destination.split("/");
-      if (pathSegments.length > 2) {
-        String roomId = pathSegments[pathSegments.length - 1];
-        chatService.exitTheRoom(roomId);
-      }
-    }
+    // 연결 종료 시 처리할 로직을 여기에 작성할 수 있습니다.
 
   }
 
@@ -86,11 +75,11 @@ public class MemberChatController {
   // 메세지 불러오기
   @MessageMapping("/loadMessages/{roomId}")
   @SendTo("/chatRoom/loadMessages/{roomId}")
-  public Slice<MemberChatMessageResponseDTO> findMessages(@DestinationVariable String roomId,
+  public Slice<MemberChatMessage> findMessages(@DestinationVariable String roomId,
                                               @Payload PaginationRequestDTO request){
-    Slice<MemberChatMessageResponseDTO> messages = chatService.getChatMessage(roomId, request.getSkip(), request.getLimit());
+    Slice<MemberChatMessage> messages = chatService.getChatMessage(roomId, request.getSkip(), request.getLimit());
 
-    for (MemberChatMessageResponseDTO message : messages) {
+    for (MemberChatMessage message : messages) {
       System.out.println(message.toString());
     }
 
@@ -100,9 +89,9 @@ public class MemberChatController {
   // 메세지 저장
   @MessageMapping("/messages/{roomId}")
   @SendTo("/chatRoom/messages/{roomId}")
-  public MemberChatMessageResponseDTO sendMessage(@DestinationVariable String roomId, @Payload String content)
+  public MemberChatMessageResponseDTO sendMessage(@DestinationVariable String roomId, @Payload MemberChatMessageRequestDTO memberChatMessageRequestDTO)
       throws IOException {
-    return chatService.insertChatMessage(roomId, content);
+    return chatService.insertChatMessage(roomId, memberChatMessageRequestDTO);
   }
 
 

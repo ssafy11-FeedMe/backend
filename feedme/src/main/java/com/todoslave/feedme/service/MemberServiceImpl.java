@@ -65,11 +65,9 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public Member updateMember(MemberSignupRequestDTO memberSignupRequestDTO) {
-        int id = SecurityUtil.getCurrentUserId();
 
-        Member member = memberRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
 
+        Member member = SecurityUtil.getCurrentMember();
         member.setNickname(memberSignupRequestDTO.getNickname());
         member.setBirthday(memberSignupRequestDTO.getBirthday());
         member.setUserRole(memberSignupRequestDTO.getUserRole());
@@ -155,7 +153,7 @@ public class MemberServiceImpl implements MemberService {
                 .toLocalDate();
 
         myPage.setBrithday(birthdayLocalDate);
-
+        myPage.setSendId(member.getId());
         myPage.setCreatureId(creature.getId());
         myPage.setCreatureName(creature.getCreatureName());
         myPage.setExp(creature.getExp());

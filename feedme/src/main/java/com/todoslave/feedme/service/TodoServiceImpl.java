@@ -112,8 +112,6 @@ public class TodoServiceImpl implements TodoService {
 
     LocalDate date = LocalDate.now();
 
-    System.out.println("date : "+date);
-
     int memberId = SecurityUtil.getCurrentUserId();
     List<Todo> query = todoRepository.findAllByMemberIdAndCreatedAtIsCompleted(memberId, date, 0);
 

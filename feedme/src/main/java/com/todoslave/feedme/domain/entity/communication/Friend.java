@@ -23,6 +23,7 @@ public class Friend {
     // 상대방 회원번호
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "counterpart_id")
+    @JsonBackReference
     private Member counterpart;
 
 
