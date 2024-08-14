@@ -13,9 +13,7 @@ import com.todoslave.feedme.domain.entity.communication.FriendRequest;
 import com.todoslave.feedme.domain.entity.membership.Member;
 import com.todoslave.feedme.login.util.SecurityUtil;
 import com.todoslave.feedme.mapper.FriendRequestMapper;
-import com.todoslave.feedme.repository.FriendRepository;
-import com.todoslave.feedme.repository.FriendRequestRepository;
-import com.todoslave.feedme.repository.MemberRepository;
+import com.todoslave.feedme.repository.*;
 import jakarta.transaction.Transactional;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,11 +31,11 @@ import org.springframework.stereotype.Service;
 public class FriendServiceImpl implements FriendService{
 
 
-    private final MemberChatService memberChatService;
-    private final CreatureService creatureService;
-    private final MemberRepository memberRepository;
-    private final FriendRepository friendRepository;
-    private final FriendRequestRepository friendRequestRepository;
+//    private final MemberChatService memberChatService;
+//    private final CreatureService creatureService;
+//    private final MemberRepository memberRepository;
+//    private final FriendRepository friendRepository;
+//    private final FriendRequestRepository friendRequestRepository;
 
 
 
@@ -46,28 +44,25 @@ public class FriendServiceImpl implements FriendService{
         return memberRepository.findByNickname(nickname).orElse(null);
     }
 
-// 문희 
-//     @Autowired
-//     MemberService memberService;
-//     @Autowired
-//     MemberChatService memberChatService;
-//     @Autowired
-//     CreatureService creatureService;
-//     @Autowired
-//     MemberRepository memberRepository;
+     @Autowired
+     MemberChatService memberChatService;
+     @Autowired
+     CreatureService creatureService;
+     @Autowired
+     MemberRepository memberRepository;
 
-//     @Autowired
-//     AlarmService alarmService;
+     @Autowired
+     AlarmService alarmService;
 
-//     @Autowired
-//     FriendRepository friendRepository;
-//     @Autowired
-//     FriendRequestRepository friendRequestRepository;
-//     @Autowired
-//     private com.todoslave.feedme.imageUtil imageUtil;
+     @Autowired
+     FriendRepository friendRepository;
+     @Autowired
+     FriendRequestRepository friendRequestRepository;
+     @Autowired
+     private com.todoslave.feedme.imageUtil imageUtil;
 
-//     private final MemberChatRoomRepository memberChatRoomRepository;
-//     private final MemberChatMessageRepository memberChatMessageRepository;
+     private final MemberChatRoomRepository memberChatRoomRepository;
+     private final MemberChatMessageRepository memberChatMessageRepository;
 
 
     // 친구 요청
@@ -99,8 +94,8 @@ public class FriendServiceImpl implements FriendService{
 
         Member friend = memberRepository.findByNickname(friendRequestDTO.getCounterpartNickname()).orElseThrow();
         int memberId = SecurityUtil.getCurrentUserId();
-        int friendId = friendRepository.findByMemberIdAndCounterpartId(memberId, friend.getId());
-        friendRepository.deleteById(friendId);
+        Friend friendId = friendRepository.findByMemberIdAndCounterpartId(memberId, friend.getId());
+        friendRepository.deleteById(friendId.getId());
 
     }
 

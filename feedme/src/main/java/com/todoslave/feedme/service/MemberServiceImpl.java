@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -149,13 +150,10 @@ public class MemberServiceImpl implements MemberService {
         myPage.setNickname(member.getNickname());
         myPage.setEmail(member.getEmail());
 
-        Timestamp birthdayTimestamp = member.getBirthday();
-        LocalDate birthdayLocalDate = birthdayTimestamp.toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate();
+        LocalDate birthdayTimestamp = member.getBirthday();
 
-        myPage.setBrithday(birthdayLocalDate);
-
+        myPage.setBrithday(birthdayTimestamp);
+        myPage.setSendId(member.getId());
         myPage.setCreatureId(creature.getId());
         myPage.setCreatureName(creature.getCreatureName());
         myPage.setExp(creature.getExp());
