@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -247,15 +248,22 @@ public class AlarmServiceImpl implements AlarmService{
 
   }
 
-  public Slice<AlarmResponseDTO> loadAlarms(PaginationRequestDTO paginationRequestDTO){
-    Pageable pageable = PageRequest.of(paginationRequestDTO.getSkip() / paginationRequestDTO.getLimit(),
-        paginationRequestDTO.getLimit());
+  public List<AlarmResponseDTO> loadAlarms(){
 
     int memberId = SecurityUtil.getCurrentUserId();
 
-    Slice<Alarm> alarm = alarmRepository.findByMemberId(memberId, pageable);
+    List<Alarm> alarm = alarmRepository.findByMemberId(memberId);
+    List<AlarmResponseDTO> response = new ArrayList<>();
 
-    return alarm.map(AlarmMapper::toDto);
+    for(Alarm a : alarm){
+
+      AlarmResponseDTO alarmResponseDTO = new AlarmResponseDTO();
+      alarmResponseDTO.setContent(a.getContent());
+      response.add(alarmResponseDTO);
+
+    }
+
+    return response;
   }
 
 

@@ -10,6 +10,7 @@ import com.todoslave.feedme.domain.entity.communication.MemberChatMessage;
 import com.todoslave.feedme.domain.entity.membership.Member;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 import org.springframework.data.domain.Slice;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -24,7 +25,7 @@ public interface AlarmService {
     SseEmitter renewCreateEmitter();
     void renewChattingRoom(MemberChatListResponseDTO room, int memberId, int checked) throws IOException;
     public <T> void sendAlarm(T alarm, int type, SseEmitter emitter) throws IOException;
-    Slice<AlarmResponseDTO> loadAlarms(PaginationRequestDTO paginationRequestDTO);
+    List<AlarmResponseDTO> loadAlarms();
 
 
 }
