@@ -231,7 +231,7 @@ public class MemberChatServiceImpl implements MemberChatService{
 
     response.setMessage(memberChatMessage.getContent());
     response.setTransmitAt(memberChatMessage.getTransmitAt());
-//    response.setSendNickname(SecurityUtil.getCurrentMember().getNickname());
+    response.setSendNickname(member.getNickname());
 
     return response;
   }
