@@ -8,13 +8,19 @@ import com.todoslave.feedme.domain.entity.membership.Member;
 import java.util.List;
 import java.util.Optional;
 
-public interface MemberService {
+// import java.util.stream.Collectors;
 
-    // 회원 가입
-    Member insertMember(Member member);
-  
-    // 회원 전체 조회
-    List<Member> findMembers();
+//@Service
+// @Transactional
+// public class MemberService {
+
+//     @Autowired
+//     MemberRepository memberRepository;
+//     @Autowired
+//     FriendService friendService;
+
+
+public interface MemberService {
 
     // 아이디로 회원 찾기
     Member findById(int userId);
@@ -24,9 +30,6 @@ public interface MemberService {
 
     // 닉네임으로 회원 찾기
     Member findByNickname(String nickname);
-
-    // 이메일 인증 여부 확인
-    boolean authenticate(String email);
 
     // 회원 가입 처리
     Member registerMember(MemberSignupRequestDTO memberSignupRequestDTO);

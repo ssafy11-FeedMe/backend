@@ -8,6 +8,7 @@ import com.todoslave.feedme.login.util.SecurityUtil;
 import com.todoslave.feedme.service.CreatureService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,10 +33,25 @@ public class CreatureController {
         return ResponseEntity.ok(Map.of("creatureId", creature.getId(), "message", "크리쳐가 성공적으로 생성되었습니다."));
     }
 
+//    @Operation(summary = "크리쳐 생성") 이거는!!! 나중에 파일 전송시에!
+//    @PostMapping("/creature")
+//    public ResponseEntity<?> createCreature(@ModelAttribute CreatureMakeRequestDTO request,
+//                                            @RequestHeader("Authorization") final String accessToken) {
+//        Member member = SecurityUtil.getCurrentMember();
+//
+//        Creature creature = creatureService.createFristCreature(request.getKeyword(),
+//                request.getPhoto(),
+//                request.getCreatureName());
+//
+//        return ResponseEntity.ok(Map.of("creatureId", creature.getId(), "message", "크리쳐가 성공적으로 생성되었습니다."));
+//    }
+
+
     @Operation(summary = "크리쳐 보기")
     @GetMapping
     public ResponseEntity<CreatureInfoResponseDTO> getCreatures(@RequestHeader("Authorization") final String accessToken) {
-        CreatureInfoResponseDTO creature = creatureService.creatureInfo();
+
+        CreatureInfoResponseDTO creature = creatureService.creatureInfo(SecurityUtil.getCurrentMember());
 
         return new ResponseEntity<CreatureInfoResponseDTO>(creature, HttpStatus.OK);
     }

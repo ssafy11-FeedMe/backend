@@ -1,5 +1,6 @@
 package com.todoslave.feedme.controller;
 
+import com.todoslave.feedme.DTO.FriendInfoResponseDTO;
 import com.todoslave.feedme.DTO.MemberSearchResponseDTO;
 import com.todoslave.feedme.DTO.MemberSignupRequestDTO;
 import com.todoslave.feedme.DTO.MypageResponseDTO;
@@ -58,6 +59,7 @@ public class MemberController {
         List<MemberSearchResponseDTO> list = memberService.getMemberList(searchvalue);
         return new ResponseEntity<List<MemberSearchResponseDTO>>(list, HttpStatus.OK);
     }
+
 
     @Operation(summary = "맴버 가입")
     @PostMapping

@@ -11,14 +11,18 @@ import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class TodoCategoryServiceImpl implements TodoCategoryService {
 
-  private final TodoCategoryRepository todoCategoryRepository;
-  private final MemberRepository memberRepository;
+  @Autowired
+  private TodoCategoryRepository todoCategoryRepository;
+  @Autowired
+  private MemberRepository memberRepository;
+
 
   // 카테고리들 가져오기
   @Override
@@ -68,9 +72,16 @@ public class TodoCategoryServiceImpl implements TodoCategoryService {
   @Override
   public TodoCategoryResponseDTO insertCategory(String name) {
 
+    if(name==null){
+      System.out.println("null인데용?");
+    }
+
     Member member = SecurityUtil.getCurrentMember();
 
     TodoCategory todoCategory = new TodoCategory();
+
+    System.out.println(" - -- 출력되나?"+name);
+    System.out.println("- - - 출력되ㅣ시나요>"+member);
 
     todoCategory.setName(name);
     todoCategory.setMember(member);

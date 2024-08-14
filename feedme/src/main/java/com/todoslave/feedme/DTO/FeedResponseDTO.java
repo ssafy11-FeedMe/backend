@@ -3,6 +3,7 @@ package com.todoslave.feedme.DTO;
 import lombok.Data;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 
 @Data
@@ -14,6 +15,6 @@ public class FeedResponseDTO {
     private String author;
     private String likeCnt;
 
-    private Timestamp createdAt;
+    private LocalDateTime createdAt;
 
 }

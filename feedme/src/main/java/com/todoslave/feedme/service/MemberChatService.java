@@ -4,7 +4,6 @@ import com.todoslave.feedme.DTO.MemberChatListResponseDTO;
 import com.todoslave.feedme.DTO.MemberChatMessageRequestDTO;
 import com.todoslave.feedme.DTO.MemberChatMessageResponseDTO;
 import com.todoslave.feedme.domain.entity.communication.MemberChatMessage;
-import com.todoslave.feedme.domain.entity.communication.MemberChatRoom;
 import java.io.IOException;
 import java.util.List;
 import org.springframework.data.domain.Slice;
@@ -20,10 +19,14 @@ public interface MemberChatService {
   public MemberChatListResponseDTO insertChatRoom(List<Integer> members);
 
   // 채팅방 메세지 불러오기
-  public Slice<MemberChatMessage> getChatMessage(String roomId, int page, int size);
+  public Slice<MemberChatMessageResponseDTO> getChatMessage(String roomId, int page, int size);
 
   // 채팅방 메세지 저장
-  public MemberChatMessageResponseDTO insertChatMessage(String roomId, MemberChatMessageRequestDTO memberChatMessageRequestDTO)
+  public MemberChatMessageResponseDTO insertChatMessage(String roomId, MemberChatMessageRequestDTO message)
       throws IOException;
+
+  void enterTheRoom(String roomId);
+
+  void exitTheRoom(String roomId);
 
 }

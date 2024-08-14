@@ -7,6 +7,7 @@ import com.todoslave.feedme.DTO.FeedResponseDTO;
 import com.todoslave.feedme.service.FeedService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FeedController {
 
+    @Autowired
     private final FeedService feedService;
 
     // 피드 생성
@@ -48,7 +50,7 @@ public class FeedController {
     }
 
     // 좋아요/좋아요 취소 버튼
-    @Operation(summary = "피드 삭제")
+    @Operation(summary = "피드 좋아요/취소")
     @PostMapping("/{feedId}/like")
     public void likeButton(@PathVariable int feedId) {
         feedService.toggleLike(feedId);
