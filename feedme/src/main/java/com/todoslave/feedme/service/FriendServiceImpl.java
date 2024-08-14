@@ -39,6 +39,7 @@ public class FriendServiceImpl implements FriendService{
 
 
 
+
     //유틸 닉네임으로 찾기
     private Member findByNickname(String nickname) {
         return memberRepository.findByNickname(nickname).orElse(null);
@@ -61,9 +62,9 @@ public class FriendServiceImpl implements FriendService{
      @Autowired
      private com.todoslave.feedme.imageUtil imageUtil;
 
-     private final MemberChatRoomRepository memberChatRoomRepository;
-     private final MemberChatMessageRepository memberChatMessageRepository;
-
+    private final FriendRequestMapper friendRequestMapper;
+    private final MemberChatRoomRepository memberChatRoomRepository;
+    private final MemberChatMessageRepository memberChatMessageRepository;
 
     // 친구 요청
     @Override
@@ -157,18 +158,30 @@ public class FriendServiceImpl implements FriendService{
         return "https://i11b104.p.ssafy.io/image/creature/" + creatureId + "_" +creatureLevel;
     }
 
+
+
     // 친구 요청 불러오기
-    @Override
-    public Slice<FriendReqResponseDTO> getRequestFriend(PaginationRequestDTO paginationRequestDTO) {
+    public List<FriendReqResponseDTO> getRequestFriend() {
 
         int memberId = SecurityUtil.getCurrentUserId();
 
-        Pageable pageable = PageRequest.of(paginationRequestDTO.getSkip() / paginationRequestDTO.getLimit(),
-            paginationRequestDTO.getLimit());
+        List<FriendRequest> friendRequests = friendRequestRepository.findAllByMemberId(memberId);
+        List<FriendReqResponseDTO> friendResponses = new ArrayList<>();
 
-        Slice<FriendRequest> friendRequests = friendRequestRepository.findAllByMemberId(memberId, pageable);
+        for(FriendRequest f : friendRequests){
 
-        return friendRequests.map(FriendRequestMapper::toDto);
+            FriendReqResponseDTO dto = new FriendReqResponseDTO();
+            dto.setId(f.getId());
+            dto.setCounterpartNickname(f.getCounterpartId().getNickname());
+            String img = generateCreatureImgPath(f.getCounterpartId());
+            dto.setCreatureImg(img);
+
+            friendResponses.add(dto);
+
+        }
+
+        // Mapper 인스턴스를 사용하여 변환
+        return friendResponses;
     }
 
     // 친구 수락

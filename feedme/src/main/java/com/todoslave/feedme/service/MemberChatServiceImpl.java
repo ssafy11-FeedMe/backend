@@ -1,6 +1,7 @@
 package com.todoslave.feedme.service;
 
 import com.todoslave.feedme.DTO.MemberChatListResponseDTO;
+import com.todoslave.feedme.DTO.MemberChatMessageRequestDTO;
 import com.todoslave.feedme.DTO.MemberChatMessageResponseDTO;
 import com.todoslave.feedme.domain.entity.avatar.Creature;
 import com.todoslave.feedme.domain.entity.communication.MemberChatMessage;
@@ -46,6 +47,8 @@ public class MemberChatServiceImpl implements MemberChatService{
   @Autowired
   private final CreatureRepository creatureRepository;
 
+  private final MessageMapper messageMapper;
+
   Map<String, int[]> rooms = new HashMap<>();
 
   // 채팅방 목록들 가져오기
@@ -77,10 +80,10 @@ public class MemberChatServiceImpl implements MemberChatService{
 
       String nickname = memberRepository.findById(counterPartId).orElseThrow().getNickname();
       chatResponse.setNickname(nickname);
-      Creature creature = creatureRepository.findByMemberId(counterPartId);
-
-      chatResponse.setCreatureImage(
-          "http://localhost:8080/image/creature/"+creature.getMember().getId()+"_"+creature.getLevel());
+//      Creature creature = creatureRepository.findByMemberId(counterPartId);
+//
+//      chatResponse.setCreatureImage(
+//          "http://localhost:8080/image/creature/"+creature.getMember().getId()+"_"+creature.getLevel());
       MemberChatRoomChecked checked = memberChatRoomCheckedRepository.findByMemberChatRoomIdAndMemberId(room.getId(),memberId);
       chatResponse.setIsChecked(checked.getIsChecked());
       chatListResponse.add(chatResponse);
@@ -111,6 +114,8 @@ public class MemberChatServiceImpl implements MemberChatService{
 
     Member countpart = null;
 
+    System.out.println("member 리스트 : "+members);
+
     for(int m : members){
       if(m!=SecurityUtil.getCurrentUserId()){
         countpart = memberRepository.findById(m).orElseThrow();
@@ -131,9 +136,9 @@ public class MemberChatServiceImpl implements MemberChatService{
 
   // 채팅방 메세지 불러오기
   @Transactional
-  public Slice<MemberChatMessageResponseDTO> getChatMessage(String roomId, int skip, int limit){
+  public Slice<MemberChatMessageResponseDTO> getChatMessage(String roomId, int skip, int limit) {
 
-    if(roomRepository.findById(roomId).orElseThrow()==null){
+    if (roomRepository.findById(roomId).orElseThrow() == null) {
       return null;
     }
 
@@ -144,21 +149,22 @@ public class MemberChatServiceImpl implements MemberChatService{
 
     int memberId = 1;
 
-    System.out.println("memberId is : "+memberId);
-    System.out.println("Room Id is : "+roomId);
+    System.out.println("memberId is : " + memberId);
+    System.out.println("Room Id is : " + roomId);
 
-    MemberChatRoomChecked checked = memberChatRoomCheckedRepository.findByMemberChatRoomIdAndMemberId(roomId,memberId);
+    MemberChatRoomChecked checked = memberChatRoomCheckedRepository.findByMemberChatRoomIdAndMemberId(roomId, memberId);
     checked.setIsChecked(1);
 
-    return messages.map(MessageMapper::toDto);
+    return messages.map(messageMapper::toDto); // MessageMapper 인스턴스를 사용하여 map 메서드 호출
   }
 
   // 채팅방 메세지 저장
-  public MemberChatMessageResponseDTO insertChatMessage(String roomId, String message)
+  public MemberChatMessageResponseDTO insertChatMessage(String roomId, MemberChatMessageRequestDTO message)
       throws IOException {
     MemberChatMessage memberChatMessage = new MemberChatMessage();
 
-    int memberId = SecurityUtil.getCurrentUserId();
+    int memberId = message.getSendId();
+    Member member = memberRepository.findById(memberId).orElseThrow();
 
     MemberChatRoom memberChatRoom = roomRepository.findById(roomId).orElseThrow();
     String counterpartNickname = null;
@@ -172,8 +178,9 @@ public class MemberChatServiceImpl implements MemberChatService{
     }
 
     memberChatMessage.setMemberChatRoomId(roomId);
-    memberChatMessage.setContent(message);
+    memberChatMessage.setContent(message.getContent());
     memberChatMessage.setSendId(memberId);
+    System.out.println("memberID is :"+memberId);
 
     // 메세지 저장
     memberChatMessage = messageRepository.save(memberChatMessage);
@@ -202,9 +209,9 @@ public class MemberChatServiceImpl implements MemberChatService{
     memberChatListResponseDTO.setCreatureImage("http://localhost:8080/image/creature/"+creature.getMember().getId()+"_"+creature.getLevel());
 
     // 채팅방 갱신 (나)
-    alarmService.renewChattingRoom(memberChatListResponseDTO, SecurityUtil.getCurrentUserId(),1);
+    alarmService.renewChattingRoom(memberChatListResponseDTO, memberId,1);
 
-    memberChatListResponseDTO.setNickname(SecurityUtil.getCurrentMember().getNickname());
+    memberChatListResponseDTO.setNickname(member.getNickname());
     creature = creatureRepository.findByMemberId(memberId);
 
     memberChatListResponseDTO.setCreatureImage("http://localhost:8080/image/creature/"+creature.getMember().getId()+"_"+creature.getLevel());
@@ -229,6 +236,7 @@ public class MemberChatServiceImpl implements MemberChatService{
     if(rooms.get(roomId)==null){
       int[] members = new int[2];
       members[0] = SecurityUtil.getCurrentUserId();
+      rooms.put(roomId, members);
     }else{
       int[] members = rooms.get(roomId);
       for(int i=0; i<2; i++){
@@ -242,17 +250,21 @@ public class MemberChatServiceImpl implements MemberChatService{
     MemberChatRoomChecked checked = roomCheckedRepository.findByMemberChatRoomIdAndMemberId(roomId, SecurityUtil.getCurrentUserId());
     checked.setIsChecked(1);
 
+    System.out.println("enter the room : "+rooms.get(roomId));
+
   }
 
   @Override
   public void exitTheRoom(String roomId) {
 
-    int[] members = rooms.get(roomId);
+    if(rooms.get(roomId)!=null) {
+      int[] members = rooms.get(roomId);
 
-    for(int i=0; i<2; i++){
-      if(members[i]==SecurityUtil.getCurrentUserId()){
-        members[i] = -1;
-        break;
+      for (int i = 0; i < 2; i++) {
+        if (members[i] == SecurityUtil.getCurrentUserId()) {
+          members[i] = -1;
+          break;
+        }
       }
     }
 

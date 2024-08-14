@@ -150,9 +150,11 @@ public class MemberServiceImpl implements MemberService {
         myPage.setNickname(member.getNickname());
         myPage.setEmail(member.getEmail());
 
+
         LocalDate birthdayTimestamp = member.getBirthday();
 
         myPage.setBrithday(birthdayTimestamp);
+
         myPage.setSendId(member.getId());
         myPage.setCreatureId(creature.getId());
         myPage.setCreatureName(creature.getCreatureName());

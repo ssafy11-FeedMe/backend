@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.socket.messaging.SessionConnectEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
@@ -40,42 +41,19 @@ public class MemberChatController {
   @Autowired
   private final MemberService memberService;
 
-  @EventListener
-  public void handleWebSocketConnectListener(SessionConnectEvent event) {
-    StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
-    String sessionId = headerAccessor.getSessionId();
-    // 추가적인 연결 초기화 로직을 여기에 작성할 수 있습니다.
-
-    String destination = headerAccessor.getDestination();
-
-    if (destination != null && destination.startsWith("/chatRoom/")) {
-      String[] pathSegments = destination.split("/");
-      if (pathSegments.length > 2) {
-        String roomId = pathSegments[pathSegments.length - 1];
-        chatService.enterTheRoom(roomId);
-      }
-    }
-
+  @PostMapping("/connect")
+  public ResponseEntity<Void> webSocketConnect(@RequestParam("room") String roomId){
+    System.out.println("enter the socket : "+roomId);
+    chatService.enterTheRoom(roomId);
+    return ResponseEntity.noContent().build();
   }
 
-  @EventListener
-  public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
-    StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
-    String sessionId = headerAccessor.getSessionId();
-    // 추가적인 연결 초기화 로직을 여기에 작성할 수 있습니다.
-
-    String destination = headerAccessor.getDestination();
-
-    if (destination != null && destination.startsWith("/chatRoom/")) {
-      String[] pathSegments = destination.split("/");
-      if (pathSegments.length > 2) {
-        String roomId = pathSegments[pathSegments.length - 1];
-        chatService.exitTheRoom(roomId);
-      }
-    }
-
+  @PostMapping("/disconnect")
+  public ResponseEntity<Void> webSocketDisConnect(@RequestParam("room") String roomId){
+    System.out.println("close the socket : "+roomId);
+    chatService.exitTheRoom(roomId);
+    return ResponseEntity.noContent().build();
   }
-
 
   // 유저의 채팅방 목록들 불러오기
   @GetMapping
@@ -100,9 +78,9 @@ public class MemberChatController {
   // 메세지 저장
   @MessageMapping("/messages/{roomId}")
   @SendTo("/chatRoom/messages/{roomId}")
-  public MemberChatMessageResponseDTO sendMessage(@DestinationVariable String roomId, @Payload String content)
+  public MemberChatMessageResponseDTO sendMessage(@DestinationVariable String roomId, @Payload MemberChatMessageRequestDTO request)
       throws IOException {
-    return chatService.insertChatMessage(roomId, content);
+    return chatService.insertChatMessage(roomId, request);
   }
 
 
