@@ -162,6 +162,7 @@ public class MemberChatServiceImpl implements MemberChatService{
     MemberChatMessage memberChatMessage = new MemberChatMessage();
 
     int memberId = message.getSendId();
+    Member member = memberRepository.findById(memberId).orElseThrow();
 
     MemberChatRoom memberChatRoom = roomRepository.findById(roomId).orElseThrow();
     String counterpartNickname = null;
@@ -206,9 +207,9 @@ public class MemberChatServiceImpl implements MemberChatService{
     memberChatListResponseDTO.setCreatureImage("http://localhost:8080/image/creature/"+creature.getMember().getId()+"_"+creature.getLevel());
 
     // 채팅방 갱신 (나)
-    alarmService.renewChattingRoom(memberChatListResponseDTO, SecurityUtil.getCurrentUserId(),1);
+    alarmService.renewChattingRoom(memberChatListResponseDTO, memberId,1);
 
-    memberChatListResponseDTO.setNickname(SecurityUtil.getCurrentMember().getNickname());
+    memberChatListResponseDTO.setNickname(member.getNickname());
     creature = creatureRepository.findByMemberId(memberId);
 
     memberChatListResponseDTO.setCreatureImage("http://localhost:8080/image/creature/"+creature.getMember().getId()+"_"+creature.getLevel());
@@ -254,12 +255,14 @@ public class MemberChatServiceImpl implements MemberChatService{
   @Override
   public void exitTheRoom(String roomId) {
 
-    int[] members = rooms.get(roomId);
+    if(rooms.get(roomId)!=null) {
+      int[] members = rooms.get(roomId);
 
-    for(int i=0; i<2; i++){
-      if(members[i]==SecurityUtil.getCurrentUserId()){
-        members[i] = -1;
-        break;
+      for (int i = 0; i < 2; i++) {
+        if (members[i] == SecurityUtil.getCurrentUserId()) {
+          members[i] = -1;
+          break;
+        }
       }
     }
 
