@@ -169,12 +169,14 @@ public class AlarmServiceImpl implements AlarmService{
   public SseEmitter renewCreateEmitter() {
     int memberId = SecurityUtil.getCurrentUserId();
 
+    System.out.println("Chatting renew channel is!!!!!!!!!!!!!! "+memberId);
+
     SseEmitter emitter = new SseEmitter();
     chatEmitters.put(memberId, emitter);
 
     emitter.onCompletion(() -> chatEmitters.remove(memberId));
     emitter.onTimeout(() -> chatEmitters.remove(memberId));
-    emitter.onError((e) -> emitters.remove(memberId));
+    emitter.onError((e) -> chatEmitters.remove(memberId));
 
     return emitter;
   }
@@ -186,7 +188,11 @@ public class AlarmServiceImpl implements AlarmService{
 
     SseEmitter emitter = chatEmitters.get(memberId);
 
+    System.out.println("enter the renew chat !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+
     if(emitter!=null) {
+
+      System.out.println(memberId+ "  renew chat SSE success!!!!!");
 
       room.setIsChecked(checked);
 
